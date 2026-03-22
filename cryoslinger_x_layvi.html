@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>cryoslinger × layvi — Analyse de la dynamique</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0f0f1a;
+    color: #d4d4e8;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #1a1206 50%, #1a1a2e 100%);
+    border-bottom: 2px solid #7c3aed;
+    padding: 28px 36px 20px;
+  }
+  .header h1 { font-size: 22px; font-weight: 700; color: #fff; letter-spacing: 0.5px; }
+  .header .subtitle { font-size: 12px; color: #8888aa; margin-top: 5px; }
+  .header .subtitle span { font-weight: 600; }
+  .header .subtitle .sc { color: #a78bfa; }
+  .header .subtitle .sl { color: #fbbf24; }
+
+  .container { padding: 24px 36px; max-width: 1100px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+
+  .card { background: #1a1a2e; border: 1px solid #2a2a45; border-radius: 8px; padding: 18px; }
+  .card.purple { border-color: #7c3aed; background: #13102a; }
+  .card.amber  { border-color: #d97706; background: #1c1505; }
+  .card.green  { border-color: #16a34a; background: #0b1a0f; }
+  .card.slate  { border-color: #475569; background: #111827; }
+  .card.rose   { border-color: #e11d48; background: #1f0a10; }
+
+  .card h3 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .card.purple h3 { color: #a78bfa; }
+  .card.amber h3  { color: #fbbf24; }
+  .card.green h3  { color: #4ade80; }
+  .card.slate h3  { color: #94a3b8; }
+  .card.rose h3   { color: #fb7185; }
+  .card p { font-size: 13px; color: #c4c4d8; }
+
+  .section-title {
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
+    color: #666688; margin: 28px 0 12px;
+    padding-bottom: 6px; border-bottom: 1px solid #2a2a45;
+  }
+
+  .stat-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .stat-label { font-size: 12px; color: #8888aa; width: 150px; flex-shrink: 0; }
+  .stat-bar-wrap { flex: 1; background: #2a2a45; border-radius: 3px; height: 8px; overflow: hidden; }
+  .stat-bar-fill { height: 100%; border-radius: 3px; }
+  .bar-c { background: linear-gradient(90deg, #4c1d95, #a78bfa); }
+  .bar-l { background: linear-gradient(90deg, #92400e, #fbbf24); }
+  .stat-val { font-size: 12px; font-weight: 700; width: 80px; text-align: right; color: #d4d4e8; }
+
+  .timeline { list-style: none; }
+  .timeline li { display: flex; gap: 12px; padding: 7px 0; border-bottom: 1px solid #1e1e38; font-size: 13px; }
+  .timeline li:last-child { border-bottom: none; }
+  .tl-date { font-size: 11px; color: #666688; width: 70px; flex-shrink: 0; padding-top: 1px; }
+  .tl-author { font-size: 11px; font-weight: 700; width: 90px; flex-shrink: 0; padding-top: 1px; }
+  .tl-author.cryo  { color: #a78bfa; }
+  .tl-author.layvi { color: #fbbf24; }
+  .tl-text { color: #c4c4d8; flex: 1; }
+
+  .quote { background: #12121f; border-left: 3px solid #7c3aed; padding: 10px 14px;
+    border-radius: 0 6px 6px 0; margin-bottom: 10px; font-size: 13px; color: #c4c4d8; font-style: italic; }
+  .quote.amber { border-color: #d97706; }
+  .quote-meta { font-size: 11px; color: #666688; margin-top: 4px; font-style: normal; }
+
+  .roles { display: flex; flex-direction: column; gap: 6px; }
+  .role-item { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: #c4c4d8; line-height: 1.4; }
+  .role-arrow      { color: #a78bfa; font-weight: 700; flex-shrink: 0; }
+  .role-arrow.amb  { color: #fbbf24; }
+
+  .chart-wrap { background: #12121f; border-radius: 6px; padding: 16px; margin-bottom: 20px; }
+  canvas { display: block; width: 100%; }
+
+  /* Miroir asymétrique */
+  .mirror-grid {
+    display: grid; grid-template-columns: 1fr 80px 1fr; gap: 0; margin: 16px 0;
+    background: #12121f; border: 1px solid #2a2a45; border-radius: 8px; overflow: hidden;
+  }
+  .mirror-side { padding: 18px; }
+  .mirror-side.cryo-side { border-right: 1px solid #2a2a45; }
+  .mirror-center { display: flex; align-items: center; justify-content: center;
+    font-size: 20px; color: #2a2a45; }
+  .mirror-title { font-size: 12px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; margin-bottom: 10px; }
+  .mirror-title.cryo  { color: #a78bfa; }
+  .mirror-title.layvi { color: #fbbf24; }
+  .mirror-item { font-size: 13px; color: #c4c4d8; padding: 4px 0;
+    border-bottom: 1px solid #1e1e38; }
+  .mirror-item:last-child { border-bottom: none; }
+  .mirror-tag { font-size: 11px; color: #666688; }
+
+  /* Jeux */
+  .game-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .game-name { font-size: 12px; color: #8888aa; width: 140px; flex-shrink: 0; }
+  .game-bars { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+  .game-bar { height: 8px; border-radius: 3px; }
+  .game-val { font-size: 11px; color: #666688; width: 60px; text-align: right; }
+
+  /* Counter badge */
+  .counter-box {
+    display: inline-flex; flex-direction: column; align-items: center;
+    background: #12121f; border: 1px solid #2a2a45; border-radius: 8px;
+    padding: 14px 20px; min-width: 120px;
+  }
+  .counter-num { font-size: 42px; font-weight: 900; letter-spacing: -3px; line-height: 1; }
+  .counter-label { font-size: 11px; color: #666688; margin-top: 4px; text-align: center; }
+  .counters-row { display: flex; gap: 16px; flex-wrap: wrap; margin: 12px 0; }
+
+  /* Verdict */
+  .verdict {
+    background: linear-gradient(135deg, #13102a, #1c1505);
+    border: 1px solid #7c3aed; border-right-color: #d97706;
+    border-radius: 8px; padding: 20px 24px; margin-top: 24px;
+  }
+  .verdict h3 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #a78bfa; margin-bottom: 10px; }
+  .verdict p  { font-size: 13px; color: #c4c4d8; line-height: 1.7; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>cryoslinger × layvi — Analyse de la dynamique</h1>
+  <div class="subtitle">
+    Canal <span class="sc">#général</span> · 2018 → 2026 ·
+    <span class="sc">6 678 msgs cryoslinger</span> / <span class="sl">5 346 msgs layvi</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="section-title">Vue d'ensemble</div>
+  <div class="grid-2">
+    <div class="card purple">
+      <h3>La paire la plus équilibrée du groupe</h3>
+      <p>Là où dosinge/espy joue sur l'asymétrie d'initiative et dosinge/cryo sur la mythologisation, cryo et layvi fonctionnent sur un registre radicalement différent : <strong>l'égalité de volume, l'absence de surnom, la réactivité mutuelle</strong>. En 7 ans, cryo a inventé zéro sobriquet pour layvi. Layvi ne mentionne jamais cryo par son pseudo. Et pourtant : <strong>1 053 échanges de moins de 3 minutes</strong> entre eux deux.</p>
+    </div>
+    <div class="card amber">
+      <h3>Deux trajectoires qui convergent puis divergent</h3>
+      <p>Layvi arrive premier sur le serveur (déc. 2018), cryo arrive 6 mois plus tard. Ils montent ensemble jusqu'en 2020, descendent ensemble ensuite. Depuis 2022, layvi ralentit plus vite que cryo. En 2025, cryo maintient 268 messages contre 108 pour layvi. La relation suit la courbe du groupe — elle ne la précède pas, elle ne la sustente pas non plus.</p>
+    </div>
+  </div>
+
+  <!-- Graphique annuel -->
+  <div class="section-title">Évolution de l'activité par année</div>
+  <div class="chart-wrap">
+    <canvas id="activityChart" height="200"></canvas>
+  </div>
+
+  <!-- Le chiffre clé -->
+  <div class="section-title">Le chiffre qui définit tout</div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="counters-row">
+      <div class="counter-box">
+        <div class="counter-num" style="color:#a78bfa">1053</div>
+        <div class="counter-label">échanges en moins de<br>3 minutes entre eux</div>
+      </div>
+      <div class="counter-box">
+        <div class="counter-num" style="color:#fbbf24">~0</div>
+        <div class="counter-label">sobriquets inventés<br>l'un pour l'autre</div>
+      </div>
+      <div class="counter-box">
+        <div class="counter-num" style="color:#4ade80">3</div>
+        <div class="counter-label">mentions directes<br>cryo → layvi (texte)</div>
+      </div>
+      <div class="counter-box">
+        <div class="counter-num" style="color:#fb7185">1</div>
+        <div class="counter-label">mention directe<br>layvi → cryo (texte)</div>
+      </div>
+    </div>
+    <p style="font-size:13px; color:#8888aa; margin-top:8px">
+      Paradoxe central : cryo et layvi <strong>se répondent constamment</strong> (1 053 échanges rapides), mais ne se mentionnent presque jamais par nom. Ils n'ont pas besoin de se nommer — ils sont déjà dans la même conversation. C'est la signature d'une présence simultanée plutôt que d'une invocation à distance.
+    </p>
+  </div>
+
+  <!-- Miroir asymétrique -->
+  <div class="section-title">Ce qu'ils apportent au canal — portrait en miroir</div>
+  <div class="mirror-grid">
+    <div class="mirror-side cryo-side">
+      <div class="mirror-title cryo">cryoslinger</div>
+      <div class="mirror-item">Organise les soirées ("ykk ce soir ? Codenames, Pummel…")<br><span class="mirror-tag">→ 164 mentions de Codenames, jeu quasi-exclusif à cryo</span></div>
+      <div class="mirror-item">Commente en temps réel, souvent le dernier mot<br><span class="mirror-tag">→ messages courts, ciblés, précis</span></div>
+      <div class="mirror-item">Archive les moments ("LAYVI T'ES SUR MON LIIIIVE")<br><span class="mirror-tag">→ copie des messages de layvi dans d'autres canaux</span></div>
+      <div class="mirror-item">N'invente aucun sobriquet pour layvi<br><span class="mirror-tag">→ layvi est traité comme un pair, pas un personnage</span></div>
+      <div class="mirror-item">Arrive tard le soir, pic 19h-21h<br><span class="mirror-tag">→ soirée gaming, pas de présence diurne</span></div>
+    </div>
+    <div class="mirror-center">⇄</div>
+    <div class="mirror-side">
+      <div class="mirror-title layvi">layvi</div>
+      <div class="mirror-item">Fournit le contenu en temps réel (stream, actu gaming)<br><span class="mirror-tag">→ 66 mentions de Twitch/stream, 45 d'esport</span></div>
+      <div class="mirror-item">S'excuse et se justifie souvent de son absence<br><span class="mirror-tag">→ "sorry", "j'arrive", "j'avais pas vu"</span></div>
+      <div class="mirror-item">Pose les questions de fond, ouvre les débats<br><span class="mirror-tag">→ interpelle le groupe, pas cryo spécifiquement</span></div>
+      <div class="mirror-item">Appelle cryo "Théo" (son prénom)<br><span class="mirror-tag">→ la seule personne à utiliser ce prénom couramment ; "Thélio" est le prénom du fils de cryo</span></div>
+      <div class="mirror-item">Présent midi et soir, double pic 12h-17h<br><span class="mirror-tag">→ schéma plus diurne que cryo</span></div>
+    </div>
+  </div>
+
+  <!-- Heures -->
+  <div class="section-title">Rythmes horaires — deux présences décalées</div>
+  <div class="chart-wrap">
+    <canvas id="hourChart" height="180"></canvas>
+  </div>
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="card purple">
+      <h3>cryoslinger : le pic du soir</h3>
+      <p>Quasi-absent avant 9h, monte progressivement, culmine entre 19h et 21h. Profil noctambule net. Le décalage avec layvi crée une fenêtre de chevauchement idéale en fin d'après-midi / soirée — exactement quand les échanges rapides se produisent.</p>
+    </div>
+    <div class="card amber">
+      <h3>layvi : le bimodal midi-soir</h3>
+      <p>Double présence : pic autour de midi (12h-14h) et en soirée (16h-20h). Layvi est disponible plus tôt que cryo. Conséquence : layvi "chauffe" le canal en journée, cryo arrive et prend la suite. Ils fonctionnent en relais naturel.</p>
+    </div>
+  </div>
+
+  <!-- Stats comparées -->
+  <div class="section-title">Statistiques comparées</div>
+  <div style="background:#1a1a2e; border:1px solid #2a2a45; border-radius:8px; padding:18px; margin-bottom:20px">
+    <div class="stat-row">
+      <div class="stat-label">Total messages (général)</div>
+      <div class="stat-bar-wrap"><div class="stat-bar-fill bar-c" style="width:100%"></div></div>
+      <div class="stat-val" style="color:#a78bfa">6 678</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-label"></div>
+      <div class="stat-bar-wrap"><div class="stat-bar-fill bar-l" style="width:80%"></div></div>
+      <div class="stat-val" style="color:#fbbf24">5 346</div>
+    </div>
+    <div class="stat-row" style="margin-top:10px">
+      <div class="stat-label">Longueur moy. message</div>
+      <div class="stat-bar-wrap"><div class="stat-bar-fill bar-c" style="width:68%"></div></div>
+      <div class="stat-val" style="color:#a78bfa">30,3 car</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-label"></div>
+      <div class="stat-bar-wrap"><div class="stat-bar-fill bar-l" style="width:100%"></div></div>
+      <div class="stat-val" style="color:#fbbf24">36,5 car</div>
+    </div>
+    <div class="stat-row" style="margin-top:10px">
+      <div class="stat-label">Pic annuel</div>
+      <div class="stat-bar-wrap"><div class="stat-bar-fill bar-c" style="width:100%"></div></div>
+      <div class="stat-val" style="color:#a78bfa">2 945 (2020)</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-label"></div>
+      <div class="stat-bar-wrap"><div class="stat-bar-fill bar-l" style="width:83%"></div></div>
+      <div class="stat-val" style="color:#fbbf24">2 457 (2020)</div>
+    </div>
+    <div class="stat-row" style="margin-top:10px">
+      <div class="stat-label">Activité 2024</div>
+      <div class="stat-bar-wrap"><div class="stat-bar-fill bar-c" style="width:100%"></div></div>
+      <div class="stat-val" style="color:#a78bfa">429</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-label"></div>
+      <div class="stat-bar-wrap"><div class="stat-bar-fill bar-l" style="width:48%"></div></div>
+      <div class="stat-val" style="color:#fbbf24">208</div>
+    </div>
+  </div>
+
+  <!-- Univers de jeux -->
+  <div class="section-title">Univers communs — qui mène quoi ?</div>
+  <div style="background:#1a1a2e; border:1px solid #2a2a45; border-radius:8px; padding:18px; margin-bottom:20px">
+    <div class="game-row">
+      <div class="game-name">Stream / Twitch</div>
+      <div class="game-bars">
+        <div class="game-bar bar-c" style="width:44%"></div>
+        <div class="game-bar bar-l" style="width:100%"></div>
+      </div>
+      <div class="game-val" style="color:#8888aa">29 / 66</div>
+    </div>
+    <div class="game-row">
+      <div class="game-name">eSport / compétitif</div>
+      <div class="game-bars">
+        <div class="game-bar bar-c" style="width:44%"></div>
+        <div class="game-bar bar-l" style="width:100%"></div>
+      </div>
+      <div class="game-val" style="color:#8888aa">20 / 45</div>
+    </div>
+    <div class="game-row">
+      <div class="game-name">LoL / TFT</div>
+      <div class="game-bars">
+        <div class="game-bar bar-c" style="width:100%"></div>
+        <div class="game-bar bar-l" style="width:83%"></div>
+      </div>
+      <div class="game-val" style="color:#8888aa">63 / 52</div>
+    </div>
+    <div class="game-row">
+      <div class="game-name">Codenames</div>
+      <div class="game-bars">
+        <div class="game-bar bar-c" style="width:100%"></div>
+        <div class="game-bar bar-l" style="width:1%"></div>
+      </div>
+      <div class="game-val" style="color:#8888aa">164 / 1</div>
+    </div>
+    <div class="game-row">
+      <div class="game-name">Dofus / Wakfu</div>
+      <div class="game-bars">
+        <div class="game-bar bar-c" style="width:42%"></div>
+        <div class="game-bar bar-l" style="width:100%"></div>
+      </div>
+      <div class="game-val" style="color:#8888aa">8 / 19</div>
+    </div>
+    <div class="game-row">
+      <div class="game-name">Vie IRL / quotidien</div>
+      <div class="game-bars">
+        <div class="game-bar bar-c" style="width:100%"></div>
+        <div class="game-bar bar-l" style="width:100%"></div>
+      </div>
+      <div class="game-val" style="color:#8888aa">44 / 44</div>
+    </div>
+    <p style="font-size:12px; color:#8888aa; margin-top:12px">
+      Codenames est l'univers exclusif de cryo (164 contre 1). Stream et esport sont le territoire de layvi. LoL et Dofus sont partagés. La vie IRL : égalité parfaite à 44/44 — leur seul terrain strictement symétrique.
+    </p>
+  </div>
+
+  <!-- Rôles -->
+  <div class="section-title">Les rôles dans la relation</div>
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="card purple">
+      <h3>cryoslinger dans la relation</h3>
+      <div class="roles">
+        <div class="role-item"><span class="role-arrow">→</span> Le répondant instantané : 1053 échanges &lt;3min</div>
+        <div class="role-item"><span class="role-arrow">→</span> L'organisateur de jeux de groupe (Codenames, Pummel…)</div>
+        <div class="role-item"><span class="role-arrow">→</span> L'archiviste de layvi ("LAYVI T'ES SUR MON LIVE")</div>
+        <div class="role-item"><span class="role-arrow">→</span> Celui qui maintient la relation après le déclin de layvi</div>
+        <div class="role-item"><span class="role-arrow">→</span> Le "Théo" de layvi — cryo est appelé par prénom, jamais par pseudo</div>
+      </div>
+    </div>
+    <div class="card amber">
+      <h3>layvi dans la relation</h3>
+      <div class="roles">
+        <div class="role-item"><span class="role-arrow amb">→</span> Le pourvoyeur de contenu : stream, esport, actu</div>
+        <div class="role-item"><span class="role-arrow amb">→</span> Le premier arrivé sur le serveur — il a précédé cryo</div>
+        <div class="role-item"><span class="role-arrow amb">→</span> Celui qui appelle cryo par son prénom ("Théo") — intimité différente, sans sobriquet</div>
+        <div class="role-item"><span class="role-arrow amb">→</span> L'excuseur chronique ("sorry", "j'arrive", "j'avais pas vu")</div>
+        <div class="role-item"><span class="role-arrow amb">→</span> Le premier à ralentir — cryo survit à son décrochage</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Le détail du prénom -->
+  <div class="section-title">Le prénom — une asymétrie révélatrice</div>
+  <div class="card slate" style="margin-bottom:20px">
+    <h3>Layvi dit "Théo". Cryo ne répond pas au prénom.</h3>
+    <p style="margin-bottom:10px">Layvi est la seule personne du groupe à utiliser régulièrement le <strong>prénom de cryo</strong> — "Théo". Pas de sobriquet, pas de variante : le prénom brut, de façon naturelle et récurrente. Quand "Thélio" apparaît, c'est le prénom du fils de cryo — preuve que layvi connaît la vie de Théo au-delà du serveur.</p>
+    <p style="margin-bottom:10px">Cryo, lui, n'a jamais inventé de surnom pour layvi. Pas de "lav", pas de "layv chan", rien. Layvi est mentionné par pseudo quand il l'est — et très rarement (3 fois en 7 ans par texte).</p>
+    <p style="font-size:12px; color:#8888aa">Interprétation : chez cryo, l'invention d'un sobriquet est un signe d'appropriation affective forte (cf. la mythologie "dod" pour dosinge). L'absence de sobriquet ne signifie pas l'indifférence — elle signifie que layvi est <em>déjà</em> quelqu'un, qu'il n'a pas besoin d'être réinventé.</p>
+  </div>
+
+  <!-- Citations -->
+  <div class="section-title">Citations qui définissent la relation</div>
+
+  <div class="quote">
+    <em>"putain il nous manque l'émote semoulina"</em>
+    <div class="quote-meta">cryoslinger — 2019-06-08 · Réponse à layvi sur les émotes Discord — échange banal, mais c'est le premier échange rapide documenté entre eux deux</div>
+  </div>
+  <div class="quote amber">
+    <em>"[CL]&lt;Layvi Haros&gt; JE SAIS PAS LIRE UNE CARTE / MAIS / MAIS / ESOFPKJSÖEJFES¨JKFES"</em>
+    <div class="quote-meta">cryoslinger — 2019-07-05 · Cryo copie un éclat de rire de layvi depuis un autre salon pour l'archiver ici. Première trace de la fonction "archiviste" de cryo envers layvi</div>
+  </div>
+  <div class="quote">
+    <em>"LAYVI T'ES SUR MON LIIIIVE"</em>
+    <div class="quote-meta">cryoslinger — 2020-05-01 · Cryo en direct, layvi passe sur son stream. Le cri en majuscules dit tout : c'est un événement</div>
+  </div>
+  <div class="quote amber">
+    <em>"Pour 10 euros vous chopez une carte légendaire le Cryobrum"</em>
+    <div class="quote-meta">layvi — 2020-03-26 · Layvi invente un objet fictif nommé d'après cryo dans un contexte de gacha. Seule création onomastique de layvi pour cryo — et c'est une carte de jeu, pas un surnom</div>
+  </div>
+  <div class="quote">
+    <em>"Ma boite vocale encore plus saturée que quand Théo m'appelle pour me réveiller en mode 'GO FAIRE BAHAMUT'"</em>
+    <div class="quote-meta">layvi — 2020-05-14 · Portrait involontaire de cryo : celui qui appelle pour forcer les sessions gaming, même le matin</div>
+  </div>
+  <div class="quote amber">
+    <em>"Ni un énième cauchemar où Théo m'annonce une nouvelle prophétie nous menant tout droit vers l'apocalypse"</em>
+    <div class="quote-meta">layvi — 2020-08-07 · Cryo comme prophète de mauvais augure. Layvi le voit comme quelqu'un qui dramatise, qui annonce, qui prédit</div>
+  </div>
+  <div class="quote">
+    <em>"Source : Vitel"</em>
+    <div class="quote-meta">layvi — 2023-07-19 · Réponse immédiate à un long copié-collé religieux de cryo. La sécheresse de la réplique est parfaite — et cryo n'a pas répondu</div>
+  </div>
+  <div class="quote amber">
+    <em>"<:cryon:782781286351503381>"</em>
+    <div class="quote-meta">layvi — 2020-12-27 · Layvi utilise un emoji personnalisé nommé "cryon" — preuve qu'un émoji à l'effigie de cryo a été créé sur le serveur</div>
+  </div>
+
+  <!-- Moments notables -->
+  <div class="section-title">Moments marquants</div>
+  <ul class="timeline">
+    <li>
+      <span class="tl-date">2019-06</span>
+      <span class="tl-author cryo">cryo</span>
+      <span class="tl-text">"putain il nous manque l'émote semoulina" — premier échange rapide entre les deux. Cryo répond à layvi en moins d'une minute. Le pattern est établi d'entrée.</span>
+    </li>
+    <li>
+      <span class="tl-date">2019-07</span>
+      <span class="tl-author cryo">cryo</span>
+      <span class="tl-text">Copie un pétage de plomb de layvi depuis un autre salon ("[CL]&lt;Layvi Haros&gt; JE SAIS PAS LIRE UNE CARTE"). Première archive. Cryo est déjà en train de documenter layvi.</span>
+    </li>
+    <li>
+      <span class="tl-date">2020-05</span>
+      <span class="tl-author cryo">cryo</span>
+      <span class="tl-text">"LAYVI T'ES SUR MON LIIIIVE" — cri de surprise en direct. Layvi apparaît dans le chat de son stream et cryo l'annonce au groupe comme une apparition.</span>
+    </li>
+    <li>
+      <span class="tl-date">2020-07</span>
+      <span class="tl-author layvi">layvi</span>
+      <span class="tl-text">"Dorion vasy doucement je suis nouveau" — layvi joue un rôle de nouvel arrivant fictif. Cryo répond instantanément : "oh oui durion sois doux avec semoule". Ils improvisent ensemble sans se concerter.</span>
+    </li>
+    <li>
+      <span class="tl-date">2020-08</span>
+      <span class="tl-author layvi">layvi</span>
+      <span class="tl-text">"Ni un énième cauchemar où Théo m'annonce une nouvelle prophétie nous menant tout droit vers l'apocalypse." Portrait de cryo en prophète : layvi voit chez lui quelqu'un d'alarmiste, de dramatique, d'intense.</span>
+    </li>
+    <li>
+      <span class="tl-date">2020-12</span>
+      <span class="tl-author layvi">layvi</span>
+      <span class="tl-text">Poste l'émoji &lt;:cryon:&gt; — un emoji custom à l'effigie de cryo existe sur le serveur. Layvi l'utilise seul, sans contexte. C'est une présence.</span>
+    </li>
+    <li>
+      <span class="tl-date">2023-07</span>
+      <span class="tl-author layvi">layvi</span>
+      <span class="tl-text">"Source : Vitel" — réponse en deux mots à un long texte religieux de cryo. La brièveté de layvi face à la profondeur de cryo. Ils ne se ressemblent pas, ils se complètent.</span>
+    </li>
+    <li>
+      <span class="tl-date">2025-04</span>
+      <span class="tl-author layvi">layvi</span>
+      <span class="tl-text">"Kakent qui va faire un barbeuc de tes testiboules si tu touches aux cheveux de Thélio" — layvi défend le fils de cryo par procuration. "Thélio" : le prénom du fils de Théo, pas un surnom pour cryo lui-même.</span>
+    </li>
+  </ul>
+
+  <!-- Verdict -->
+  <div class="verdict">
+    <h3>Verdict</h3>
+    <p>
+      La relation cryo/layvi est la plus difficile à caractériser du groupe précisément parce qu'elle <em>refuse la caractérisation</em>. Pas de mythologie, pas de sobriquets, pas de mentionne-moi-pour-que-j'existe. Juste 1 053 fois où l'un a répondu à l'autre en moins de trois minutes. Layvi est arrivé premier, cryo a suivi — et depuis, cryo est resté quand layvi a ralenti. La relation ne génère pas de récit spectaculaire ; elle génère de la <strong>continuité</strong>. Layvi appelle cryo "Théo" — le prénom, pas le personnage. Quand il mentionne "Thélio", c'est le fils de Théo qu'il défend, pas cryo lui-même — ce qui en dit long sur la profondeur de la connexion : layvi connaît la vie de cryo au-delà du serveur. Cryo n'invente rien pour layvi parce qu'il n'a pas besoin de l'inventer : layvi est déjà là, il n'a pas besoin d'être recréé. Entre eux, pas de tension, pas de hiérarchie, pas de dynamique de pouvoir. Juste deux types qui regardent le même canal, qui répondent au même rythme, et qui ont traversé sept ans sans que ça ait l'air d'un effort.
+    </p>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+const years = [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026];
+const cryoYear  = [0,   511,  2945, 1062, 830,  575,  429,  268,  58];
+const layviYear = [22,  982,  2457, 873,  390,  276,  208,  108,  30];
+
+const ctx1 = document.getElementById('activityChart').getContext('2d');
+new Chart(ctx1, {
+  type: 'line',
+  data: {
+    labels: years,
+    datasets: [
+      {
+        label: 'cryoslinger',
+        data: cryoYear,
+        borderColor: '#a78bfa',
+        backgroundColor: 'rgba(167,139,250,0.08)',
+        borderWidth: 2.5,
+        pointBackgroundColor: '#a78bfa',
+        pointRadius: 4,
+        fill: true, tension: 0.3
+      },
+      {
+        label: 'layvi',
+        data: layviYear,
+        borderColor: '#fbbf24',
+        backgroundColor: 'rgba(251,191,36,0.06)',
+        borderWidth: 2.5,
+        pointBackgroundColor: '#fbbf24',
+        pointRadius: 4,
+        fill: true, tension: 0.3
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { labels: { color: '#8888aa', font: { size: 12 }, boxWidth: 16 } },
+      tooltip: { backgroundColor: '#1a1a2e', borderColor: '#7c3aed', borderWidth: 1, titleColor: '#d4d4e8', bodyColor: '#8888aa' }
+    },
+    scales: {
+      x: { grid: { color: '#2a2a45' }, ticks: { color: '#666688' } },
+      y: { grid: { color: '#2a2a45' }, ticks: { color: '#666688' }, beginAtZero: true }
+    }
+  }
+});
+
+const hours = Array.from({length: 24}, (_, i) => `${i}h`);
+const cryoH  = [48,11,5,6,0,23,15,40,78,190,231,386,401,429,399,352,412,362,503,666,787,606,545,183];
+const layviH = [95,30,8,10,0,3,8,62,89,94,204,260,411,284,408,373,449,470,468,386,417,388,291,138];
+
+const ctx2 = document.getElementById('hourChart').getContext('2d');
+new Chart(ctx2, {
+  type: 'line',
+  data: {
+    labels: hours,
+    datasets: [
+      {
+        label: 'cryoslinger',
+        data: cryoH,
+        borderColor: '#a78bfa',
+        backgroundColor: 'rgba(167,139,250,0.07)',
+        borderWidth: 2, pointRadius: 2, fill: true, tension: 0.4
+      },
+      {
+        label: 'layvi',
+        data: layviH,
+        borderColor: '#fbbf24',
+        backgroundColor: 'rgba(251,191,36,0.06)',
+        borderWidth: 2, pointRadius: 2, fill: true, tension: 0.4
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { labels: { color: '#8888aa', font: { size: 12 }, boxWidth: 16 } },
+      tooltip: { backgroundColor: '#1a1a2e', borderColor: '#7c3aed', borderWidth: 1, titleColor: '#d4d4e8', bodyColor: '#8888aa' }
+    },
+    scales: {
+      x: { grid: { color: '#2a2a45' }, ticks: { color: '#666688', font: { size: 10 } } },
+      y: { grid: { color: '#2a2a45' }, ticks: { color: '#666688' }, beginAtZero: true }
+    }
+  }
+});
+</script>
+</body>
+</html>

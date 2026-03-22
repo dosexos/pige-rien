@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dosinge × cryoslinger — Analyse de la dynamique</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0f0f1a;
+    color: #d4d4e8;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #0d1f2d 50%, #1a1a2e 100%);
+    border-bottom: 2px solid #0f7a8a;
+    padding: 28px 36px 20px;
+  }
+  .header h1 { font-size: 22px; font-weight: 700; color: #fff; letter-spacing: 0.5px; }
+  .header .subtitle { font-size: 12px; color: #8888aa; margin-top: 5px; }
+  .header .subtitle span { color: #5eead4; font-weight: 600; }
+
+  .container { padding: 24px 36px; max-width: 1100px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+
+  .card { background: #1a1a2e; border: 1px solid #2a2a45; border-radius: 8px; padding: 18px; }
+  .card.teal   { border-color: #0f7a8a; background: #0a1f25; }
+  .card.orange { border-color: #c2410c; background: #1f1008; }
+  .card.yellow { border-color: #d4a017; background: #1e1a10; }
+  .card.slate  { border-color: #475569; background: #111827; }
+
+  .card h3 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .card.teal h3   { color: #5eead4; }
+  .card.orange h3 { color: #fb923c; }
+  .card.yellow h3 { color: #d4a017; }
+  .card.slate h3  { color: #94a3b8; }
+  .card p { font-size: 13px; color: #c4c4d8; }
+
+  .section-title {
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
+    color: #666688; margin: 28px 0 12px;
+    padding-bottom: 6px; border-bottom: 1px solid #2a2a45;
+  }
+
+  /* Stat bars */
+  .stat-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .stat-label { font-size: 12px; color: #8888aa; width: 130px; flex-shrink: 0; }
+  .stat-bar-wrap { flex: 1; background: #2a2a45; border-radius: 3px; height: 8px; overflow: hidden; }
+  .stat-bar-fill { height: 100%; border-radius: 3px; }
+  .bar-d { background: linear-gradient(90deg, #0f7a8a, #5eead4); }
+  .bar-c { background: linear-gradient(90deg, #7c2d12, #fb923c); }
+  .stat-val { font-size: 12px; font-weight: 700; width: 80px; text-align: right; color: #d4d4e8; }
+
+  /* Timeline */
+  .timeline { list-style: none; }
+  .timeline li { display: flex; gap: 12px; padding: 7px 0; border-bottom: 1px solid #1e1e38; font-size: 13px; }
+  .timeline li:last-child { border-bottom: none; }
+  .tl-date { font-size: 11px; color: #666688; width: 70px; flex-shrink: 0; padding-top: 1px; }
+  .tl-author { font-size: 11px; font-weight: 700; width: 90px; flex-shrink: 0; padding-top: 1px; }
+  .tl-author.dos  { color: #5eead4; }
+  .tl-author.cryo { color: #fb923c; }
+  .tl-text { color: #c4c4d8; flex: 1; }
+
+  /* Quotes */
+  .quote { background: #12121f; border-left: 3px solid #0f7a8a; padding: 10px 14px;
+    border-radius: 0 6px 6px 0; margin-bottom: 10px; font-size: 13px; color: #c4c4d8; font-style: italic; }
+  .quote.orange { border-color: #fb923c; }
+  .quote-meta { font-size: 11px; color: #666688; margin-top: 4px; font-style: normal; }
+
+  /* Role pills */
+  .roles { display: flex; flex-direction: column; gap: 6px; }
+  .role-item { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: #c4c4d8; line-height: 1.4; }
+  .role-arrow      { color: #5eead4; font-weight: 700; flex-shrink: 0; }
+  .role-arrow.org  { color: #fb923c; }
+
+  .chart-wrap { background: #12121f; border-radius: 6px; padding: 16px; margin-bottom: 20px; }
+
+  /* Asymmetry */
+  .asymmetry-bar { background: #2a2a45; border-radius: 4px; height: 20px; position: relative; overflow: hidden; margin: 12px 0; }
+  .asym-left  { position: absolute; left: 0; top: 0; bottom: 0; background: linear-gradient(90deg, #0f7a8a, #5eead4); border-radius: 4px 0 0 4px; }
+  .asym-right { position: absolute; right: 0; top: 0; bottom: 0; background: linear-gradient(270deg, #7c2d12, #fb923c); border-radius: 0 4px 4px 0; }
+  .asym-labels { display: flex; justify-content: space-between; font-size: 11px; color: #8888aa; margin-top: 4px; }
+
+  /* Mention grid */
+  .mention-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: center; margin: 16px 0; }
+  .mention-side { display: flex; flex-direction: column; gap: 6px; }
+  .mention-count { font-size: 36px; font-weight: 900; letter-spacing: -2px; }
+  .mention-label { font-size: 11px; color: #8888aa; }
+  .mention-arrow { text-align: center; font-size: 24px; color: #2a2a45; }
+
+  /* Jeux bar chart */
+  .game-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .game-name { font-size: 12px; color: #8888aa; width: 140px; flex-shrink: 0; }
+  .game-bars { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+  .game-bar { height: 8px; border-radius: 3px; }
+  .game-val { font-size: 11px; color: #666688; width: 50px; text-align: right; }
+
+  /* Nicknames */
+  .nicknames { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .nick {
+    background: #1a1a2e; border: 1px solid #2a2a45; border-radius: 20px;
+    padding: 3px 10px; font-size: 12px; color: #c4c4d8;
+  }
+  .nick.cryo-nick { border-color: #0f7a8a; color: #5eead4; }
+
+  /* Verdict */
+  .verdict {
+    background: linear-gradient(135deg, #0a1f25, #1f1008);
+    border: 1px solid #0f7a8a; border-right-color: #fb923c;
+    border-radius: 8px; padding: 20px 24px; margin-top: 24px;
+  }
+  .verdict h3 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #5eead4; margin-bottom: 10px; }
+  .verdict p  { font-size: 13px; color: #c4c4d8; line-height: 1.7; }
+
+  canvas { display: block; width: 100%; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>dosinge × cryoslinger — Analyse de la dynamique</h1>
+  <div class="subtitle">
+    Canal <span>#général</span> · 2019 → 2026 · 
+    <span>12 726 msgs dosinge</span> / <span>6 678 msgs cryoslinger</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Vue d'ensemble -->
+  <div class="section-title">Vue d'ensemble</div>
+  <div class="grid-2">
+    <div class="card teal">
+      <h3>L'ami qui t'appelle "Dorian" quand il t'insulte</h3>
+      <p>Cryoslinger est la seule personne du groupe qui utilise systématiquement le <strong>prénom</strong> de dosinge — "Dorian" — et particulièrement quand il le chambre, le rabroue ou l'affectionne. Ce n'est pas de la distance : c'est de la familiarité. "Dod", "dodent", "doderino", "mon dodent" — il a développé une mythologie onomastique entière autour d'un seul type.</p>
+    </div>
+    <div class="card orange">
+      <h3>Un rapport inversé par rapport à dosinge/espy</h3>
+      <p>Contrairement à la paire dosinge/espy où dosinge initie massivement, ici <strong>cryoslinger organise</strong>. C'est lui qui lance les parties de Codenames, les soirées MHW, les sessions "frotaj". Dosinge suit, participe, amplifie. La relation fonctionne sur un chef de bande silencieux (cryo) et un exécutant enthousiaste (dosinge).</p>
+    </div>
+  </div>
+
+  <!-- Graphique activité -->
+  <div class="section-title">Évolution de l'activité par année</div>
+  <div class="chart-wrap">
+    <canvas id="activityChart" height="200"></canvas>
+  </div>
+
+  <!-- Mentions croisées -->
+  <div class="section-title">Mentions croisées & asymétrie</div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="mention-grid">
+      <div class="mention-side">
+        <div class="mention-count" style="color:#5eead4">cryoslinger</div>
+        <div class="mention-label">mentionne dosinge par nom</div>
+        <div class="mention-count" style="font-size:28px; color:#5eead4">200+</div>
+        <div class="mention-label">"Dorian", "Dod", "dodent"…</div>
+        <p style="font-size:12px; color:#8888aa; margin-top:6px">Cryo est le seul à appeler dosinge par son prénom. Il a inventé une gamme complète de sobriquets : <em>dod, dodent, doderino, dodipied, dodal, dodogama, dodérinostar…</em> Chaque variation trahit un degré différent d'affection ou d'exaspération.</p>
+      </div>
+      <div class="mention-arrow">⇄</div>
+      <div class="mention-side" style="text-align:right">
+        <div class="mention-count" style="color:#fb923c">dosinge</div>
+        <div class="mention-label">mentionne cryo par nom</div>
+        <div class="mention-count" style="font-size:28px; color:#fb923c">35+</div>
+        <div class="mention-label">"cryo", "cryocuck"</div>
+        <p style="font-size:12px; color:#8888aa; margin-top:6px; text-align:right">Dosinge appelle cryo par son pseudo ou "cryocuck" (2020). Il n'invente pas de sobriquet propre à cryo — contrairement à cryo qui a construit une mythologie entière autour de "dod". Ironie : dosinge est nommé, jamais vraiment le nommeur.</p>
+      </div>
+    </div>
+    <div class="section-title" style="margin-top:8px">Qui convoque qui ?</div>
+    <div class="asymmetry-bar">
+      <div class="asym-left" style="width:40%"></div>
+      <div class="asym-right" style="width:55%"></div>
+    </div>
+    <div class="asym-labels">
+      <span>dosinge convoque (40%)</span>
+      <span>cryo organise (55%)</span>
+    </div>
+  </div>
+
+  <!-- Le lexique de cryo pour dosinge -->
+  <div class="section-title">Le panthéon de sobriquets de cryoslinger pour dosinge</div>
+  <div class="card slate" style="margin-bottom:20px">
+    <h3>Tous les noms inventés par cryo pour dosinge</h3>
+    <div class="nicknames">
+      <span class="nick cryo-nick">dod</span>
+      <span class="nick cryo-nick">dodent</span>
+      <span class="nick cryo-nick">doderino</span>
+      <span class="nick cryo-nick">dodipied</span>
+      <span class="nick cryo-nick">dodérinostar</span>
+      <span class="nick cryo-nick">dodal</span>
+      <span class="nick cryo-nick">dodogama</span>
+      <span class="nick cryo-nick">dodogomo</span>
+      <span class="nick cryo-nick">dod chan</span>
+      <span class="nick cryo-nick">dodounet</span>
+      <span class="nick cryo-nick">mon bebou dod</span>
+      <span class="nick cryo-nick">dod spinner</span>
+      <span class="nick cryo-nick">Benkedod</span>
+      <span class="nick cryo-nick">dodish egg</span>
+      <span class="nick cryo-nick">NOM CODOD</span>
+      <span class="nick">cryocuck</span>
+    </div>
+    <p style="margin-top:12px; font-size:12px; color:#8888aa">
+      Les variantes en <span style="color:#5eead4">teal</span> sont inventées par cryoslinger. Les grises sont de dosinge — qui ne trouve qu'un seul terme pour cryo, et encore, pas un sobriquet affectueux.
+      "Codod" fusionne "Codenames" (jeu favori de cryo) avec "dod" — l'onomastique comme stratégie d'appropriation affectueuse.
+    </p>
+  </div>
+
+  <!-- Statistiques comparées -->
+  <div class="section-title">Statistiques comparées</div>
+  <div style="background:#1a1a2e; border:1px solid #2a2a45; border-radius:8px; padding:18px; margin-bottom:20px">
+    <div class="stat-row">
+      <div class="stat-label">Total messages (général)</div>
+      <div class="stat-bar-wrap"><div class="stat-bar-fill bar-d" style="width:100%"></div></div>
+      <div class="stat-val" style="color:#5eead4">12 726</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-label"></div>
+      <div class="stat-bar-wrap"><div class="stat-bar-fill bar-c" style="width:52%"></div></div>
+      <div class="stat-val" style="color:#fb923c">6 678</div>
+    </div>
+    <div class="stat-row" style="margin-top:10px">
+      <div class="stat-label">Longueur moy. message</div>
+      <div class="stat-bar-wrap"><div class="stat-bar-fill bar-d" style="width:100%"></div></div>
+      <div class="stat-val" style="color:#5eead4">42,7 car</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-label"></div>
+      <div class="stat-bar-wrap"><div class="stat-bar-fill bar-c" style="width:71%"></div></div>
+      <div class="stat-val" style="color:#fb923c">30,3 car</div>
+    </div>
+    <div class="stat-row" style="margin-top:10px">
+      <div class="stat-label">Pic annuel</div>
+      <div class="stat-bar-wrap"><div class="stat-bar-fill bar-d" style="width:100%"></div></div>
+      <div class="stat-val" style="color:#5eead4">5 339 (2020)</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-label"></div>
+      <div class="stat-bar-wrap"><div class="stat-bar-fill bar-c" style="width:55%"></div></div>
+      <div class="stat-val" style="color:#fb923c">2 945 (2020)</div>
+    </div>
+    <div class="stat-row" style="margin-top:10px">
+      <div class="stat-label">Activité 2024 (inversion ?)</div>
+      <div class="stat-bar-wrap"><div class="stat-bar-fill bar-d" style="width:50%"></div></div>
+      <div class="stat-val" style="color:#5eead4">216</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-label"></div>
+      <div class="stat-bar-wrap"><div class="stat-bar-fill bar-c" style="width:100%"></div></div>
+      <div class="stat-val" style="color:#fb923c">429</div>
+    </div>
+    <div class="stat-row" style="margin-top:10px">
+      <div class="stat-label">Heure de pointe</div>
+      <div class="stat-bar-wrap"><div class="stat-bar-fill bar-d" style="width:85%"></div></div>
+      <div class="stat-val" style="color:#5eead4">20h (midi aussi)</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-label"></div>
+      <div class="stat-bar-wrap"><div class="stat-bar-fill bar-c" style="width:100%"></div></div>
+      <div class="stat-val" style="color:#fb923c">19h-22h</div>
+    </div>
+  </div>
+
+  <!-- Graphique activité horaire -->
+  <div class="section-title">Activité horaire — deux rythmes différents</div>
+  <div class="chart-wrap">
+    <canvas id="hourChart" height="180"></canvas>
+  </div>
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="card teal">
+      <h3>dosinge : le bimodal</h3>
+      <p>Double pic : midi (pause déjeuner au taf, études) et 20h (soirée gaming). Dosinge est présent toute la journée à faible intensité dès 7h, puis explose en soirée. Un schéma de vie sédentaire-hyperconnecté typique.</p>
+    </div>
+    <div class="card orange">
+      <h3>cryoslinger : le noctambule tardif</h3>
+      <p>Cryo est invisible le matin, monte progressivement à partir de 18h, culmine entre 19h et 21h, reste actif jusqu'à 22h-23h. Aucun pic de midi. C'est le profil classique du joueur qui vit la journée en décalé et arrive quand les autres sont déjà en game.</p>
+    </div>
+  </div>
+
+  <!-- Univers de jeux communs -->
+  <div class="section-title">Univers de jeux partagés — qui mène quoi ?</div>
+  <div style="background:#1a1a2e; border:1px solid #2a2a45; border-radius:8px; padding:18px; margin-bottom:20px">
+
+    <div class="game-row">
+      <div class="game-name">LoL / TFT</div>
+      <div class="game-bars">
+        <div class="game-bar bar-d" style="width:100%"></div>
+        <div class="game-bar bar-c" style="width:19%"></div>
+      </div>
+      <div class="game-val">336 / 63</div>
+    </div>
+    <div class="game-row">
+      <div class="game-name">Codenames</div>
+      <div class="game-bars">
+        <div class="game-bar bar-d" style="width:13%"></div>
+        <div class="game-bar bar-c" style="width:100%"></div>
+      </div>
+      <div class="game-val">20 / 181</div>
+    </div>
+    <div class="game-row">
+      <div class="game-name">Monster Hunter</div>
+      <div class="game-bars">
+        <div class="game-bar bar-d" style="width:100%"></div>
+        <div class="game-bar bar-c" style="width:54%"></div>
+      </div>
+      <div class="game-val">46 / 25</div>
+    </div>
+    <div class="game-row">
+      <div class="game-name">Dofus / Wakfu</div>
+      <div class="game-bars">
+        <div class="game-bar bar-d" style="width:100%"></div>
+        <div class="game-bar bar-c" style="width:13%"></div>
+      </div>
+      <div class="game-val">71 / 9</div>
+    </div>
+    <div class="game-row">
+      <div class="game-name">Terraria</div>
+      <div class="game-bars">
+        <div class="game-bar bar-d" style="width:100%"></div>
+        <div class="game-bar bar-c" style="width:2%"></div>
+      </div>
+      <div class="game-val">48 / 1</div>
+    </div>
+    <div class="game-row">
+      <div class="game-name">FFXIV</div>
+      <div class="game-bars">
+        <div class="game-bar bar-d" style="width:23%"></div>
+        <div class="game-bar bar-c" style="width:100%"></div>
+      </div>
+      <div class="game-val">3 / 13</div>
+    </div>
+    <p style="font-size:12px; color:#8888aa; margin-top:12px">
+      Lecture : dosinge est le roi du LoL/TFT et de Terraria — cryo les suit à distance. Cryo est le propriétaire de Codenames (×9 plus) et de FFXIV. MHW est leur terrain commun le plus équilibré. En somme : dosinge joue, cryo choisit les soirées.
+    </p>
+  </div>
+
+  <!-- Rôles -->
+  <div class="section-title">Les rôles dans la relation</div>
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="card teal">
+      <h3>cryoslinger dans la relation</h3>
+      <div class="roles">
+        <div class="role-item"><span class="role-arrow">→</span> L'inventeur de sobriquets (200+ mentions de "dod")</div>
+        <div class="role-item"><span class="role-arrow">→</span> L'organisateur de soirées ("ykk ce soir ? Codenames, Pummel…")</div>
+        <div class="role-item"><span class="role-arrow">→</span> Le commentateur acide ("Dorian est con", "tpabo dod")</div>
+        <div class="role-item"><span class="role-arrow">→</span> Le chaudement affectueux ("bonne nuit mon doderinou :3")</div>
+        <div class="role-item"><span class="role-arrow">→</span> L'arbitre ("Je sacre Dorian roi des fils de putes")</div>
+        <div class="role-item"><span class="role-arrow">→</span> Le remplaçant de dosinge en 2024 (son activité double celle de dod)</div>
+      </div>
+    </div>
+    <div class="card orange">
+      <h3>dosinge dans la relation</h3>
+      <div class="roles">
+        <div class="role-item"><span class="role-arrow org">→</span> Pas de sobriquet inventé pour cryo — il l'appelle par pseudo ou "cryocuck" (2020)</div>
+        <div class="role-item"><span class="role-arrow org">→</span> L'amplificateur : reprend les blagues de cryo, les escalade</div>
+        <div class="role-item"><span class="role-arrow org">→</span> Le subordonné gaming : suit les sessions lancées par cryo</div>
+        <div class="role-item"><span class="role-arrow org">→</span> La cible d'affection/chaos concentré de cryo</div>
+        <div class="role-item"><span class="role-arrow org">→</span> Celui qui finit les pavés de cryo ("la taf de dod")</div>
+        <div class="role-item"><span class="role-arrow org">→</span> En recul depuis 2022, cryo maintient la relation en vie</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phases -->
+  <div class="section-title">Les phases de la relation</div>
+  <div class="grid-3">
+    <div class="card yellow">
+      <h3>Phase I — Accélération (2019-2020)</h3>
+      <p>Cryo arrive sur le serveur 6 mois après dosinge. 2020 est leur pic commun (2945 vs 5339). Ils jouent ensemble à MHW, Barotrauma, Codenames, Factorio. Cryo commence à construire son vocabulaire autour de "dod". C'est la forge de la relation.</p>
+    </div>
+    <div class="card teal">
+      <h3>Phase II — Complicité (2021-2023)</h3>
+      <p>Le volume baisse, la densité reste. Les échanges deviennent plus ponctuels mais plus chargés : anniversary messages, "T'es si cruel dod", soirées séries. Cryo consolide son rôle de mémoire affective du groupe. C'est lui qui note, qui archive, qui commente.</p>
+    </div>
+    <div class="card orange">
+      <h3>Phase III — Inversion (2024-2026)</h3>
+      <p>En 2024, cryo (429 msgs) double dosinge (216). C'est lui qui ping, qui propose, qui relance. "Bon, Dod répond un truc intelligible", "Bonne nuit bébou". Dosinge s'est retiré du serveur ; cryo y reste et continue de mentionner son ami absent.</p>
+    </div>
+  </div>
+
+  <!-- Citations -->
+  <div class="section-title">Citations qui définissent la relation</div>
+
+  <div class="quote">
+    <em>"c'est l'heure de la sieste dorian, va dans ton panier"</em>
+    <div class="quote-meta">cryoslinger — 2019-09-29 · Le ton est posé dès le début : cryo traite dosinge comme un chien affectionné, avec la tendresse d'un maître</div>
+  </div>
+  <div class="quote">
+    <em>"Dorian, 23 ans, en chien sur des pixels"</em>
+    <div class="quote-meta">cryoslinger — 2019-10-08 · Portrait au vitriol, précis comme une fiche de police</div>
+  </div>
+  <div class="quote orange">
+    <em>"T'ES MA FEMME DORIAN"</em>
+    <div class="quote-meta">cryoslinger — 2020-05-29 · Le registre oscille sans prévenir entre chambre brutal et tendresse absolue</div>
+  </div>
+  <div class="quote">
+    <em>"bonne nuit mon doderinou :3"</em>
+    <div class="quote-meta">cryoslinger — 2021-02-23 · Doderinou avec un émoji :3 — le summum de la douceur de cryo, uniquement réservé à dosinge</div>
+  </div>
+  <div class="quote orange">
+    <em>"Chancla tier nonobstant «Groupe de Dosinge : 1 membre»"</em>
+    <div class="quote-meta">cryoslinger — 2023-09-13 · Réponse à une hiérarchie interne. Cryo classe dosinge en bas de tableau tout en immortalisant l'image du groupe de dod à 1 membre</div>
+  </div>
+  <div class="quote">
+    <em>"Je sacre Dorian roi des fils de putes"</em>
+    <div class="quote-meta">cryoslinger — 2023-09-29 · Couronnement officiel. Cryo est le seul à avoir le pouvoir de sacrer dosinge</div>
+  </div>
+  <div class="quote orange">
+    <em>"pardon dorian" / "je propose de promouvoir dorian au rang de capitaine monguôle"</em>
+    <div class="quote-meta">cryoslinger — 2020-05-07 · Les deux sur la même journée. L'excuse et la promotion sont dans le même mouvement</div>
+  </div>
+  <!-- Moments notables -->
+  <div class="section-title">Moments marquants</div>
+  <ul class="timeline">
+    <li>
+      <span class="tl-date">2019-10</span>
+      <span class="tl-author cryo">cryo</span>
+      <span class="tl-text">"Dorian, 23 ans, en chien sur des pixels" — premier portrait littéraire de dosinge. Cryo a compris très tôt qu'il avait affaire à un personnage.</span>
+    </li>
+    <li>
+      <span class="tl-date">2020-05</span>
+      <span class="tl-author cryo">cryo</span>
+      <span class="tl-text">En une journée : "pardon dorian" puis "je propose de promouvoir dorian au rang de capitaine monguôle". La dynamique cryo/dod en deux messages.</span>
+    </li>
+    <li>
+      <span class="tl-date">2020-08</span>
+      <span class="tl-author cryo">cryo</span>
+      <span class="tl-text">"On pisse tous sur dosinge le con" — annonce publique d'une hostilité collective qui n'engage que cryo. Personne ne suit.</span>
+    </li>
+    <li>
+      <span class="tl-date">2020-10</span>
+      <span class="tl-author cryo">cryo</span>
+      <span class="tl-text">Invente "NOM CODOD" (fusion de Codenames + dod) pour convoquer dosinge sur une partie. Cryo est le seul à avoir fusionné le nom d'un jeu avec le prénom d'un ami.</span>
+    </li>
+    <li>
+      <span class="tl-date">2021-02</span>
+      <span class="tl-author cryo">cryo</span>
+      <span class="tl-text">"bonne nuit mon doderinou :3" — pic de tendresse documenté. Utilisé à 23h après une session gaming. Le :3 n'apparaît nulle part ailleurs dans ses messages.</span>
+    </li>
+    <li>
+      <span class="tl-date">2022-11</span>
+      <span class="tl-author cryo">cryo</span>
+      <span class="tl-text">"J'aime dorian mon meilleur ami depuis la primaire" — déclaration solennelle, probablement irronique dans le ton, sincère dans le fond.</span>
+    </li>
+    <li>
+      <span class="tl-date">2023-09</span>
+      <span class="tl-author cryo">cryo</span>
+      <span class="tl-text">"hier ça a fait six mois que Dod n'est pas sorti" — cryo tient le comptage des absences de dosinge. Il est le chroniqueur officiel de la vie sociale de son ami.</span>
+    </li>
+    <li>
+      <span class="tl-date">2025-09</span>
+      <span class="tl-author cryo">cryo</span>
+      <span class="tl-text">"JOYEUX ANNIVERSAIRE MON BEBOU" — message d'anniversaire. Cryo, le moins démonstratif du groupe, réserve ses élans au dosinge annuel.</span>
+    </li>
+  </ul>
+
+  <!-- Verdict -->
+  <div class="verdict">
+    <h3>Verdict</h3>
+    <p>
+      Cryoslinger a construit autour de dosinge une cosmologie entière : des sobriquets (dod, dodent, doderino, dodipied…), des cérémonies (le sacre des fils de putes, le couronnement de capitaine monguôle), un comptage obsessionnel des absences. C'est la forme la plus haute d'attention qu'un ami introverti puisse offrir — non pas des mots doux, mais une <em>nomenclature</em>. De son côté, dosinge n'invente aucun sobriquet propre à cryo : il reprend <strong>semoule</strong> — le surnom de layvi — sans jamais en expliquer l'usage. Deux asymétries qui se complètent parfaitement : cryo surcharge d'onomastique, dosinge recycle un mot qui n'appartient même pas à leur duo. L'un archive l'autre dans un musée personnel ; l'autre l'atteint par ricochet, via un tiers. En 2024, quand dosinge s'est retiré, cryo a continué à le mentionner — à posteriorité, en son absence. Il y a là quelque chose qui ressemble à de la fidélité.
+    </p>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+// Activité par année
+const years = [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026];
+const dosingeYear = [2650, 5339, 2053, 1499, 588, 216, 296, 85];
+const cryoYear    = [511,  2945, 1062, 830,  575, 429, 268, 58];
+
+const ctx1 = document.getElementById('activityChart').getContext('2d');
+new Chart(ctx1, {
+  type: 'bar',
+  data: {
+    labels: years,
+    datasets: [
+      {
+        label: 'dosinge',
+        data: dosingeYear,
+        backgroundColor: 'rgba(94,234,212,0.6)',
+        borderColor: '#5eead4',
+        borderWidth: 1.5,
+        borderRadius: 3,
+      },
+      {
+        label: 'cryoslinger',
+        data: cryoYear,
+        backgroundColor: 'rgba(251,146,60,0.6)',
+        borderColor: '#fb923c',
+        borderWidth: 1.5,
+        borderRadius: 3,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { labels: { color: '#8888aa', font: { size: 12 }, boxWidth: 16 } },
+      tooltip: { backgroundColor: '#1a1a2e', borderColor: '#0f7a8a', borderWidth: 1, titleColor: '#d4d4e8', bodyColor: '#8888aa' }
+    },
+    scales: {
+      x: { grid: { color: '#2a2a45' }, ticks: { color: '#666688' } },
+      y: { grid: { color: '#2a2a45' }, ticks: { color: '#666688' }, beginAtZero: true }
+    }
+  }
+});
+
+// Activité horaire
+const hours = Array.from({length: 24}, (_, i) => `${i}h`);
+const dosingeHour = [89,33,5,9,1,18,41,204,287,371,449,831,963,950,895,841,813,794,976,961,1265,849,699,382];
+const cryoHour    = [48,11,5,6,0,23,15,40,78,190,231,386,401,429,399,352,412,362,503,666,787,606,545,183];
+
+const ctx2 = document.getElementById('hourChart').getContext('2d');
+new Chart(ctx2, {
+  type: 'line',
+  data: {
+    labels: hours,
+    datasets: [
+      {
+        label: 'dosinge',
+        data: dosingeHour,
+        borderColor: '#5eead4',
+        backgroundColor: 'rgba(94,234,212,0.07)',
+        borderWidth: 2,
+        pointRadius: 2,
+        fill: true,
+        tension: 0.4
+      },
+      {
+        label: 'cryoslinger',
+        data: cryoHour,
+        borderColor: '#fb923c',
+        backgroundColor: 'rgba(251,146,60,0.07)',
+        borderWidth: 2,
+        pointRadius: 2,
+        fill: true,
+        tension: 0.4
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { labels: { color: '#8888aa', font: { size: 12 }, boxWidth: 16 } },
+      tooltip: { backgroundColor: '#1a1a2e', borderColor: '#0f7a8a', borderWidth: 1, titleColor: '#d4d4e8', bodyColor: '#8888aa' }
+    },
+    scales: {
+      x: { grid: { color: '#2a2a45' }, ticks: { color: '#666688', font: { size: 10 } } },
+      y: { grid: { color: '#2a2a45' }, ticks: { color: '#666688' }, beginAtZero: true }
+    }
+  }
+});
+</script>
+</body>
+</html>

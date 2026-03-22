@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L'Arc Pishot — Été 2020</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #18181f;
+    --border: #2a2a3a;
+    --text: #c8c8d8;
+    --muted: #666680;
+    --accent: #e8c87a;
+    --red: #e05555;
+    --teal: #5eead4;
+    --purple: #a78bfa;
+    --orange: #fb923c;
+    --green: #4ade80;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── INTRO CINÉMATIQUE ── */
+  .cold-open {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 60px 40px;
+    position: relative;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(232,200,122,0.04) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(94,234,212,0.03) 0%, transparent 50%),
+      var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .cold-open::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(255,255,255,0.005) 2px,
+      rgba(255,255,255,0.005) 4px
+    );
+    pointer-events: none;
+  }
+
+  .series-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+  }
+
+  .cold-open h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(42px, 8vw, 88px);
+    font-weight: 900;
+    line-height: 1;
+    color: #fff;
+    margin-bottom: 8px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.5s;
+  }
+
+  .cold-open h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .cold-open .subtitle {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(14px, 2vw, 18px);
+    font-style: italic;
+    color: var(--muted);
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.8s;
+  }
+
+  .cold-open .meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+    justify-content: center;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 1.1s;
+  }
+  .cold-open .meta span { color: var(--accent); }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 32px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    animation: pulse 2s ease infinite;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards 2s, pulse 2s ease infinite 2s;
+  }
+
+  /* ── CONTAINER ── */
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* ── ACTES ── */
+  .act {
+    padding: 80px 0 0;
+  }
+
+  .act-header {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    margin-bottom: 48px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .act-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 11px;
+    font-style: italic;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+
+  .act-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 4vw, 32px);
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+  }
+
+  .act-period {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  /* ── PROSE NARRATIVE ── */
+  .prose {
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--text);
+    margin-bottom: 32px;
+  }
+  .prose strong { color: #fff; font-weight: 500; }
+  .prose em { color: var(--accent); font-style: italic; }
+
+  /* ── SCÈNES ── */
+  .scene {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px 28px;
+    margin: 28px 0;
+    position: relative;
+  }
+
+  .scene::before {
+    content: attr(data-label);
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: var(--bg2);
+    padding: 0 8px;
+    color: var(--muted);
+  }
+
+  .scene.tension::before { color: var(--red); }
+  .scene.reveal::before  { color: var(--accent); }
+  .scene.comedy::before  { color: var(--green); }
+  .scene.climax::before  { color: #fff; }
+
+  .scene.tension { border-color: rgba(224,85,85,0.2); }
+  .scene.reveal  { border-color: rgba(232,200,122,0.2); }
+  .scene.comedy  { border-color: rgba(74,222,128,0.15); }
+  .scene.climax  { border-color: rgba(255,255,255,0.2); background: #14141f; }
+
+  /* ── MESSAGES IN-UNIVERSE ── */
+  .msg-thread {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 16px 0;
+  }
+
+  .msg {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .msg-avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .msg-body { flex: 1; }
+  .msg-author {
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+  .msg-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: #b0b0c8;
+    line-height: 1.5;
+    background: var(--bg3);
+    border-radius: 3px;
+    padding: 8px 12px;
+    border-left: 2px solid var(--border);
+  }
+  .msg-time {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 2px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .av-dosinge  { background: #2a1a5a; color: #a78bfa; }
+  .av-espy     { background: #0a2030; color: #5eead4; }
+  .av-layvi    { background: #2a1f05; color: #fbbf24; }
+  .av-cryo     { background: #2a1205; color: #fb923c; }
+  .av-dadai    { background: #2a0a0a; color: #e05555; }
+
+  .col-dosinge { color: #a78bfa; }
+  .col-espy    { color: #5eead4; }
+  .col-layvi   { color: #fbbf24; }
+  .col-cryo    { color: #fb923c; }
+  .col-dadai   { color: #e05555; }
+
+  /* ── CITATIONS MARQUANTES ── */
+  .pull-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(18px, 3vw, 24px);
+    font-style: italic;
+    color: var(--accent);
+    border-left: 3px solid var(--accent);
+    padding: 16px 0 16px 24px;
+    margin: 36px 0;
+    line-height: 1.4;
+  }
+  .pull-quote .attr {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-style: normal;
+    color: var(--muted);
+    margin-top: 10px;
+    letter-spacing: 1px;
+  }
+
+  /* ── FICHES PERSONNAGES ── */
+  .cast {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 32px 0;
+  }
+  @media (max-width: 600px) { .cast { grid-template-columns: 1fr; } }
+
+  .cast-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 16px 18px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .cast-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; flex-shrink: 0;
+  }
+  .cast-name {
+    font-size: 13px; font-weight: 700; margin-bottom: 2px;
+  }
+  .cast-role {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; color: var(--muted); letter-spacing: 1px;
+    text-transform: uppercase; margin-bottom: 6px;
+  }
+  .cast-desc { font-size: 12px; color: #9999aa; line-height: 1.5; }
+
+  /* ── TIMELINE ── */
+  .timeline {
+    position: relative;
+    padding-left: 28px;
+    margin: 32px 0;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 6px; top: 0; bottom: 0;
+    width: 1px;
+    background: var(--border);
+  }
+  .tl-item {
+    position: relative;
+    margin-bottom: 24px;
+  }
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -25px;
+    top: 6px;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--border);
+    border: 2px solid var(--bg);
+  }
+  .tl-item.key::before { background: var(--accent); }
+  .tl-item.climax-point::before { background: var(--red); }
+
+  .tl-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; color: var(--accent); letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .tl-content { font-size: 13px; color: var(--text); line-height: 1.6; }
+
+  /* ── ÉPILOGUE ── */
+  .epilogue {
+    padding: 80px 0;
+    text-align: center;
+    border-top: 1px solid var(--border);
+    margin-top: 80px;
+  }
+  .epilogue h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-style: italic;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+  .epilogue p {
+    font-size: 14px;
+    color: var(--muted);
+    max-width: 560px;
+    margin: 0 auto 16px;
+    line-height: 1.8;
+  }
+  .final-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-style: italic;
+    color: var(--text);
+    margin: 40px auto;
+    max-width: 560px;
+    line-height: 1.5;
+  }
+  .fin {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--muted);
+    margin-top: 48px;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 48px 0;
+    color: var(--border);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--muted);
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50%       { opacity: 1; }
+  }
+
+  /* ── STAT BOXES ── */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 28px 0;
+  }
+  @media (max-width: 600px) { .stat-row { grid-template-columns: 1fr; } }
+  .stat-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 16px;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* ── DÉMISSION BOX ── */
+  .resignation-box {
+    background: #0f0808;
+    border: 1px solid var(--red);
+    border-radius: 4px;
+    padding: 28px 32px;
+    margin: 32px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .resignation-box::before {
+    content: 'DOCUMENT OFFICIEL';
+    position: absolute;
+    top: -1px; right: -1px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    background: var(--red);
+    color: #fff;
+    padding: 3px 10px;
+  }
+  .resignation-box h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-style: italic;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  .resignation-box p {
+    font-size: 13px;
+    color: #b0a0a0;
+    line-height: 1.7;
+  }
+  .resignation-sigs {
+    display: flex;
+    gap: 24px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(224,85,85,0.2);
+    flex-wrap: wrap;
+  }
+  .sig {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ COLD OPEN ══ -->
+<div class="cold-open">
+  <div class="series-label">Discordeum · Archives 2020 · Été</div>
+  <h1>L'Arc <em>Pishot</em></h1>
+  <div class="subtitle">Une histoire de coaching, de botlane, et de lettres de démission sous PDF</div>
+  <div class="meta">
+    <div>Période <span>Avril — Septembre 2020</span></div>
+    <div>Durée <span>~5 mois</span></div>
+    <div>Occurrences <span>82 messages</span></div>
+    <div>Issue <span>Démission collective</span></div>
+  </div>
+  <div class="scroll-hint">↓ scroll</div>
+</div>
+
+<div class="container">
+
+  <!-- ══ PERSONNAGES ══ -->
+  <div class="act">
+    <div class="act-header">
+      <div class="act-number">Distribution</div>
+      <div class="act-title">Les protagonistes</div>
+    </div>
+
+    <div class="cast">
+      <div class="cast-card">
+        <div class="cast-avatar av-layvi">L</div>
+        <div>
+          <div class="cast-name col-layvi">layvi</div>
+          <div class="cast-role">Joueur · Capitaine de facto</div>
+          <div class="cast-desc">Intégré en premier dans la structure. Intermédiaire naturel entre pishot et le groupe. Écrira le "pavé César" final.</div>
+        </div>
+      </div>
+      <div class="cast-card">
+        <div class="cast-avatar av-dosinge">D</div>
+        <div>
+          <div class="cast-name col-dosinge">dosinge</div>
+          <div class="cast-role">Analyste → Joueur</div>
+          <div class="cast-desc">Recruté comme analyste/coach. Écrira des pavés de review que personne n'appliquera. Son calvaire sera le moteur de l'arc.</div>
+        </div>
+      </div>
+      <div class="cast-card">
+        <div class="cast-avatar av-espy">E</div>
+        <div>
+          <div class="cast-name col-espy">espy</div>
+          <div class="cast-role">Joueur · Commentateur extérieur</div>
+          <div class="cast-desc">Intègre la team A. Fournit le recul analytique et les analogies cinglantes. "dadai : le staff qui fait n'importe quoi."</div>
+        </div>
+      </div>
+      <div class="cast-card">
+        <div class="cast-avatar av-dadai">🏢</div>
+        <div>
+          <div class="cast-name col-dadai">Dadai</div>
+          <div class="cast-role">Co-fondatrice · Manager Pishot</div>
+          <div class="cast-desc">Dirigeante de la structure. Personnage absent du canal mais omniprésent dans les conversations. Figure du corporate kafkaïen.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-box">
+        <div class="stat-num">5</div>
+        <div class="stat-label">Mois d'arc</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">3</div>
+        <div class="stat-label">Lettres de démission PDF</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">∞</div>
+        <div class="stat-label">Pavés ignorés</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider">· · ·</div>
+
+  <!-- ══ ACTE I ══ -->
+  <div class="act">
+    <div class="act-header">
+      <div class="act-number">Acte I</div>
+      <div class="act-title">Le recrutement</div>
+      <div class="act-period">AVR — MAI 2020</div>
+    </div>
+
+    <p class="prose">
+      Le contexte est simple : <strong>confinement, 2020</strong>. Layvi joue depuis un moment dans la structure pishot, une organisation d'esport amateur sur League of Legends. Pishot est divisée en plusieurs équipes — Team A, Team B, Team C — avec un staff composé de managers, community managers et player managers dont la bureaucratie va rapidement devenir le personnage principal de l'histoire.
+    </p>
+
+    <p class="prose">
+      En avril, cryo est en scrim avec Dadai. En mai, dosinge entre dans l'histoire. Dadai lui envoie un message de recrutement formel : elle veut l'intégrer comme analyste et coach de la Team A. La proposition semble honnête. Dosinge accepte.
+    </p>
+
+    <div class="scene reveal" data-label="Document — Recrutement officiel">
+      <div class="msg-thread">
+        <div class="msg">
+          <div class="msg-avatar av-dadai">🏢</div>
+          <div class="msg-body">
+            <div class="msg-author col-dadai">Dadai68 · Fonda πshot</div>
+            <div class="msg-text">Coucou ! Veux-tu que je te décrive dans #coaching esport sur mon serveur ? Si oui, t'as une description de toi ? Ton âge (si tu veux), ce que tu préfères ? (review après les games, coaching en direct), coaching personnel et ou de team etc ? Tu veux que j'indique "main team A" ? Et Op.gg maybe</div>
+            <div class="msg-time">11 mai 2020 · 17:54</div>
+          </div>
+        </div>
+        <div class="msg">
+          <div class="msg-avatar av-espy">E</div>
+          <div class="msg-body">
+            <div class="msg-author col-espy">espy</div>
+            <div class="msg-text">Description : oui oui le coach</div>
+            <div class="msg-time">11 mai 2020 · 17:52</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="prose">
+      Espy, qui observe depuis le début, résume la situation en quatre mots. Le ton est donné. Mais dosinge s'y met sérieusement — il commence à watch les replays, à prendre des notes, à rédiger des analyses de botlane. Ses premiers retours sont détaillés, précis, parfois sur plusieurs messages. Il est le seul à regarder avec attention. Et personne n'applique quoi que ce soit.
+    </p>
+
+    <div class="pull-quote">
+      "J'aurais bien uninstall mais on doit COACH 🙂"
+      <span class="attr">dosinge — 11 mai 2020, 23:26</span>
+    </div>
+
+    <p class="prose">
+      De son côté, espy commence à percevoir le fonctionnement réel de la structure. Pishot recrute 25 coachs pour dire "oui oui bien joué". La botlane de la Team A est décrite comme des "bots intermédiaires". Dosinge regarde les replays et écrit des romains analytiques que personne ne lit. La machinerie pishot tourne — mais dans le vide.
+    </p>
+  </div>
+
+  <div class="divider">· · ·</div>
+
+  <!-- ══ ACTE II ══ -->
+  <div class="act">
+    <div class="act-header">
+      <div class="act-number">Acte II</div>
+      <div class="act-title">Le corporate</div>
+      <div class="act-period">JUIN — JUILLET 2020</div>
+    </div>
+
+    <p class="prose">
+      L'été commence et avec lui, la véritable nature de pishot se révèle. La structure est <em>massivement bureaucratique</em> pour ce qu'elle est. Chaque décision passe par une chaîne de validation qui implique la player manager, la community manager et le HM pishot. Organiser un flex prend des jours de négociation. Layvi commence à parler de "réponses corporates" pour décrire les messages de Dadai.
+    </p>
+
+    <div class="scene tension" data-label="Scène · Juillet 2020">
+      <div class="msg-thread">
+        <div class="msg">
+          <div class="msg-avatar av-layvi">L</div>
+          <div class="msg-body">
+            <div class="msg-author col-layvi">layvi</div>
+            <div class="msg-text">Je répond à dadai ou pas xd ?</div>
+            <div class="msg-time">8 juillet 2020 · 12:31</div>
+          </div>
+        </div>
+        <div class="msg">
+          <div class="msg-avatar av-espy">E</div>
+          <div class="msg-body">
+            <div class="msg-author col-espy">espy</div>
+            <div class="msg-text">Et twil demande lui si ses propositions ont été approuvées par la player manager, la community manager et le HM pishot</div>
+            <div class="msg-time">8 juillet 2020 · 12:43</div>
+          </div>
+        </div>
+        <div class="msg">
+          <div class="msg-avatar av-layvi">L</div>
+          <div class="msg-body">
+            <div class="msg-author col-layvi">layvi</div>
+            <div class="msg-text">Mec je go dans le tournois panthéon au moins là bas y aura pas besoin de voir l'orga en interne et attendre la réponse de 800 personnes</div>
+            <div class="msg-time">8 juillet 2020 · 12:49</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="prose">
+      En juillet, un nouveau coach débarque — un inconnu qui insulte les joueurs sans donner d'explications et sabote le travail du coach de la Team B. Layvi documente tout. La Team A est résumée sans appel : <strong>"Team A → Inexistant"</strong>. Le roster fait de l'eau de toutes parts. Un membre profite des vacances de Dadai pour tenter un coup d'état interne. Cryo observe depuis le Discordeum et commente : <em>"ces feux de l'amour version pishot."</em>
+    </p>
+
+    <div class="pull-quote">
+      "Aaaaaaah bah super on se croirait team pishot niveau communication"
+      <span class="attr">dosinge — 12 juillet 2020</span>
+    </div>
+
+    <p class="prose">
+      Le problème fondamental émerge clairement : dosinge écrit des analyses que personne ne lit, propose des changements que personne n'applique, suggère des modifications de roster que Dadai ignore. Espy le formule avec la précision d'un chirurgien :
+    </p>
+
+    <div class="scene reveal" data-label="Analyse · Espy">
+      <div class="msg-thread">
+        <div class="msg">
+          <div class="msg-avatar av-espy">E</div>
+          <div class="msg-body">
+            <div class="msg-author col-espy">espy</div>
+            <div class="msg-text">dadai : le staff qui fait n'importe quoi, comprend même pas les tenants et aboutissants de la chose mais refuse de changer même quand ceux qui savent de quoi ils parlent lui exposent la véritax</div>
+            <div class="msg-time">27 août 2020 · 17:14</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider">· · ·</div>
+
+  <!-- ══ ACTE III ══ -->
+  <div class="act">
+    <div class="act-header">
+      <div class="act-number">Acte III</div>
+      <div class="act-title">Point de rupture</div>
+      <div class="act-period">AOÛT 2020</div>
+    </div>
+
+    <p class="prose">
+      Août est le mois de toutes les tensions. Dadai prévoit un tournoi inter-pishot deux semaines à l'avance et réalise que les équipes sont, selon layvi, des <em>"gruyères ambulants"</em>. Elle exige que tout le monde sacrifie sa vie IRL pour des matchs. La réponse de layvi dans le Discordeum est concise : <strong>"Oui Dadai on va tous dire fuck notre vie IRL pour faire des matchs LoL pichotte."</strong>
+    </p>
+
+    <p class="prose">
+      Dosinge, de son côté, touche le fond analytique. Il rédige des pavés détaillés sur la botlane — position par position, erreur par erreur. Personne n'applique. Il continue quand même. La situation est absurde : il coache une équipe qui refuse d'être coachée, dans une structure qui refuse de reconnaître qu'elle a besoin de changements.
+    </p>
+
+    <div class="scene tension" data-label="Point de rupture · Dosinge">
+      <div class="msg-thread">
+        <div class="msg">
+          <div class="msg-avatar av-dosinge">D</div>
+          <div class="msg-body">
+            <div class="msg-author col-dosinge">dosinge</div>
+            <div class="msg-text">Je veux juste un putain de carry avec moi pour os le premier qui vient — la seule personne que j'ai: DADAI</div>
+            <div class="msg-time">23 août 2020 · 21:08</div>
+          </div>
+        </div>
+        <div class="msg">
+          <div class="msg-avatar av-dosinge">D</div>
+          <div class="msg-body">
+            <div class="msg-author col-dosinge">dosinge</div>
+            <div class="msg-text">Et sinon moi je vous propose de lancer un ultimatum à dadai. Soit elle se calme sur les trucs corporate</div>
+            <div class="msg-time">2 septembre 2020 · 10:10</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="prose">
+      Le 23 août, espy sent que ça ne peut plus durer : <em>"Jps la démission pishot ça va pas tarder."</em> Le 25 août, dosinge célèbre avec soulagement un week-end sans obligation pishot : <strong>"Quel plaisir de pouvoir dire à dadai d'aller niquer ses morts ce week-end."</strong> Les comptes sont en train de se régler — il ne reste qu'à trouver la forme.
+    </p>
+
+    <div class="pull-quote">
+      "Jps la démission pishot ça va pas tarder."
+      <span class="attr">espy — 23 août 2020 · Prophétie à 10 jours d'avance</span>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-date">17 AOÛT</div>
+        <div class="tl-content">Reu capitaine — layvi brief le groupe sur les "projets futurs" de pishot (web TV, objectifs de teams). Il ajoute en passant que Dadai n'a toujours pas compris que l'ult Leona ne stun qu'au centre.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">19 AOÛT</div>
+        <div class="tl-content">Espy : "l'art de rendre corpo la moindre chose." Dosinge : "faut qu'on arrête de rester dix ans sur le vocal du serv dadai."</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">21 AOÛT</div>
+        <div class="tl-content">Layvi rapporte que Dadai est "pas contente" parce que les équipes sont des gruyères ambulants. Layvi commente : "Oui Dadai on va tous dire fuck notre vie IRL."</div>
+      </div>
+      <div class="tl-item key">
+        <div class="tl-date">23 AOÛT</div>
+        <div class="tl-content">Espy prédit la démission. Layvi confirme que "le pavé César va tomber". La décision est prise collectivement, implicitement.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">27 AOÛT</div>
+        <div class="tl-content">Espy livre son portrait final de Dadai. Dosinge annonce qu'il va "la faire imploser". Le ton est au bilan, plus à la patience.</div>
+      </div>
+      <div class="tl-item key">
+        <div class="tl-date">2 SEPT · MATIN</div>
+        <div class="tl-content">Layvi révèle avoir écrit un "pavé César" à Dadai la veille. Dosinge propose un ultimatum officiel. Les trois sont coordonnés sans se le dire explicitement.</div>
+      </div>
+      <div class="tl-item climax-point">
+        <div class="tl-date">2 SEPT · 22H10</div>
+        <div class="tl-content">Cryoslinger, depuis le Discordeum : "Bordel ces lettres de démission." Les trois PDF sont tombés.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider">· · ·</div>
+
+  <!-- ══ ACTE IV — LE CLIMAX ══ -->
+  <div class="act">
+    <div class="act-header">
+      <div class="act-number">Acte IV</div>
+      <div class="act-title">Les lettres</div>
+      <div class="act-period">2 SEPTEMBRE 2020 · NUIT</div>
+    </div>
+
+    <p class="prose">
+      Le 2 septembre 2020, layvi passe une séance de coaching dans l'après-midi — probablement la dernière. À 14h, dosinge annonce qu'il se mute pour "go coaching trio". À 15h26 : "Bon coaching terminax." À 17h18, layvi prononce sa dernière ligne en tant que membre pishot : <strong>"Pour le fin mot de pishot."</strong>
+    </p>
+
+    <p class="prose">
+      Le soir, les trois envoient leurs lettres de démission. En PDF. Humoristiques. Simultanées.
+    </p>
+
+    <div class="resignation-box">
+      <h3>Démissions simultanées — 2 septembre 2020</h3>
+      <p>
+        Layvi, dosinge et espy ont chacun rédigé et envoyé une lettre de démission formelle à pishot, sous format PDF, le soir du 2 septembre 2020. Le ton était humoristique — la forme bureaucratique retournée contre la bureaucratie elle-même. Trois lettres, une seule nuit, aucune concertation officielle au préalable dans le Discordeum. La seule trace côté serveur : cryoslinger, qui discover les messages à 22h10.
+      </p>
+      <div class="resignation-sigs">
+        <div class="sig col-layvi">layvi, joueur Team A</div>
+        <div class="sig col-dosinge">dosinge, analyste & joueur</div>
+        <div class="sig col-espy">espy, joueur Team A</div>
+      </div>
+    </div>
+
+    <div class="scene climax" data-label="Réaction · Le Discordeum apprend la nouvelle">
+      <div class="msg-thread">
+        <div class="msg">
+          <div class="msg-avatar av-cryo">C</div>
+          <div class="msg-body">
+            <div class="msg-author col-cryo">cryoslinger</div>
+            <div class="msg-text">Bordel ces lettres de démission</div>
+            <div class="msg-time">2 septembre 2020 · 22:10</div>
+          </div>
+        </div>
+        <div class="msg">
+          <div class="msg-avatar av-cryo">C</div>
+          <div class="msg-body">
+            <div class="msg-author col-cryo">cryoslinger</div>
+            <div class="msg-text">Braconnier team Aled</div>
+            <div class="msg-time">2 septembre 2020 · 22:10</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="prose">
+      Le lendemain matin, le calme de l'après-bataille. Layvi ouvre les hostilités avec une philosophie tranquille : <em>"ça fait quoi le premier jour sans pishot issou"</em>, suivi de : <strong>"On se sent plus trop esport ni corporate là."</strong> Dosinge, lui, ne peut s'empêcher d'enfoncer le clou — il contacte Dadai une dernière fois juste pour le plaisir, et revient rapporter : <em>"J'ai encore clowned dadai c'était trop tentant."</em>
+    </p>
+
+    <div class="pull-quote">
+      "Profite mec c'est un paiement différé pour tout le temps que pishot nous a dérobé."
+      <span class="attr">espy à layvi — 9 septembre 2020, au sujet d'un coach pishot qui proposait encore des reviews</span>
+    </div>
+  </div>
+
+  <!-- ══ ÉPILOGUE ══ -->
+  <div class="epilogue">
+    <h2>Épilogue</h2>
+    <p>
+      Pishot survivra quelque temps comme référence culturelle dans le Discordeum. Le mot "pishot" devient un adjectif : désorganisé, kafkaïen, inutilement corporate. "On se croirait team pishot niveau communication" devient une insulte de fond, convoquée chaque fois qu'une coordination dysfonctionne.
+    </p>
+    <p>
+      Dadai réapparaîtra dans les conversations jusqu'en 2022, mais toujours comme fantôme — une mention, un lien twitch, une référence. La structure pishot, elle, continue son chemin dans la stratosphère d'un esport amateur qui se prend au sérieux.
+    </p>
+    <p>
+      Les trois lettres de démission PDF n'ont pas été partagées dans le Discordeum. Leur contenu exact reste inconnu. Leur existence, elle, a suffi.
+    </p>
+
+    <div class="final-quote">
+      "De toute façon si tu n'y as pas droit, dadai te préviendra dans trois mois."
+    </div>
+
+    <div class="fin">FIN DE L'ARC · SEPTEMBRE 2020</div>
+  </div>
+
+</div>
+
+</body>
+</html>

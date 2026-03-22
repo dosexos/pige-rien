@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dosinge × espy — Analyse de la dynamique</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0f0f1a;
+    color: #d4d4e8;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #1a1a2e 100%);
+    border-bottom: 2px solid #533483;
+    padding: 28px 36px 20px;
+  }
+  .header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.5px;
+  }
+  .header .subtitle {
+    font-size: 12px;
+    color: #8888aa;
+    margin-top: 5px;
+  }
+  .header .subtitle span {
+    color: #a78bfa;
+    font-weight: 600;
+  }
+
+  /* ── Layout ── */
+  .container { padding: 24px 36px; max-width: 1100px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+
+  /* ── Cards ── */
+  .card {
+    background: #1a1a2e;
+    border: 1px solid #2a2a45;
+    border-radius: 8px;
+    padding: 18px;
+  }
+  .card.yellow { border-color: #d4a017; background: #1e1a10; }
+  .card.purple { border-color: #533483; background: #14102a; }
+  .card.red    { border-color: #e94560; background: #1e0f15; }
+
+  .card h3 {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .card.yellow h3 { color: #d4a017; }
+  .card.purple h3 { color: #a78bfa; }
+  .card.red h3    { color: #e94560; }
+
+  .card p { font-size: 13px; color: #c4c4d8; }
+
+  /* ── Section titles ── */
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #666688;
+    margin: 28px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #2a2a45;
+  }
+
+  /* ── Stats bar ── */
+  .stat-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: #8888aa;
+    width: 120px;
+    flex-shrink: 0;
+  }
+  .stat-bar-wrap {
+    flex: 1;
+    background: #2a2a45;
+    border-radius: 3px;
+    height: 8px;
+    overflow: hidden;
+  }
+  .stat-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+  }
+  .bar-dosinge { background: linear-gradient(90deg, #533483, #a78bfa); }
+  .bar-espy    { background: linear-gradient(90deg, #b91c4a, #e94560); }
+  .stat-val {
+    font-size: 12px;
+    font-weight: 700;
+    width: 56px;
+    text-align: right;
+    color: #d4d4e8;
+  }
+
+  /* ── Timeline ── */
+  .timeline { list-style: none; }
+  .timeline li {
+    display: flex;
+    gap: 12px;
+    padding: 7px 0;
+    border-bottom: 1px solid #1e1e38;
+    font-size: 13px;
+  }
+  .timeline li:last-child { border-bottom: none; }
+  .tl-date {
+    font-size: 11px;
+    color: #666688;
+    width: 70px;
+    flex-shrink: 0;
+    padding-top: 1px;
+  }
+  .tl-author {
+    font-size: 11px;
+    font-weight: 700;
+    width: 80px;
+    flex-shrink: 0;
+    padding-top: 1px;
+  }
+  .tl-author.dosinge { color: #a78bfa; }
+  .tl-author.espy    { color: #e94560; }
+  .tl-text { color: #c4c4d8; flex: 1; }
+
+  /* ── Quote block ── */
+  .quote {
+    background: #12121f;
+    border-left: 3px solid #533483;
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: #c4c4d8;
+    font-style: italic;
+  }
+  .quote.red { border-color: #e94560; }
+  .quote-meta {
+    font-size: 11px;
+    color: #666688;
+    margin-top: 4px;
+    font-style: normal;
+  }
+
+  /* ── Role pills ── */
+  .roles { display: flex; flex-direction: column; gap: 6px; }
+  .role-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 13px;
+    color: #c4c4d8;
+    line-height: 1.4;
+  }
+  .role-arrow { color: #533483; font-weight: 700; flex-shrink: 0; }
+  .role-arrow.red { color: #e94560; }
+
+  /* ── Activity chart ── */
+  .chart-wrap {
+    background: #12121f;
+    border-radius: 6px;
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+  canvas { display: block; width: 100%; }
+
+  /* ── Asymmetry meter ── */
+  .asymmetry-bar {
+    background: #2a2a45;
+    border-radius: 4px;
+    height: 20px;
+    position: relative;
+    overflow: hidden;
+    margin: 12px 0;
+  }
+  .asym-left {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, #533483, #a78bfa);
+    border-radius: 4px 0 0 4px;
+  }
+  .asym-right {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: linear-gradient(270deg, #b91c4a, #e94560);
+    border-radius: 0 4px 4px 0;
+  }
+  .asym-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #8888aa;
+    margin-top: 4px;
+  }
+
+  /* ── Verdict ── */
+  .verdict {
+    background: linear-gradient(135deg, #14102a, #1e0f15);
+    border: 1px solid #533483;
+    border-right-color: #e94560;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-top: 24px;
+  }
+  .verdict h3 {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #a78bfa;
+    margin-bottom: 10px;
+  }
+  .verdict p { font-size: 13px; color: #c4c4d8; line-height: 1.7; }
+
+  /* ── Name badges ── */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .badge-d { background: #2a1a5a; color: #a78bfa; }
+  .badge-e { background: #3a0f1e; color: #e94560; }
+
+  /* ── Number highlights ── */
+  .num { font-weight: 700; color: #a78bfa; }
+  .num.red { color: #e94560; }
+
+  .mention-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 16px;
+    align-items: center;
+    margin: 16px 0;
+  }
+  .mention-side { display: flex; flex-direction: column; gap: 6px; }
+  .mention-count {
+    font-size: 36px;
+    font-weight: 900;
+    letter-spacing: -2px;
+  }
+  .mention-label { font-size: 11px; color: #8888aa; }
+  .mention-arrow {
+    text-align: center;
+    font-size: 24px;
+    color: #2a2a45;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>dosinge × espy — Analyse de la dynamique</h1>
+  <div class="subtitle">
+    Canal <span>#général</span> · 7 ans d'archives (2018 → 2026) · 
+    <span>12 726 msgs dosinge</span> / <span>10 405 msgs espy</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Résumé en 2 cartes -->
+  <div class="section-title">Vue d'ensemble</div>
+  <div class="grid-2">
+    <div class="card yellow">
+      <h3>Le duo pivot du serveur</h3>
+      <p>dosinge et espy constituent la colonne vertébrale du groupe depuis juin 2019. À eux deux, ils pèsent <strong>23 131 messages</strong> — plus de 60 % du volume total du canal. Leur dynamique n'est pas symétrique : dosinge initie, convoque, relance ; espy répond, valide, enrichit. La relation ne ressemble à aucune autre sur le serveur.</p>
+    </div>
+    <div class="card purple">
+      <h3>Permanence sur 7 ans</h3>
+      <p>Pas un pic isolé — une présence continue de fin 2018 à mars 2026. L'apogée est 2019-2020 (pic du confinement), mais la relation ne meurt pas : elle ralentit en 2022-2023, se stabilise. En 2024-2025, c'est espy qui reprend le dessus en volume. La dynamique s'est inversée.</p>
+    </div>
+  </div>
+
+  <!-- Graphique d'activité -->
+  <div class="section-title">Évolution de l'activité par année</div>
+  <div class="chart-wrap">
+    <canvas id="activityChart" height="200"></canvas>
+  </div>
+
+  <!-- Mentions croisées -->
+  <div class="section-title">Mentions croisées</div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="mention-grid">
+      <div class="mention-side">
+        <div class="mention-count" style="color:#a78bfa">dosinge</div>
+        <div class="mention-label">mentionne espy</div>
+        <div class="mention-count" style="font-size:28px; color:#a78bfa">~300+</div>
+        <div class="mention-label">@mentions directes en 2019-2020</div>
+        <p style="font-size:12px; color:#8888aa; margin-top:6px">Dosinge utilise massivement les @mentions pour mobiliser espy — parfois 20 pings dans la même soirée. C'est une relation de <em>convocation</em>.</p>
+      </div>
+      <div class="mention-arrow">⇄</div>
+      <div class="mention-side" style="text-align:right">
+        <div class="mention-count" style="color:#e94560">espy</div>
+        <div class="mention-label">mentionne dosinge</div>
+        <div class="mention-count" style="font-size:28px; color:#e94560">~150+</div>
+        <div class="mention-label">@mentions directes en 2019-2020</div>
+        <p style="font-size:12px; color:#8888aa; margin-top:6px; text-align:right">Espy mentionne dosinge avec modération — souvent pour l'impliquer dans un plan déjà décidé, ou pour partager une découverte. C'est une relation de <em>mise en avant</em>.</p>
+      </div>
+    </div>
+    <div class="section-title" style="margin-top:8px">Asymétrie de l'initiative</div>
+    <div class="asymmetry-bar">
+      <div class="asym-left" style="width:68%"></div>
+      <div class="asym-right" style="width:28%"></div>
+    </div>
+    <div class="asym-labels">
+      <span>dosinge initie (68%)</span>
+      <span>espy initie (28%)</span>
+    </div>
+  </div>
+
+  <!-- Statistiques comparées -->
+  <div class="section-title">Statistiques comparées</div>
+  <div style="background:#1a1a2e; border:1px solid #2a2a45; border-radius:8px; padding:18px; margin-bottom:20px">
+    <div class="stat-row">
+      <div class="stat-label">Total messages</div>
+      <div class="stat-bar-wrap"><div class="stat-bar-fill bar-dosinge" style="width:100%"></div></div>
+      <div class="stat-val" style="color:#a78bfa">12 726</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-label"></div>
+      <div class="stat-bar-wrap"><div class="stat-bar-fill bar-espy" style="width:82%"></div></div>
+      <div class="stat-val" style="color:#e94560">10 405</div>
+    </div>
+    <div class="stat-row" style="margin-top:10px">
+      <div class="stat-label">Longueur moy.</div>
+      <div class="stat-bar-wrap"><div class="stat-bar-fill bar-dosinge" style="width:96%"></div></div>
+      <div class="stat-val" style="color:#a78bfa">42,7 car</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-label"></div>
+      <div class="stat-bar-wrap"><div class="stat-bar-fill bar-espy" style="width:100%"></div></div>
+      <div class="stat-val" style="color:#e94560">44,3 car</div>
+    </div>
+    <div class="stat-row" style="margin-top:10px">
+      <div class="stat-label">Pic d'activité</div>
+      <div class="stat-bar-wrap"><div class="stat-bar-fill bar-dosinge" style="width:100%"></div></div>
+      <div class="stat-val" style="color:#a78bfa">5 339 (2020)</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-label"></div>
+      <div class="stat-bar-wrap"><div class="stat-bar-fill bar-espy" style="width:72%"></div></div>
+      <div class="stat-val" style="color:#e94560">3 818 (2020)</div>
+    </div>
+    <div class="stat-row" style="margin-top:10px">
+      <div class="stat-label">Heure de pointe</div>
+      <div class="stat-bar-wrap"><div class="stat-bar-fill bar-dosinge" style="width:88%"></div></div>
+      <div class="stat-val" style="color:#a78bfa">20h-21h</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-label"></div>
+      <div class="stat-bar-wrap"><div class="stat-bar-fill bar-espy" style="width:100%"></div></div>
+      <div class="stat-val" style="color:#e94560">17h-22h</div>
+    </div>
+  </div>
+
+  <!-- Rôles auto-attribués -->
+  <div class="section-title">Les rôles que chacun s'attribue</div>
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="card purple">
+      <h3>dosinge dans la relation</h3>
+      <div class="roles">
+        <div class="role-item"><span class="role-arrow">→</span> L'instigateur : "on fait ça ce soir ?"</div>
+        <div class="role-item"><span class="role-arrow">→</span> Le convocateur obsessionnel (pings en rafale)</div>
+        <div class="role-item"><span class="role-arrow">→</span> Le partenaire de jeu attitré (Terra, LoL, TFT, MHW…)</div>
+        <div class="role-item"><span class="role-arrow">→</span> Celui qui nomme espy : "Espy chan", "Espysexe"</div>
+        <div class="role-item"><span class="role-arrow">→</span> L'impatient chronique ("reponds fdp", "t là ?", "aled")</div>
+      </div>
+    </div>
+    <div class="card red">
+      <h3>espy dans la relation</h3>
+      <div class="roles">
+        <div class="role-item"><span class="role-arrow red">→</span> Le répondant — jamais premier, toujours présent</div>
+        <div class="role-item"><span class="role-arrow red">→</span> Le pourvoyeur de contenu (liens, vidéos, tips)</div>
+        <div class="role-item"><span class="role-arrow red">→</span> Celui qui "classe" dosinge : "Y'a des Dosinges et des Surikak"</div>
+        <div class="role-item"><span class="role-arrow red">→</span> Le témoin légal de dosinge en 2023 (duel de sorciers)</div>
+        <div class="role-item"><span class="role-arrow red">→</span> L'électron libre — parfois plus actif que dosinge (2024)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phases de la relation -->
+  <div class="section-title">Les phases de la relation (2019 → 2026)</div>
+  <div class="grid-3">
+    <div class="card yellow">
+      <h3>Phase I — Fusion (2019-2020)</h3>
+      <p>5 000+ messages chacun. Dosinge ping espy <em>tous les jours</em>, parfois plusieurs fois par heure pour lancer une game. Ils jouent ensemble à Wakfu, FF14, Terraria, LoL, TFT, MHW. C'est la période la plus dense — le confinement agit comme un amplificateur.</p>
+    </div>
+    <div class="card purple">
+      <h3>Phase II — Stabilisation (2021-2023)</h3>
+      <p>Le rythme baisse, la qualité reste. Les messages sont moins nombreux mais plus riches : discussions LoL, analyses, animes. Espy commence à recommander à dosinge — Mushoku Tensei, Kanata no Astra. La relation devient moins opérationnelle, plus culturelle.</p>
+    </div>
+    <div class="card red">
+      <h3>Phase III — Inversion (2024-2026)</h3>
+      <p>Espy reprend l'initiative. Dosinge ralentit (216 msgs en 2024), espy maintient 556. C'est espy qui ping, qui propose des jeux (Core Keeper, Horripilant), qui "consulte". Le rapport d'initiative s'est inversé. La relation survit au changement.</p>
+    </div>
+  </div>
+
+  <!-- Citations clés -->
+  <div class="section-title">Citations qui définissent la relation</div>
+
+  <div class="quote">
+    <em>"Et du coup pour les roses espy chan ?"</em>
+    <div class="quote-meta">dosinge — 2020-04-02 · dosinge interpelle espy avec son surnom affectueux, marqueur précoce du registre intime</div>
+  </div>
+  <div class="quote">
+    <em>"Y'a des Dosinges et des Surikak"</em>
+    <div class="quote-meta">espy — 2022-04-30 · espy classe dosinge comme une <em>espèce</em> à part entière — taxonomie affectueuse</div>
+  </div>
+  <div class="quote red">
+    <em>"D'ici quelques années on aura un duel de sorciers épique entre Dosinge et sa magie noire contre Enzosex et ses pouvoirs mystiques fascistes"</em>
+    <div class="quote-meta">espy — 2023-01-13 · espy attribue à dosinge une mythologie propre — dosinge = personnage de légende</div>
+  </div>
+  <div class="quote">
+    <em>"Espysexe" / "Meréci espy sexe"</em>
+    <div class="quote-meta">dosinge — juin 2022 · Sobriquet créé par dosinge, utilisé deux jours de suite. Registre absurde-affectueux typique</div>
+  </div>
+  <div class="quote red">
+    <em>"note bien dosinge parce que là j'ai reçu ma paie du mois je peux tout à fait livrer des colis de merde ou engager un assassin bitcoin"</em>
+    <div class="quote-meta">espy → dosinge — 2023-06-30 · menace affectueuse, registre commun de la relation</div>
+  </div>
+  <div class="quote">
+    <em>"Je soussigné, moi Dosinges, avoir pu constaté l'existence du dit Laurent l'après-midi du 2 Février 2023."</em>
+    <div class="quote-meta">dosinge — 2023-02-02 · autoportrait solennel et absurde, co-signé ironiquement par baiedhiver</div>
+  </div>
+
+  <!-- Petites histoires notables -->
+  <div class="section-title">Moments marquants</div>
+  <ul class="timeline">
+    <li>
+      <span class="tl-date">2019-08-31</span>
+      <span class="tl-author dosinge">dosinge</span>
+      <span class="tl-text">Envoie 20 messages de suite à espy, juste les heures : "1h10", "1h11"… "1h30", "1h31"… jusqu'à "UN SI BEL EGOUT". Patience épuisée, art brut.</span>
+    </li>
+    <li>
+      <span class="tl-date">2020-04-02</span>
+      <span class="tl-author dosinge">dosinge</span>
+      <span class="tl-text">Premier "Espy chan" documenté. Sobriquet affectueux sorti de nulle part pour demander si espy a pensé aux roses Animal Crossing.</span>
+    </li>
+    <li>
+      <span class="tl-date">2022-06-25</span>
+      <span class="tl-author dosinge">dosinge</span>
+      <span class="tl-text">"Espysexe" — message unique, sans contexte. Suivi le lendemain de "Meréci espy sexe". Pic d'absurde affectueux.</span>
+    </li>
+    <li>
+      <span class="tl-date">2023-01-13</span>
+      <span class="tl-author espy">espy</span>
+      <span class="tl-text">Mythologise dosinge : "duel de sorciers épique entre Dosinge et sa magie noire". Passage du statut de ami à celui de personnage de fiction.</span>
+    </li>
+    <li>
+      <span class="tl-date">2023-02-02</span>
+      <span class="tl-author dosinge">dosinge</span>
+      <span class="tl-text">Rédige un acte notarial fictif pour attester de sa propre existence. Baiedhiver co-signe en attestant "l'échec du système scolaire sur le dit Dosinges".</span>
+    </li>
+    <li>
+      <span class="tl-date">2025-10-15</span>
+      <span class="tl-author dosinge">dosinge</span>
+      <span class="tl-text">Message d'anniversaire accompagné d'un GIF — suivi d'un "Joyeux hot swamp d'anniversaire". Le registre n'a pas vieilli.</span>
+    </li>
+  </ul>
+
+  <!-- Verdict final -->
+  <div class="verdict">
+    <h3>Verdict</h3>
+    <p>
+      Dosinge et espy ne sont pas les meilleurs amis qui se le disent — ils sont les meilleurs amis qui se le prouvent à coup de <em>30 pings consécutifs à 1h du matin</em> et de sobriquets inventés pour l'occasion. La relation fonctionne sur une asymétrie saine : dosinge fournit l'énergie brute, l'urgence, l'impatience ; espy fournit la constance, la recommandation culturelle, l'ironie douce. En sept ans, le rapport d'initiative s'est inversé sans que la relation en souffre — preuve d'une amitié qui n'a pas besoin d'un chef pour exister. Dosinge est devenu un personnage dans la mythologie personnelle d'espy. Espy est devenu l'horizon vers lequel dosinge dirige toutes ses mentions. C'est une orbite mutuelle, légèrement excentrique, parfaitement stable.
+    </p>
+  </div>
+
+</div><!-- /container -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+// Données d'activité annuelle
+const years = [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026];
+const dosingeData = [0, 2650, 5339, 2053, 1499, 588, 216, 296, 85];
+const espyData    = [25, 2397, 3818, 1775, 933, 624, 556, 240, 37];
+
+const ctx = document.getElementById('activityChart').getContext('2d');
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: years,
+    datasets: [
+      {
+        label: 'dosinge',
+        data: dosingeData,
+        borderColor: '#a78bfa',
+        backgroundColor: 'rgba(167,139,250,0.08)',
+        borderWidth: 2.5,
+        pointBackgroundColor: '#a78bfa',
+        pointRadius: 4,
+        fill: true,
+        tension: 0.3
+      },
+      {
+        label: 'espy',
+        data: espyData,
+        borderColor: '#e94560',
+        backgroundColor: 'rgba(233,69,96,0.06)',
+        borderWidth: 2.5,
+        pointBackgroundColor: '#e94560',
+        pointRadius: 4,
+        fill: true,
+        tension: 0.3
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: {
+        labels: { color: '#8888aa', font: { size: 12 }, boxWidth: 16 }
+      },
+      tooltip: {
+        backgroundColor: '#1a1a2e',
+        borderColor: '#533483',
+        borderWidth: 1,
+        titleColor: '#d4d4e8',
+        bodyColor: '#8888aa'
+      }
+    },
+    scales: {
+      x: {
+        grid: { color: '#2a2a45' },
+        ticks: { color: '#666688' }
+      },
+      y: {
+        grid: { color: '#2a2a45' },
+        ticks: { color: '#666688' },
+        beginAtZero: true
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>

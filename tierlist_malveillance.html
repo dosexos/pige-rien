@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tier List Malveillance — Le Discordeum</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0f0f1a;
+    color: #d4d4e8;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .header {
+    background: linear-gradient(135deg, #1a0a0a 0%, #1a1a2e 50%, #1a0a0a 100%);
+    border-bottom: 2px solid #7f1d1d;
+    padding: 28px 36px 20px;
+  }
+  .header h1 { font-size: 22px; font-weight: 700; color: #fff; }
+  .header .subtitle { font-size: 12px; color: #8888aa; margin-top: 5px; }
+  .header .subtitle span { color: #fca5a5; font-weight: 600; }
+
+  .container { padding: 24px 36px; max-width: 1100px; }
+
+  .section-title {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 2px; color: #666688; margin: 28px 0 14px;
+    padding-bottom: 6px; border-bottom: 1px solid #2a2a45;
+  }
+
+  /* ── Tier rows ── */
+  .tier { display: flex; align-items: stretch; margin-bottom: 12px; border-radius: 8px; overflow: hidden; border: 1px solid #2a2a45; }
+
+  .tier-label {
+    width: 80px; flex-shrink: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-size: 28px; font-weight: 900; letter-spacing: -1px;
+    padding: 12px 8px;
+  }
+  .tier-sublabel { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; opacity: 0.8; }
+
+  .tier-content { flex: 1; background: #13121f; padding: 14px 18px; }
+
+  /* Tier colors */
+  .tier-s .tier-label { background: #4c0519; color: #fda4af; }
+  .tier-a .tier-label { background: #431407; color: #fdba74; }
+  .tier-b .tier-label { background: #1e3a5f; color: #93c5fd; }
+  .tier-c .tier-label { background: #1a2e1a; color: #86efac; }
+
+  /* ── Member block dans chaque tier ── */
+  .member-block {
+    background: #1a1a2e;
+    border: 1px solid #2a2a45;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+  .member-block:last-child { margin-bottom: 0; }
+
+  .mb-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .mb-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; flex-shrink: 0;
+  }
+  .mb-name { font-size: 15px; font-weight: 700; }
+  .mb-verdict { font-size: 11px; margin-top: 1px; }
+
+  .mb-score-row {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;
+  }
+  .score-pill {
+    background: #12121f; border: 1px solid #2a2a45; border-radius: 20px;
+    padding: 2px 10px; font-size: 11px; color: #c4c4d8;
+  }
+
+  .mb-desc { font-size: 13px; color: #c4c4d8; margin-bottom: 10px; line-height: 1.6; }
+
+  /* Critères */
+  .criteria-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+  .crit { background: #12121f; border-radius: 6px; padding: 8px 10px; }
+  .crit-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: #666688; margin-bottom: 2px; }
+  .crit-bar { height: 5px; border-radius: 3px; background: #2a2a45; margin-bottom: 2px; }
+  .crit-fill { height: 100%; border-radius: 3px; }
+  .crit-val { font-size: 11px; }
+
+  /* Quotes */
+  .quote-block {
+    background: #0f0f1a; border-left: 3px solid #7f1d1d;
+    border-radius: 0 6px 6px 0; padding: 8px 12px;
+    margin-bottom: 6px; font-size: 12px; color: #c4c4d8; font-style: italic;
+  }
+  .quote-block.amber { border-color: #b45309; }
+  .quote-block.blue  { border-color: #1d4ed8; }
+  .quote-block.green { border-color: #15803d; }
+  .quote-meta { font-size: 10px; color: #666688; margin-top: 3px; font-style: normal; }
+
+  /* Couleurs membres */
+  .av-espy     { background: #0a2030; color: #5eead4; }
+  .av-cryo     { background: #2a1205; color: #fb923c; }
+  .av-baie     { background: #0a2010; color: #4ade80; }
+  .av-dosinge  { background: #2a1a5a; color: #a78bfa; }
+  .av-layvi    { background: #2a1f05; color: #fbbf24; }
+
+  .col-espy    { color: #5eead4; }
+  .col-cryo    { color: #fb923c; }
+  .col-baie    { color: #4ade80; }
+  .col-dosinge { color: #a78bfa; }
+  .col-layvi   { color: #fbbf24; }
+
+  /* ── Intro Kouffardor ── */
+  .kouffardor-box {
+    background: #1a0808;
+    border: 1px solid #7f1d1d;
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 24px;
+  }
+  .kouffardor-title {
+    font-size: 13px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; color: #fca5a5; margin-bottom: 8px;
+  }
+  .kouffardor-box p { font-size: 13px; color: #c4c4d8; line-height: 1.6; }
+
+  /* ── Méthodologie ── */
+  .methodo {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+    margin-bottom: 24px;
+  }
+  .meth-card {
+    background: #1a1a2e; border: 1px solid #2a2a45; border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .meth-title { font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.8px; color: #fca5a5; margin-bottom: 4px; }
+  .meth-desc { font-size: 12px; color: #8888aa; }
+
+  /* ── Verdict global ── */
+  .verdict-final {
+    background: linear-gradient(135deg, #1a0808, #1a1a2e);
+    border: 1px solid #7f1d1d; border-right-color: #a78bfa;
+    border-radius: 8px; padding: 20px 24px; margin-top: 24px;
+  }
+  .verdict-final h3 { font-size: 13px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1.5px; color: #fca5a5; margin-bottom: 10px; }
+  .verdict-final p { font-size: 13px; color: #c4c4d8; line-height: 1.7; }
+
+  .chancla { font-size: 18px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Tier List Malveillance — Le Discordeum <span style="font-size:18px">🥿</span></h1>
+  <div class="subtitle">
+    Analyse fondée sur <span>52 752 messages</span> · 2018 → 2026 · Méthodologie Kouffardor™
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ══ CONTEXTE INSTITUTIONNEL ══ -->
+  <div class="section-title">Contexte — La cérémonie des Kouffardor</div>
+  <div class="kouffardor-box">
+    <div class="kouffardor-title">Institution officielle du Discordeum</div>
+    <p>La malveillance n'est pas un accident dans ce groupe — c'est une <strong style="color:#fca5a5">institution</strong>. Le Discordeum a développé tout un vocabulaire autour du concept : la <em>Chancla</em> (punition symbolique), le <em>KUFR</em> (terme arabe détourné désignant l'impiété, utilisé ici pour la trahison/malveillance), et les <em>Kouffardor</em> — une cérémonie annuelle récompensant le membre le plus malveillant de l'année. Organisée par baiedhiver en 2024 pour l'année 2023, formalisée par cryoslinger en janvier 2026 avec un système de vote par MP. La présente tier list s'inscrit dans cette tradition. Elle distingue quatre types de malveillance : <em>froide</em> (calculée), <em>institutionnelle</em> (systémique), <em>bruyante</em> (spectaculaire) et <em>passive</em> (par inaction).</p>
+  </div>
+
+  <!-- ══ MÉTHODOLOGIE ══ -->
+  <div class="section-title">Méthodologie</div>
+  <div class="methodo">
+    <div class="meth-card">
+      <div class="meth-title">Volume brut</div>
+      <div class="meth-desc">% de messages contenant un terme à connotation hostile (trahison, enculé, fdp, malveill…)</div>
+    </div>
+    <div class="meth-card">
+      <div class="meth-title">Préméditation</div>
+      <div class="meth-desc">La malveillance est-elle spontanée ou construite, rituelle, institutionnalisée ?</div>
+    </div>
+    <div class="meth-card">
+      <div class="meth-title">Cibles</div>
+      <div class="meth-desc">La malveillance vise-t-elle des individus précis ou le groupe en général ?</div>
+    </div>
+    <div class="meth-card">
+      <div class="meth-title">Durabilité</div>
+      <div class="meth-desc">S'agit-il d'une posture de fond ou de pics occasionnels ? La malveillance est-elle maintenue dans le temps ?</div>
+    </div>
+  </div>
+
+  <!-- ══ TIER S ══ -->
+  <div class="section-title">Tier S — Malveillance d'élite</div>
+  <div class="tier tier-s">
+    <div class="tier-label">S<div class="tier-sublabel">élite</div></div>
+    <div class="tier-content">
+
+      <!-- ESPY -->
+      <div class="member-block">
+        <div class="mb-header">
+          <div class="mb-avatar av-espy">E</div>
+          <div>
+            <div class="mb-name col-espy">espy</div>
+            <div class="mb-verdict" style="color:#fca5a5">Architecte de la malveillance institutionnelle</div>
+          </div>
+        </div>
+        <div class="mb-score-row">
+          <span class="score-pill">1,8% msgs malveillants</span>
+          <span class="score-pill">Volume #2 (10 405 msgs)</span>
+          <span class="score-pill">Préméditation maximale</span>
+          <span class="score-pill">Portée : tout le groupe</span>
+        </div>
+        <div class="criteria-grid">
+          <div class="crit">
+            <div class="crit-label">Préméditation</div>
+            <div class="crit-bar"><div class="crit-fill" style="width:100%; background:#fca5a5"></div></div>
+            <div class="crit-val" style="color:#fca5a5">10/10</div>
+          </div>
+          <div class="crit">
+            <div class="crit-label">Portée systémique</div>
+            <div class="crit-bar"><div class="crit-fill" style="width:95%; background:#fca5a5"></div></div>
+            <div class="crit-val" style="color:#fca5a5">9,5/10</div>
+          </div>
+          <div class="crit">
+            <div class="crit-label">Créativité</div>
+            <div class="crit-bar"><div class="crit-fill" style="width:100%; background:#fca5a5"></div></div>
+            <div class="crit-val" style="color:#fca5a5">10/10</div>
+          </div>
+          <div class="crit">
+            <div class="crit-label">Durabilité</div>
+            <div class="crit-bar"><div class="crit-fill" style="width:90%; background:#fca5a5"></div></div>
+            <div class="crit-val" style="color:#fca5a5">9/10</div>
+          </div>
+        </div>
+        <p class="mb-desc">
+          Espy est le seul membre du groupe à avoir <strong style="color:#5eead4">institutionnalisé</strong> la malveillance. Il ne se contente pas d'insulter — il crée des <em>systèmes</em>. La <strong>Chancla</strong> comme symbole de punition collective, la <strong>liste des faiblesses du Discordeum</strong> (cartographie précise des vulnérabilités de chaque membre), les <strong>invocations en latin médiéval</strong> pour bannir Souhil de la dimension, la prophétie du duel de sorciers, le "MO du Discordeum Maleficium"... Espy n'agit pas dans la colère. Il agit avec <em>méthode</em>. Sa malveillance est documentée, nommée, ritualisée. Il concentre explicitement sa malveillance ("je ne dirais rien du D, je concentre ma malveillance") — la préméditation est avouée. Enfin, c'est lui qui, en 2025, annonce publiquement qu'il va retirer son boost de serveur ("trahison, disgrâce, la marque du mal gravée sur sa fesse tout ça") — la mise en scène de sa propre malveillance comme performance.
+        </p>
+        <div class="quote-block">
+          <em>Liste des faiblesses du Discordeum, ou "Comment hameçonner n'importe qui" — Lul : Nourriture / Dorian : ⛏️ / Enzo : Eugénisme / Souhil : Islamologie / Théo : Tout / Kimberley : Théo</em>
+          <div class="quote-meta">espy — 2024-01-07 · Cartographie des vulnérabilités. Niveau renseignement, pas niveau Discord.</div>
+        </div>
+        <div class="quote-block">
+          <em>In nominis potentiae et dimensionis, ego, Discordeum, hanc invocationem facio ut Souhil, entitas dimensionis, alligetur et vincitur...</em>
+          <div class="quote-meta">espy — 2023-09-23 · Invocation en latin pour bannir un membre. Répétée deux fois.</div>
+        </div>
+        <div class="quote-block">
+          <em>Je ne dirais rien du D, je concentre ma malveillance.</em>
+          <div class="quote-meta">espy — 2022-09-05 · La préméditation avouée publiquement.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ TIER A ══ -->
+  <div class="section-title">Tier A — Malveillance de haut niveau</div>
+  <div class="tier tier-a">
+    <div class="tier-label">A<div class="tier-sublabel">confirmé</div></div>
+    <div class="tier-content">
+
+      <!-- CRYO -->
+      <div class="member-block">
+        <div class="mb-header">
+          <div class="mb-avatar av-cryo">C</div>
+          <div>
+            <div class="mb-name col-cryo">cryoslinger</div>
+            <div class="mb-verdict" style="color:#fdba74">Malveillance froide, précise, bureaucratique</div>
+          </div>
+        </div>
+        <div class="mb-score-row">
+          <span class="score-pill">2,9% msgs malveillants</span>
+          <span class="score-pill">Taux brut #1</span>
+          <span class="score-pill">Inventeur du Kouffardor 2026</span>
+          <span class="score-pill">Portée : ciblée</span>
+        </div>
+        <div class="criteria-grid">
+          <div class="crit">
+            <div class="crit-label">Préméditation</div>
+            <div class="crit-bar"><div class="crit-fill" style="width:80%; background:#fdba74"></div></div>
+            <div class="crit-val" style="color:#fdba74">8/10</div>
+          </div>
+          <div class="crit">
+            <div class="crit-label">Portée systémique</div>
+            <div class="crit-bar"><div class="crit-fill" style="width:65%; background:#fdba74"></div></div>
+            <div class="crit-val" style="color:#fdba74">6,5/10</div>
+          </div>
+          <div class="crit">
+            <div class="crit-label">Créativité</div>
+            <div class="crit-bar"><div class="crit-fill" style="width:75%; background:#fdba74"></div></div>
+            <div class="crit-val" style="color:#fdba74">7,5/10</div>
+          </div>
+          <div class="crit">
+            <div class="crit-label">Durabilité</div>
+            <div class="crit-bar"><div class="crit-fill" style="width:85%; background:#fdba74"></div></div>
+            <div class="crit-val" style="color:#fdba74">8,5/10</div>
+          </div>
+        </div>
+        <p class="mb-desc">
+          Cryo détient le <strong style="color:#fb923c">taux brut de malveillance le plus élevé</strong> (2,9%) mais sa malveillance est d'une nature particulière : <em>froide, répétée, chirurgicale</em>. "Tu ne mérites que trahison dodent", "tpabo", "sois moins disgracieux" — des formules courtes, sans éclat, qui font plus de dégâts par leur régularité que par leur intensité. Il a inventé le "tpabo" comme punition verbale de fond, répétée des dizaines de fois. Sa malveillance est aussi <em>institutionnelle</em> dans un sens différent d'espy : c'est lui qui formalise en 2026 le Kouffardor avec un système de vote par MP, récoltant les avis anonymes du groupe sur le membre le plus enculé. Il souffre par ailleurs de "l'embrigadement sadique de Dod et Lul" — il se désigne victime tout en étant bourreau, ce qui est un niveau de sophistication non négligeable.
+        </p>
+        <div class="quote-block amber">
+          <em>Tu ne mérites que trahison dodent.</em>
+          <div class="quote-meta">cryoslinger — 2021-02-18 · Sentence définitive. Pas de contexte. Pas de justification.</div>
+        </div>
+        <div class="quote-block amber">
+          <em>2026 est arrivé, il est donc temps de savoir qui a été le plus gros KUFR de 2025. [...] envoyez-moi par MP votre classement des membres du discord du plus gros enculé à la plus sympathique des âmes.</em>
+          <div class="quote-meta">cryoslinger — 2026-01-05 · Formalisation institutionnelle de la malveillance. Système de vote anonyme.</div>
+        </div>
+        <div class="quote-block amber">
+          <em>Marre d'être le seul à souffrir de l'embrigadement sadique de Dod et Lul.</em>
+          <div class="quote-meta">cryoslinger — 2020-08-30 · Il se victimise tout en maintenant la pression sur les autres.</div>
+        </div>
+      </div>
+
+      <!-- BAIEDHIVER -->
+      <div class="member-block">
+        <div class="mb-header">
+          <div class="mb-avatar av-baie">B</div>
+          <div>
+            <div class="mb-name col-baie">baiedhiver</div>
+            <div class="mb-verdict" style="color:#fdba74">Malveillance littéraire et procédurière</div>
+          </div>
+        </div>
+        <div class="mb-score-row">
+          <span class="score-pill">1,5% msgs malveillants</span>
+          <span class="score-pill">Co-fondateur Kouffardor</span>
+          <span class="score-pill">Inventeur de l'expédition punitive</span>
+          <span class="score-pill">Portée : ciblée + institutionnelle</span>
+        </div>
+        <div class="criteria-grid">
+          <div class="crit">
+            <div class="crit-label">Préméditation</div>
+            <div class="crit-bar"><div class="crit-fill" style="width:90%; background:#86efac"></div></div>
+            <div class="crit-val" style="color:#86efac">9/10</div>
+          </div>
+          <div class="crit">
+            <div class="crit-label">Portée systémique</div>
+            <div class="crit-bar"><div class="crit-fill" style="width:70%; background:#86efac"></div></div>
+            <div class="crit-val" style="color:#86efac">7/10</div>
+          </div>
+          <div class="crit">
+            <div class="crit-label">Créativité</div>
+            <div class="crit-bar"><div class="crit-fill" style="width:95%; background:#86efac"></div></div>
+            <div class="crit-val" style="color:#86efac">9,5/10</div>
+          </div>
+          <div class="crit">
+            <div class="crit-label">Durabilité</div>
+            <div class="crit-bar"><div class="crit-fill" style="width:55%; background:#86efac"></div></div>
+            <div class="crit-val" style="color:#86efac">5,5/10</div>
+          </div>
+        </div>
+        <p class="mb-desc">
+          Baiedhiver est le moins actif du groupe (750 messages) mais son ratio malveillance/volume est trompeur : sa malveillance est d'une <strong style="color:#4ade80">densité littéraire sans équivalent</strong>. Il ne dit pas "t'es nul" — il rédige des <em>actes notariaux</em> attestant de l'échec du système scolaire. Il ne menace pas — il propose des <em>expéditions punitives</em> en laissant entendre qu'un procès serait déjà trop généreux. Il est co-fondateur de la cérémonie des Kouffardor et premier organisateur documenté (janvier 2024 pour l'édition 2023). Sa malveillance opère sur le registre de la <em>légitimité procédurale</em> — il institue, juge, condamne. Le fait qu'il soit arrivé tardivement et qu'il soit le frère de cryo lui donne un accès privilégié au groupe et donc aux angles d'attaque. Enfin : "C'était la dernière fois que j'étais malveillant et que je n'articulais pas." — la malveillance présentée comme une discipline.
+        </p>
+        <div class="quote-block" style="border-color:#4ade80">
+          <em>Je pense qu'il faut agir au plus vite, un procès me semble déjà trop généreux. Il faut envoyer un message fort et organiser de suite une expédition punitive à l'encontre du T.</em>
+          <div class="quote-meta">baiedhiver — 2023-04-17 · Escalade judiciaire directe vers la violence punitive. Le style est le message.</div>
+        </div>
+        <div class="quote-block" style="border-color:#4ade80">
+          <em>Je, soussigné Ahurin, avoir pu constaté l'échec du système scolaire sur le dit Dosinges l'après-midi du 2 Février 2023.</em>
+          <div class="quote-meta">baiedhiver — 2023-02-02 · Acte notarial fictif. Malveillance par voie administrative.</div>
+        </div>
+        <div class="quote-block" style="border-color:#4ade80">
+          <em>"C'était la dernière fois que j'étais malveillant et que je n'articulais pas." — 23:21</em>
+          <div class="quote-meta">baiedhiver — 2023-05-01 · Citation attribuée à lui-même. La malveillance comme discipline stylistique.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ TIER B ══ -->
+  <div class="section-title">Tier B — Malveillance honnête</div>
+  <div class="tier tier-b">
+    <div class="tier-label">B<div class="tier-sublabel">honnête</div></div>
+    <div class="tier-content">
+
+      <!-- DOSINGE -->
+      <div class="member-block">
+        <div class="mb-header">
+          <div class="mb-avatar av-dosinge">D</div>
+          <div>
+            <div class="mb-name col-dosinge">dosinge</div>
+            <div class="mb-verdict" style="color:#93c5fd">Malveillance bruyante, sincère, sans lendemain</div>
+          </div>
+        </div>
+        <div class="mb-score-row">
+          <span class="score-pill">2,7% msgs malveillants</span>
+          <span class="score-pill">Volume #1 (12 726 msgs)</span>
+          <span class="score-pill">Taux absolu #2</span>
+          <span class="score-pill">Durée d'attention : nulle</span>
+        </div>
+        <div class="criteria-grid">
+          <div class="crit">
+            <div class="crit-label">Préméditation</div>
+            <div class="crit-bar"><div class="crit-fill" style="width:15%; background:#93c5fd"></div></div>
+            <div class="crit-val" style="color:#93c5fd">1,5/10</div>
+          </div>
+          <div class="crit">
+            <div class="crit-label">Portée systémique</div>
+            <div class="crit-bar"><div class="crit-fill" style="width:20%; background:#93c5fd"></div></div>
+            <div class="crit-val" style="color:#93c5fd">2/10</div>
+          </div>
+          <div class="crit">
+            <div class="crit-label">Créativité</div>
+            <div class="crit-bar"><div class="crit-fill" style="width:40%; background:#93c5fd"></div></div>
+            <div class="crit-val" style="color:#93c5fd">4/10</div>
+          </div>
+          <div class="crit">
+            <div class="crit-label">Durabilité</div>
+            <div class="crit-bar"><div class="crit-fill" style="width:10%; background:#93c5fd"></div></div>
+            <div class="crit-val" style="color:#93c5fd">1/10</div>
+          </div>
+        </div>
+        <p class="mb-desc">
+          Dosinge présente statistiquement le <strong style="color:#a78bfa">deuxième volume absolu de termes malveillants</strong> du groupe, mais l'analyse qualitative révèle une malveillance d'un type entièrement différent : <em>bruyante, immédiate, sans mémoire</em>. Ses "je vais t'enculer", "nique ta mère", "sale chien" s'enchaînent à une vitesse telle qu'ils perdent leur charge dès l'envoi. Il annonce des représailles qu'il n'exécutera jamais ("je t'envoie l'escadron de la mort chez toi") et des sentences définitives oubliées dans le message suivant. C'est une malveillance de façade, performative, domestique. Sa vraie nature est révélée par une citation de layvi : <em>"Il a mis de la ponctuation, c'est dire à quel point t'es malveillant dodent"</em> — quand la ponctuation devient la preuve ultime de l'hostilité, on mesure le niveau de base. Dosinge est en tier B non par manque de volume mais par manque de profondeur.
+        </p>
+        <div class="quote-block blue">
+          <em>Je ne donnerai pas de noms je ne veux pas finir suicidé à coup de patent dans le dos.</em>
+          <div class="quote-meta">dosinge — 2025-12-12 · Il craint la malveillance des autres plus qu'il n'exerce la sienne.</div>
+        </div>
+        <div class="quote-block blue">
+          <em>Il a mis de la ponctuation, c'est dire à quel point t'es malveillant dodent.</em>
+          <div class="quote-meta">layvi sur dosinge — 2022-06-19 · Quand la ponctuation est la barre maximale de la malveillance dosinge.</div>
+        </div>
+        <div class="quote-block blue">
+          <em>Bon swil c'est rigolo de troller mais au lieu de projeter ta malveillance sur moi est ce qu'il ne serait pas plutôt possible de dépenser de l'énergie en vue d'éventuellement avancer sur v rising.</em>
+          <div class="quote-meta">dosinge — 2022-06-19 · Il accuse les autres de malveillance tout en demandant à jouer.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ TIER C ══ -->
+  <div class="section-title">Tier C — Bienveillance structurelle (avec exceptions)</div>
+  <div class="tier tier-c">
+    <div class="tier-label">C<div class="tier-sublabel">soft</div></div>
+    <div class="tier-content">
+
+      <!-- LAYVI -->
+      <div class="member-block">
+        <div class="mb-header">
+          <div class="mb-avatar av-layvi">L</div>
+          <div>
+            <div class="mb-name col-layvi">layvi</div>
+            <div class="mb-verdict" style="color:#86efac">Malveillance passive — le dodge comme arme</div>
+          </div>
+        </div>
+        <div class="mb-score-row">
+          <span class="score-pill">1,2% msgs malveillants</span>
+          <span class="score-pill">Taux brut le plus bas</span>
+          <span class="score-pill">Malveillance : essentiellement par absence</span>
+          <span class="score-pill">1 citation active documentée</span>
+        </div>
+        <div class="criteria-grid">
+          <div class="crit">
+            <div class="crit-label">Préméditation</div>
+            <div class="crit-bar"><div class="crit-fill" style="width:10%; background:#fbbf24"></div></div>
+            <div class="crit-val" style="color:#fbbf24">1/10</div>
+          </div>
+          <div class="crit">
+            <div class="crit-label">Portée systémique</div>
+            <div class="crit-bar"><div class="crit-fill" style="width:8%; background:#fbbf24"></div></div>
+            <div class="crit-val" style="color:#fbbf24">0,8/10</div>
+          </div>
+          <div class="crit">
+            <div class="crit-label">Créativité</div>
+            <div class="crit-bar"><div class="crit-fill" style="width:20%; background:#fbbf24"></div></div>
+            <div class="crit-val" style="color:#fbbf24">2/10</div>
+          </div>
+          <div class="crit">
+            <div class="crit-label">Durabilité</div>
+            <div class="crit-bar"><div class="crit-fill" style="width:5%; background:#fbbf24"></div></div>
+            <div class="crit-val" style="color:#fbbf24">0,5/10</div>
+          </div>
+        </div>
+        <p class="mb-desc">
+          Layvi est le moins malveillant du groupe au sens actif du terme. Son taux brut est le plus bas (1,2%), et l'analyse qualitative révèle que la quasi-totalité de ses occurrences sont contextuelles (parler de "merde" en jeu, commenter la malveillance des autres). Sa seule malveillance documentée et délibérée : <strong style="color:#fbbf24">"Sache Dorian que t'es une MERDE"</strong> (2022) — un message isolé, non suivi d'effets. Sa vraie malveillance opère sur un registre entièrement différent : <em>le dodge</em>. Layvi ne répond pas, arrive en retard, s'excuse après, disparaît. C'est une malveillance involontaire, structurelle, qui génère plus de dommages passifs que ses rares sorties actives. Il a d'ailleurs été accusé de "full dodge" et de "giga cuck des JCS". En tier C non par innocence mais parce que sa malveillance n'a ni volonté ni système.
+        </p>
+        <div class="quote-block" style="border-color:#d97706">
+          <em>Sache Dorian que t'es une MERDE.</em>
+          <div class="quote-meta">layvi — 2022-06-18 · Sa seule sentence directe documentée. Seule et unique.</div>
+        </div>
+        <div class="quote-block" style="border-color:#d97706">
+          <em>Le climat il est malveillant là.</em>
+          <div class="quote-meta">layvi — 2022-07-19 · Il observe la malveillance des autres. Spectateur, pas acteur.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ VERDICT FINAL ══ -->
+  <div class="verdict-final">
+    <h3>Verdict — Classement Kouffardor</h3>
+    <p>
+      La tier list révèle une structure intéressante : les membres les moins volumineux (baiedhiver, cryo) sont les plus <em>efficacement</em> malveillants, tandis que le plus bavard (dosinge) l'est le moins profondément. <strong style="color:#fca5a5">Espy remporte le Kouffardor</strong> haut la main — il est le seul à avoir transformé la malveillance en institution, à l'avoir nommée, cartographiée, et ritualisée à l'échelle du groupe. Sa liste des faiblesses du Discordeum est un chef-d'œuvre de malveillance froide : il a pris le temps de trouver la vulnérabilité de chaque membre et de la documenter publiquement. <strong style="color:#fdba74">Cryo et baiedhiver</strong> se disputent la deuxième place avec deux styles distincts — l'un par la répétition froide et bureaucratique, l'autre par l'éclat littéraire et procédurier. <strong style="color:#93c5fd">Dosinge</strong>, malgré son volume, reste en B : trop bruyant pour être dangereux. <strong style="color:#fbbf24">Layvi</strong> clôt le classement — il est malveillant malgré lui, par inaction, ce qui est une forme de malveillance que la Chancla ne sanctionne pas encore, mais devrait.
+    </p>
+  </div>
+
+</div>
+</body>
+</html>

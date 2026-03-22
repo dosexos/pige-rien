@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>38°c — L'Arc Covid · Septembre 2020</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Sans:wght@300;400;500&display=swap');
+
+  :root {
+    --bg:      #070a0f;
+    --bg2:     #0c1018;
+    --bg3:     #111820;
+    --border:  #1a2030;
+    --text:    #b8c4d0;
+    --muted:   #4a5a6a;
+    --accent:  #60a0d0;
+    --warm:    #d07060;
+    --cold:    #60c0b0;
+    --yellow:  #d0b060;
+    --green:   #60b080;
+    --dim:     #202830;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 80px 48px;
+    position: relative;
+    background:
+      radial-gradient(ellipse at 60% 40%, rgba(208,112,96,0.07) 0%, transparent 55%),
+      radial-gradient(ellipse at 20% 70%, rgba(96,160,208,0.04) 0%, transparent 45%),
+      var(--bg);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  /* Température en fond */
+  .hero-temp {
+    position: absolute;
+    top: 0; right: 0;
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(200px, 35vw, 400px);
+    font-weight: 800;
+    color: var(--warm);
+    opacity: 0.04;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+    padding: 40px;
+  }
+
+  .hero-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--warm); margin-bottom: 24px;
+    opacity: 0; animation: fadeUp 0.7s ease forwards 0.2s;
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(48px, 9vw, 96px);
+    font-weight: 800; line-height: 0.95;
+    color: #fff; margin-bottom: 16px;
+    opacity: 0; animation: fadeUp 0.7s ease forwards 0.5s;
+  }
+  .hero h1 .deg { color: var(--warm); }
+
+  .hero-sub {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: clamp(14px, 2vw, 18px);
+    font-weight: 300; color: var(--muted);
+    max-width: 480px; line-height: 1.6;
+    opacity: 0; animation: fadeUp 0.7s ease forwards 0.8s;
+  }
+
+  .hero-meta {
+    display: flex; gap: 32px; margin-top: 48px; flex-wrap: wrap;
+    opacity: 0; animation: fadeUp 0.7s ease forwards 1.1s;
+  }
+  .hm { display: flex; flex-direction: column; }
+  .hm-v {
+    font-family: 'Syne', sans-serif;
+    font-size: 24px; font-weight: 700; color: var(--warm); line-height: 1;
+  }
+  .hm-l { font-size: 11px; color: var(--muted); margin-top: 3px; letter-spacing: 0.5px; }
+
+  /* ── CONTAINER ── */
+  .container { max-width: 840px; margin: 0 auto; padding: 0 40px; }
+
+  /* ── ACTES ── */
+  .act { padding: 72px 0 0; }
+  .act-header {
+    display: flex; align-items: baseline; gap: 16px;
+    margin-bottom: 36px; padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .act-n {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; letter-spacing: 2px; color: var(--muted);
+  }
+  .act-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(20px, 3.5vw, 30px); font-weight: 700; color: #fff;
+  }
+  .act-date {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; letter-spacing: 2px; color: var(--warm);
+    margin-left: auto; flex-shrink: 0;
+  }
+
+  /* ── PROSE ── */
+  .prose {
+    font-size: 15px; line-height: 1.9; color: var(--text);
+    margin-bottom: 24px; max-width: 680px;
+  }
+  .prose strong { color: #fff; font-weight: 500; }
+  .prose em { color: var(--warm); font-style: normal; }
+
+  /* ── MESSAGES ── */
+  .chat {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 4px; padding: 18px 22px; margin: 24px 0;
+    position: relative;
+  }
+  .chat::before {
+    content: attr(data-label);
+    position: absolute; top: -10px; left: 16px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 9px;
+    letter-spacing: 2px; text-transform: uppercase;
+    background: var(--bg2); padding: 0 8px; color: var(--muted);
+  }
+  .chat.warm { border-color: rgba(208,112,96,0.3); }
+  .chat.warm::before { color: var(--warm); }
+  .chat.cold { border-color: rgba(96,192,176,0.2); }
+  .chat.cold::before { color: var(--cold); }
+  .chat.key  { border-color: rgba(208,176,96,0.25); background: #0f1218; }
+  .chat.key::before { color: var(--yellow); }
+
+  .msg { display: flex; gap: 10px; margin-bottom: 8px; }
+  .msg:last-child { margin-bottom: 0; }
+  .av {
+    width: 26px; height: 26px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; flex-shrink: 0; margin-top: 2px;
+  }
+  .av-d { background: #1a1030; color: #a078e0; }
+  .av-c { background: #200f05; color: #e08060; }
+  .av-e { background: #051820; color: #60c0b0; }
+  .av-l { background: #1a1505; color: #c0a040; }
+
+  .mb { flex: 1; }
+  .ma { font-size: 10px; font-weight: 700; margin-bottom: 2px; }
+  .col-d { color: #a078e0; }
+  .col-c { color: #e08060; }
+  .col-e { color: #60c0b0; }
+  .col-l { color: #c0a040; }
+
+  .mt {
+    font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+    color: #a0b0c0; line-height: 1.55;
+    background: var(--bg3); border-radius: 3px;
+    padding: 7px 10px;
+  }
+  .mtime { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: var(--muted); margin-top: 2px; }
+
+  /* ── PULL QUOTE ── */
+  .pull {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(18px, 3vw, 24px); font-weight: 700;
+    color: var(--warm);
+    border-left: 3px solid var(--warm);
+    padding: 14px 0 14px 24px;
+    margin: 36px 0; line-height: 1.3;
+  }
+  .pull .att {
+    display: block; font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 400; color: var(--muted);
+    margin-top: 10px; letter-spacing: 1px;
+  }
+
+  /* ── TIMELINE VERTICALE ── */
+  .tl { position: relative; padding-left: 24px; margin: 32px 0; }
+  .tl::before {
+    content: ''; position: absolute; left: 5px; top: 0; bottom: 0;
+    width: 1px; background: var(--border);
+  }
+  .tl-item { position: relative; margin-bottom: 22px; }
+  .tl-item::before {
+    content: ''; position: absolute; left: -21px; top: 6px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--dim); border: 2px solid var(--bg);
+  }
+  .tl-item.key::before { background: var(--warm); }
+  .tl-item.neg::before { background: var(--cold); }
+  .tl-date {
+    font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+    color: var(--warm); letter-spacing: 1px; margin-bottom: 3px;
+  }
+  .tl-item.neg .tl-date { color: var(--cold); }
+  .tl-text { font-size: 13px; color: var(--text); line-height: 1.6; }
+  .tl-text strong { color: #fff; font-weight: 500; }
+
+  /* ── SCORE CARD cryo ── */
+  .score-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 4px; padding: 20px 24px; margin: 28px 0;
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 600px) { .score-card { grid-template-columns: 1fr; } }
+  .sc-item { display: flex; flex-direction: column; }
+  .sc-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .sc-value { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; color: var(--warm); line-height: 1; }
+  .sc-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  /* ── SYMPTÔMES BOX ── */
+  .symptoms {
+    background: #0e0808;
+    border: 1px solid rgba(208,112,96,0.25);
+    border-radius: 4px; padding: 18px 22px; margin: 24px 0;
+  }
+  .symptoms-title {
+    font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+    letter-spacing: 2px; color: var(--warm); text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .symptoms-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .symptom {
+    background: rgba(208,112,96,0.1); border: 1px solid rgba(208,112,96,0.2);
+    border-radius: 20px; padding: 3px 12px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+    color: var(--warm);
+  }
+  .symptom.done { background: rgba(96,192,176,0.08); border-color: rgba(96,192,176,0.2); color: var(--cold); }
+
+  /* ── RÉSULTAT BOX ── */
+  .result-box {
+    background: #081510; border: 2px solid var(--cold);
+    border-radius: 4px; padding: 24px 28px; margin: 32px 0;
+    text-align: center;
+  }
+  .result-label {
+    font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+    letter-spacing: 3px; color: var(--cold); text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .result-value {
+    font-family: 'Syne', sans-serif; font-size: 48px;
+    font-weight: 800; color: var(--cold); line-height: 1;
+    margin-bottom: 8px;
+  }
+  .result-sub { font-size: 13px; color: var(--muted); }
+
+  /* ── SEP ── */
+  .sep { height: 1px; background: var(--border); margin: 56px 0; }
+
+  /* ── ÉPILOGUE ── */
+  .epilogue {
+    padding: 72px 0; border-top: 1px solid var(--border); margin-top: 64px;
+  }
+  .epilogue-tag {
+    font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+    letter-spacing: 3px; color: var(--muted); text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .epilogue-text { font-size: 14px; color: var(--muted); max-width: 560px; line-height: 1.85; margin-bottom: 14px; }
+  .epilogue-text strong { color: var(--text); font-weight: 400; }
+
+  .fin-quote {
+    font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700;
+    color: var(--text); margin: 36px 0 8px; line-height: 1.4; max-width: 540px;
+  }
+  .fin-attr {
+    font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+    color: var(--muted); letter-spacing: 1px;
+  }
+  .fin { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 4px; color: var(--dim); text-transform: uppercase; margin-top: 48px; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-temp">38°</div>
+  <div class="hero-tag">Discordeum · Septembre 2020 · Épisode médical</div>
+  <h1><span class="deg">38°c</span><br>Courbatures.<br>Insomnie.</h1>
+  <p class="hero-sub">ou : comment contaminer son discord depuis son lit à 3h07 du matin</p>
+  <div class="hero-meta">
+    <div class="hm"><div class="hm-v">8 jours</div><div class="hm-l">de saga</div></div>
+    <div class="hm"><div class="hm-v">3h07</div><div class="hm-l">heure du premier message</div></div>
+    <div class="hm"><div class="hm-v">NÉGATIF</div><div class="hm-l">résultat final</div></div>
+    <div class="hm"><div class="hm-v">0</div><div class="hm-l">autre symptôme dans le groupe</div></div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ACTE I -->
+  <div class="act">
+    <div class="act-header">
+      <div class="act-n">Acte I</div>
+      <div class="act-title">Europapark</div>
+      <div class="act-date">FIN AOÛT</div>
+    </div>
+
+    <p class="prose">
+      Fin août 2020. Le groupe sort du confinement, pishot vient de s'effondrer. Cryo, dosinge, layvi et d'autres ont visité <em>Europapark</em> ensemble — un parc d'attractions. C'est la sortie de l'été. Le groupe rentre. Tout le monde va bien.
+    </p>
+
+    <p class="prose">
+      Le 5 septembre, dans une conversation anodine sur des skins LoL, dosinge lâche en passant : <strong>"Tout ce que tu vas ramasser c'est une mandale et le covid en prime."</strong> C'est une blague. Personne ne fait attention.
+    </p>
+
+    <p class="prose">
+      Deux jours plus tard, le 7 septembre à <em>3h07 du matin</em>, dosinge envoie un message dans le canal.
+    </p>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ACTE II -->
+  <div class="act">
+    <div class="act-header">
+      <div class="act-n">Acte II</div>
+      <div class="act-title">3h07</div>
+      <div class="act-date">7 SEPT · 03:07</div>
+    </div>
+
+    <p class="prose">
+      Il n'arrive pas à dormir. Il a de la fièvre. Et il prévient immédiatement ses amis — les mêmes qui étaient avec lui à Europapark.
+    </p>
+
+    <div class="chat warm" data-label="Message initial · 3h07 du matin">
+      <div class="msg">
+        <div class="av av-d">D</div>
+        <div class="mb">
+          <div class="ma col-d">dosinge</div>
+          <div class="mt">38°c courbatures maux de tête arrive pas a dormir, du coup j'ai surement le covid de mon pere ou c'est moi qui lui ai file, faudrait p-e vous faire tester</div>
+          <div class="mtime">7 septembre 2020 · 03:07</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="av av-d">D</div>
+        <div class="mb">
+          <div class="ma col-d">dosinge</div>
+          <div class="mt">Je vous tiens au courant</div>
+          <div class="mtime">7 septembre 2020 · 03:07</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="av av-d">D</div>
+        <div class="mb">
+          <div class="ma col-d">dosinge</div>
+          <div class="mt">Au vu du peu de sorties de mon père et la nôtre à europapark y a plus de chance que je sois l'origine du mal</div>
+          <div class="mtime">7 septembre 2020 · 03:09</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="symptoms">
+      <div class="symptoms-title">// Symptômes déclarés</div>
+      <div class="symptoms-list">
+        <span class="symptom">38°c de fièvre</span>
+        <span class="symptom">courbatures</span>
+        <span class="symptom">maux de tête</span>
+        <span class="symptom">insomnie</span>
+        <span class="symptom">chair de poule à 25°c</span>
+        <span class="symptom">chaleur intense</span>
+      </div>
+    </div>
+
+    <p class="prose">
+      Europapark. 7-8 jours avant les symptômes. La fenêtre d'incubation colle. Dosinge en est persuadé : c'est lui le patient zéro du groupe, et son père a probablement chopé ça de lui ou vice versa. Il prévient tout le monde — layvi qui était à la piscine avec quelqu'un d'autre, cryo qui était au parc avec eux.
+    </p>
+
+    <p class="prose">
+      Le matin, le groupe se réveille et découvre les messages. La réaction est immédiate — et caractéristique.
+    </p>
+
+    <div class="chat cold" data-label="Réactions du matin · 7 sept 09h-13h">
+      <div class="msg">
+        <div class="av av-c">C</div>
+        <div class="mb">
+          <div class="ma col-c">cryoslinger</div>
+          <div class="mt">En vrai europa park ça fait 7-8 j donc on devrait être clean non ? Ça peut aller jusqu'à 14j en asymptomatique certes, mais c'est assez rare</div>
+          <div class="mtime">9:43</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="av av-c">C</div>
+        <div class="mb">
+          <div class="ma col-c">cryoslinger</div>
+          <div class="mt">YRR, Dorian est juste un cuck fragile, il est covid free. Le mec a 38 de fièvre et mal à la tête, il a juste été bercé trop près du radiateur</div>
+          <div class="mtime">13:22</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="av av-d">D</div>
+        <div class="mb">
+          <div class="ma col-d">dosinge</div>
+          <div class="mt">Les maux de tête je me suis volontairement claqué la tête contre le mur ? Les courbatures SANS SORTIR DE CHEZ MOI EN CINQ JOURS</div>
+          <div class="mtime">13:23</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="av av-e">E</div>
+        <div class="mb">
+          <div class="ma col-e">espy</div>
+          <div class="mt">Dodent on t'avait dit de pas lécher les rembardes du parc</div>
+          <div class="mtime">13:16</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="av av-c">C</div>
+        <div class="mb">
+          <div class="ma col-c">cryoslinger</div>
+          <div class="mt">C'est de ma faute, je lui avais dit que y'avait eu les pieds de Corrin dessus</div>
+          <div class="mtime">13:27</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pull">
+      "Dodent on t'avait dit de pas lécher les rembardes du parc"
+      <span class="att">espy — 7 septembre 2020, 13:16 · Diagnostic médical officiel</span>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ACTE III -->
+  <div class="act">
+    <div class="act-header">
+      <div class="act-n">Acte III</div>
+      <div class="act-title">Le coton-tige de l'infirmière</div>
+      <div class="act-date">7-8 SEPT</div>
+    </div>
+
+    <p class="prose">
+      Les labos sont blindés. Dosinge ne peut pas prendre de rendez-vous. Sa mère — infirmière — propose de prélever elle-même l'échantillon et de l'apporter au labo directement. La logistique de cette proposition déclenche chez cryo un interrogatoire administratif en règle.
+    </p>
+
+    <div class="chat warm" data-label="Le débat logistique · 7 sept 13h25">
+      <div class="msg">
+        <div class="av av-d">D</div>
+        <div class="mb">
+          <div class="ma col-d">dosinge</div>
+          <div class="mt">Askip les labos sont blindés et ma mère va peut-être elle-même me coton-tiger demain</div>
+          <div class="mtime">13:25</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="av av-c">C</div>
+        <div class="mb">
+          <div class="ma col-c">cryoslinger</div>
+          <div class="mt">En vrai si les labos sont blindés à quoi ça sert que ta mère te coton tige à la maison ?</div>
+          <div class="mtime">13:27</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="av av-c">C</div>
+        <div class="mb">
+          <div class="ma col-c">cryoslinger</div>
+          <div class="mt">Et elle s'est dit eugneugneu je balance un échantillon potentiellement contaminé à l'accueil d'un labo et ils vont dire "oui oui merci de votre civisme" ?</div>
+          <div class="mtime">13:28</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="av av-d">D</div>
+        <div class="mb">
+          <div class="ma col-d">dosinge</div>
+          <div class="mt">Je pense pas qu'elle s'est dit GNUEGNUEGNU COTON TIGE GO BONK</div>
+          <div class="mtime">13:28</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="prose">
+      Le 7 septembre à 17h21, dosinge annonce que c'est réglé : une infirmière viendra le lendemain matin entre 8h et 9h. Il précise immédiatement qu'il essaiera de la noter. Le 8 septembre à 6h52, il rend son verdict : <strong>"C'était une infirmière en fin de carrière, je note pas, wolah. Elle entre même plus dans la catégorie milf."</strong>
+    </p>
+
+    <p class="prose">
+      Le prélèvement est fait. Il reste à attendre les résultats. Et c'est là que cryo entre en jeu.
+    </p>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ACTE IV -->
+  <div class="act">
+    <div class="act-header">
+      <div class="act-n">Acte IV</div>
+      <div class="act-title">cryoslinger, comptable</div>
+      <div class="act-date">9-10 SEPT</div>
+    </div>
+
+    <p class="prose">
+      Le 8 septembre au soir, le prélèvement a été fait. Le 9 septembre à 7h44, cryo envoie son premier bulletin de suivi :
+    </p>
+
+    <div class="chat key" data-label="Bulletins de suivi officiel · cryo">
+      <div class="msg">
+        <div class="av av-c">C</div>
+        <div class="mb">
+          <div class="ma col-c">cryoslinger</div>
+          <div class="mt">t'as tes résultats ?</div>
+          <div class="mtime">9 septembre · 07:44</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="av av-d">D</div>
+        <div class="mb">
+          <div class="ma col-d">dosinge</div>
+          <div class="mt">Apprend à compter les heures</div>
+          <div class="mtime">9 septembre · 09:48</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="av av-c">C</div>
+        <div class="mb">
+          <div class="ma col-c">cryoslinger</div>
+          <div class="mt">t'es un vrai gitan, tous mes collègues testés ont eu leurs résultats le lendemain. Le lendemain sous 24h, je précise, pas testés le matin et le résultat le lendemain après-midi</div>
+          <div class="mtime">9 septembre · 13:11</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="av av-c">C</div>
+        <div class="mb">
+          <div class="ma col-c">cryoslinger</div>
+          <div class="mt">Avant que tu ne cherches une faille de cuck</div>
+          <div class="mtime">9 septembre · 13:12</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="av av-c">C</div>
+        <div class="mb">
+          <div class="ma col-c">cryoslinger</div>
+          <div class="mt">Mais vu que je ne me suis pas fait testé je ne peux pas savoir</div>
+          <div class="mtime">9 septembre · 13:14</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="prose">
+      La finesse du dernier message. Cryo établit une norme statistique basée sur ses collègues, précise les conditions exactes ("pas testés le matin et le résultat le lendemain après-midi"), anticipe les objections de dosinge ("avant que tu ne cherches une faille") — et conclut en admettant qu'il ne s'est pas fait tester lui-même. Ce niveau de préparation rhétorique pour demander un résultat de test covid est remarquable.
+    </p>
+
+    <div class="score-card">
+      <div class="sc-item">
+        <div class="sc-label">Relances de cryo</div>
+        <div class="sc-value">3+</div>
+        <div class="sc-sub">sur 2 jours</div>
+      </div>
+      <div class="sc-item">
+        <div class="sc-label">Délai annoncé par cryo</div>
+        <div class="sc-value">24h</div>
+        <div class="sc-sub">"comme mes collègues"</div>
+      </div>
+      <div class="sc-item">
+        <div class="sc-label">Délai réel</div>
+        <div class="sc-value">48-72h</div>
+        <div class="sc-sub">dosinge l'avait dit</div>
+      </div>
+    </div>
+
+    <p class="prose">
+      Le 10 septembre au matin, cryo remet ça : <em>"tu as tes résultats ou je dois encore apprendre à compter jusqu'à 24 ?"</em> Espy prend la défense de dosinge avec une rhétorique inversée : <strong>"tu devrais être au courant de la situation de chaque laboratoire d'analyse de la métropole comme tout être humain décent."</strong>
+    </p>
+
+    <div class="chat warm" data-label="Le débat final sur les délais · 10 sept">
+      <div class="msg">
+        <div class="av av-c">C</div>
+        <div class="mb">
+          <div class="ma col-c">cryoslinger</div>
+          <div class="mt">Bon, tu as tes résultats ou je dois encore apprendre à compter jusqu'à 24 ?</div>
+          <div class="mtime">10 septembre · 11:01</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="av av-e">E</div>
+        <div class="mb">
+          <div class="ma col-e">espy</div>
+          <div class="mt">Sois pas con thoht tu devrais être au courant de la situation de chaque laboratoire d'analyse de la métropole comme tout être humain décent, ça t'éviterais de devoir poser des questions aussi stupides à des gens qui dépassent ton intellect</div>
+          <div class="mtime">10 septembre · 11:15</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="av av-c">C</div>
+        <div class="mb">
+          <div class="ma col-c">cryoslinger</div>
+          <div class="mt">Et puis c'est l'échantillon de durion, ils doivent déjà avoir du mal à comprendre de quelle espèce provient l'ADN récupéré</div>
+          <div class="mtime">10 septembre · 11:16</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ACTE V — LE RÉSULTAT -->
+  <div class="act">
+    <div class="act-header">
+      <div class="act-n">Acte V</div>
+      <div class="act-title">Le résultat</div>
+      <div class="act-date">10 SEPT · 22:05</div>
+    </div>
+
+    <p class="prose">
+      Le soir du 10 septembre, dosinge reçoit ses résultats. Il les annonce dans le canal.
+    </p>
+
+    <div class="result-box">
+      <div class="result-label">// Résultat PCR · dosinge · 10 septembre 2020</div>
+      <div class="result-value">NÉGATIF</div>
+      <div class="result-sub">Rendu en 4 jours ouvrés</div>
+    </div>
+
+    <div class="chat cold" data-label="Annonce du résultat · 22h05">
+      <div class="msg">
+        <div class="av av-d">D</div>
+        <div class="mb">
+          <div class="ma col-d">dosinge</div>
+          <div class="mt">En vrai simes. Tests reviennent négatifs je comprends pas</div>
+          <div class="mtime">10 septembre · 22:05</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="av av-d">D</div>
+        <div class="mb">
+          <div class="ma col-d">dosinge</div>
+          <div class="mt">Je me dis par curiosité je vais regarder le temps d'incubation des maladies plus courantes genre syndrome grippal et tout. Max 72h. Je suis pas sorti depuis mardi et symptômes dimanche soir</div>
+          <div class="mtime">10 septembre · 22:06</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="av av-c">C</div>
+        <div class="mb">
+          <div class="ma col-c">cryoslinger</div>
+          <div class="mt">eugneugneu covid ready</div>
+          <div class="mtime">10 septembre · 22:06</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="av av-c">C</div>
+        <div class="mb">
+          <div class="ma col-c">cryoslinger</div>
+          <div class="mt">oui oui ligma</div>
+          <div class="mtime">22:07</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="av av-d">D</div>
+        <div class="mb">
+          <div class="ma col-d">dosinge</div>
+          <div class="mt">Bah gros trouve moi ce que j'ai pu faire avec 5 jours d'incubation</div>
+          <div class="mtime">22:07</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="av av-d">D</div>
+        <div class="mb">
+          <div class="ma col-d">dosinge</div>
+          <div class="mt">Je me recouche jpp de tes bêtises</div>
+          <div class="mtime">22:07</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pull">
+      "En vrai simes. Tests reviennent négatifs je comprends pas."
+      <span class="att">dosinge — 10 septembre 2020, 22:05 · Après 4 jours de saga</span>
+    </div>
+
+    <p class="prose">
+      Dosinge ne comprend pas parce que les symptômes étaient bien réels : la fièvre, les courbatures, l'insomnie à 3h du matin. La réponse probable : une grippe ordinaire, ou un faux négatif dans un système de santé sous pression. Cryo répond "eugneugneu covid ready" puis "oui oui ligma." La conclusion scientifique est posée.
+    </p>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ACTE VI — LES RETOMBÉES -->
+  <div class="act">
+    <div class="act-header">
+      <div class="act-n">Acte VI</div>
+      <div class="act-title">Les contaminations collatérales</div>
+      <div class="act-date">14 SEPT</div>
+    </div>
+
+    <p class="prose">
+      Le 14 septembre, cryo reçoit finalement les résultats de ceux qui se sont fait tester dans la foulée. Verdict : zéro positif. Cryo annonce dans le canal :
+    </p>
+
+    <div class="chat cold" data-label="Bilan épidémique · 14 sept">
+      <div class="msg">
+        <div class="av av-c">C</div>
+        <div class="mb">
+          <div class="ma col-c">cryoslinger</div>
+          <div class="mt">Putain de merde il nous l'a vraiment chopé ce con. Maudite salope.</div>
+          <div class="mtime">14 septembre · 09:52</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="prose">
+      Ce message est envoyé avant que cryo ait vu le résultat négatif de dosinge. Quand il comprend que dosinge était négatif, il retourne sa veste immédiatement : <em>"À ceci près qu'on est 15j après notre dernier contact avec Dorian Covided, et que pour ma part j'ai toujours zéro symptômes."</em>
+    </p>
+
+    <p class="prose">
+      Espy, de son côté, passe finalement au labo le 14 septembre, contraint et forcé : <strong>"Allez baise ta mère (la 10/10 nonobstant) j'appelle un labo."</strong> Il annonce qu'il se fera tester le lendemain matin à 8h directement. Résultat : non documenté dans le canal — probablement négatif, car aucune mention n'en est faite.
+    </p>
+
+    <div class="tl">
+      <div class="tl-item key">
+        <div class="tl-date">7 SEPT · 03:07</div>
+        <div class="tl-text"><strong>Annonce.</strong> Dosinge : 38°c, courbatures, insomnie. Prévient le groupe depuis son lit. Incrimine Europapark.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">7 SEPT · 09:43</div>
+        <div class="tl-text">Cryo diagnostique : "bercé trop près du radiateur." Espy diagnostique : "léché les rembardes du parc."</div>
+      </div>
+      <div class="tl-item key">
+        <div class="tl-date">7 SEPT · 17:21</div>
+        <div class="tl-text"><strong>Infirmière programmée.</strong> Sa mère viendra le prélever entre 8h et 9h. Dosinge annonce qu'il la notera.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">8 SEPT · 06:52</div>
+        <div class="tl-text">Verdict infirmière : "fin de carrière, entre plus dans la catégorie milf, je note pas." Prélèvement effectué.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">9 SEPT · 07:44</div>
+        <div class="tl-text">Cryo : "t'as tes résultats ?" — premier d'une série de relances administratives.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">9 SEPT · 13:11</div>
+        <div class="tl-text">Cryo cite ses collègues, établit la norme des 24h, anticipe les objections, avoue ne pas s'être testé lui-même.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">10 SEPT · 11:01</div>
+        <div class="tl-text">"Tu as tes résultats ou je dois encore apprendre à compter jusqu'à 24 ?" — deuxième bulletin.</div>
+      </div>
+      <div class="tl-item neg">
+        <div class="tl-date">10 SEPT · 22:05</div>
+        <div class="tl-text"><strong>RÉSULTAT : NÉGATIF.</strong> Dosinge : "je comprends pas." Cryo : "eugneugneu covid ready." Cryo : "oui oui ligma."</div>
+      </div>
+      <div class="tl-item neg">
+        <div class="tl-date">14 SEPT</div>
+        <div class="tl-text">Cryo et les autres : zéro symptôme. Espy se fait finalement tester. Résultat non documenté. L'arc se ferme.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ÉPILOGUE -->
+  <div class="epilogue">
+    <div class="epilogue-tag">// Épilogue</div>
+    <p class="epilogue-text">
+      Dosinge n'avait probablement pas le covid. Il avait probablement une grippe — peut-être attrapée à Europapark, peut-être ailleurs. Le résultat négatif ne l'a pas convaincu : il a sorti les maths d'incubation, cherché une explication, et a conclu que soit le test était faux, soit c'était autre chose.
+    </p>
+    <p class="epilogue-text">
+      Le groupe, lui, n'a jamais vraiment cru qu'il était positif — mais a joué le jeu pendant huit jours avec une rigueur administrative qu'on n'attendait pas. Cryo en particulier a développé une science du suivi de résultats qui dépasse largement les exigences de la situation.
+    </p>
+    <p class="epilogue-text">
+      Pendant toute la saga, le canal a continué comme si de rien n'était : <strong>skins LoL, sessions watch-together, discussions FFXIV, YTP Naruto.</strong> Le covid de dosinge était un sous-canal. La vie continuait au-dessus.
+    </p>
+
+    <div class="fin-quote">"Je me recouche, jpp de tes bêtises."</div>
+    <div class="fin-attr">dosinge — 10 septembre 2020, 22:07 · Mot de la fin</div>
+
+    <div class="fin">// fin de l'arc · septembre 2020</div>
+  </div>
+
+</div>
+</body>
+</html>

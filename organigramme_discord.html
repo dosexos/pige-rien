@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carte du Discordeum</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0f0f1a;
+    color: #d4d4e8;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #12101f 50%, #1a1a2e 100%);
+    border-bottom: 2px solid #3b3070;
+    padding: 28px 36px 20px;
+  }
+  .header h1 { font-size: 22px; font-weight: 700; color: #fff; }
+  .header .subtitle { font-size: 12px; color: #8888aa; margin-top: 5px; }
+  .header .subtitle span { color: #a78bfa; font-weight: 600; }
+
+  .container { padding: 24px 36px; max-width: 1200px; }
+
+  .section-title {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 2px; color: #666688;
+    margin: 28px 0 14px; padding-bottom: 6px;
+    border-bottom: 1px solid #2a2a45;
+  }
+
+  /* ── Graphe SVG central ── */
+  .graph-wrap {
+    background: #12121f;
+    border: 1px solid #2a2a45;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    overflow-x: auto;
+  }
+
+  /* ── Grille de fiches membres ── */
+  .members-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 900px) { .members-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  .member-card {
+    background: #1a1a2e;
+    border: 1px solid #2a2a45;
+    border-radius: 10px;
+    padding: 16px;
+    position: relative;
+    transition: border-color .2s;
+  }
+  .member-card:hover { border-color: #533483; }
+
+  .member-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .member-avatar {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .member-name { font-size: 15px; font-weight: 700; color: #fff; }
+  .member-role { font-size: 11px; color: #8888aa; margin-top: 2px; }
+
+  .member-stats {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .stat-pill {
+    background: #12121f;
+    border: 1px solid #2a2a45;
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-size: 11px;
+    color: #c4c4d8;
+  }
+
+  .member-desc { font-size: 12px; color: #9999bb; line-height: 1.5; }
+
+  .badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .badge {
+    font-size: 10px; font-weight: 700;
+    padding: 2px 8px; border-radius: 20px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+
+  /* Couleurs par membre */
+  .col-dosinge  { color: #a78bfa; border-color: #533483; }
+  .col-espy     { color: #5eead4; border-color: #0f7a8a; }
+  .col-cryo     { color: #fb923c; border-color: #c2410c; }
+  .col-layvi    { color: #fbbf24; border-color: #d97706; }
+  .col-baie     { color: #4ade80; border-color: #16a34a; }
+  .col-kim      { color: #f9a8d4; border-color: #be185d; }
+  .col-thelio   { color: #94a3b8; border-color: #475569; }
+  .col-elbariel { color: #818cf8; border-color: #4338ca; }
+  .col-deleted  { color: #666688; border-color: #3a3a55; }
+
+  .av-dosinge  { background: #2a1a5a; color: #a78bfa; }
+  .av-espy     { background: #0a2030; color: #5eead4; }
+  .av-cryo     { background: #2a1205; color: #fb923c; }
+  .av-layvi    { background: #2a1f05; color: #fbbf24; }
+  .av-baie     { background: #0a2010; color: #4ade80; }
+  .av-kim      { background: #2a0a1a; color: #f9a8d4; }
+  .av-thelio   { background: #1a1f2a; color: #94a3b8; }
+  .av-elbariel { background: #0f1030; color: #818cf8; }
+
+  /* ── Section liens familiaux ── */
+  .family-tree {
+    background: #12121f;
+    border: 1px solid #d97706;
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+  }
+  .family-title {
+    font-size: 12px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; color: #d97706; margin-bottom: 16px;
+  }
+  .family-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    align-items: center;
+    text-align: center;
+  }
+  .fam-node {
+    padding: 10px;
+    border-radius: 8px;
+  }
+  .fam-name { font-size: 14px; font-weight: 700; }
+  .fam-label { font-size: 11px; color: #8888aa; margin-top: 2px; }
+  .fam-link {
+    display: flex; align-items: center; justify-content: center;
+    gap: 6px; font-size: 11px; color: #d97706;
+  }
+  .fam-divider { border: none; border-top: 1px dashed #d97706; margin: 8px 0; }
+  .running-gag {
+    background: #1c1505; border: 1px solid #d97706;
+    border-radius: 6px; padding: 10px 14px;
+    font-size: 12px; color: #c4c4d8;
+    font-style: italic; margin-top: 12px;
+  }
+  .running-gag strong { color: #fbbf24; font-style: normal; }
+
+  /* ── Matrice des dynamiques ── */
+  .matrix-wrap {
+    background: #12121f;
+    border: 1px solid #2a2a45;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 24px;
+    overflow-x: auto;
+  }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 8px 12px; text-align: center; font-size: 12px; }
+  th { color: #8888aa; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+  td:first-child { text-align: left; font-weight: 700; font-size: 13px; }
+  tr:not(:last-child) td { border-bottom: 1px solid #1e1e38; }
+  .cell-hot    { color: #a78bfa; font-weight: 700; }
+  .cell-mid    { color: #8888aa; }
+  .cell-cold   { color: #3a3a55; }
+  .cell-fam    { color: #d97706; font-weight: 700; }
+  .cell-self   { color: #2a2a45; }
+  .dyn-label   { font-size: 10px; display: block; color: #666688; font-weight: 400; }
+
+  /* ── Légende dynamiques ── */
+  .legend-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 10px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #8888aa; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  /* ── Verdict global ── */
+  .verdict {
+    background: linear-gradient(135deg, #13102a, #1c1505);
+    border: 1px solid #533483; border-right-color: #d97706;
+    border-radius: 8px; padding: 20px 24px; margin-top: 8px;
+  }
+  .verdict h3 { font-size: 13px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1.5px; color: #a78bfa; margin-bottom: 10px; }
+  .verdict p { font-size: 13px; color: #c4c4d8; line-height: 1.7; }
+
+  /* barre d'activité mini */
+  .bar-wrap { display: flex; align-items: flex-end; gap: 2px; height: 28px; margin-top: 8px; }
+  .bar-seg { flex: 1; border-radius: 2px 2px 0 0; min-width: 3px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Carte du Discordeum</h1>
+  <div class="subtitle">
+    Serveur privé · <span>52 752 messages</span> · 2018 → 2026 · 5 membres actifs + famille
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ══ GRAPHE CENTRAL ══ -->
+  <div class="section-title">Structure du groupe</div>
+  <div class="graph-wrap">
+    <svg width="100%" viewBox="0 0 900 440">
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+
+      <!-- ── Halo "noyau dur" ── -->
+      <ellipse cx="480" cy="160" rx="280" ry="120" fill="none" stroke="#533483" stroke-width="0.5" stroke-dasharray="6 4" opacity="0.4"/>
+      <text font-family="Segoe UI,system-ui,sans-serif" font-size="10" fill="#533483" opacity="0.6" x="718" y="108">noyau dur</text>
+
+      <!-- ── Halo "famille cryo" ── -->
+      <ellipse cx="160" cy="330" rx="148" ry="90" fill="none" stroke="#d97706" stroke-width="0.5" stroke-dasharray="4 3" opacity="0.4"/>
+      <text font-family="Segoe UI,system-ui,sans-serif" font-size="10" fill="#d97706" opacity="0.6" x="46" y="260">famille cryo</text>
+
+      <!-- ═══ LIENS ═══ -->
+
+      <!-- dosinge ↔ espy (fort) -->
+      <line x1="480" y1="112" x2="620" y2="112" stroke="#7c3aed" stroke-width="2.5" marker-end="url(#arr)" marker-start="url(#arr)"/>
+
+      <!-- dosinge ↔ cryo (fort) -->
+      <line x1="420" y1="168" x2="310" y2="220" stroke="#7c3aed" stroke-width="2" marker-end="url(#arr)" marker-start="url(#arr)"/>
+
+      <!-- espy ↔ layvi (fort) -->
+      <line x1="660" y1="140" x2="700" y2="220" stroke="#7c3aed" stroke-width="2" marker-end="url(#arr)" marker-start="url(#arr)"/>
+
+      <!-- cryo ↔ layvi (moyen) -->
+      <line x1="360" y1="240" x2="660" y2="240" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr)" marker-start="url(#arr)"/>
+
+      <!-- dosinge ↔ layvi (secondaire) -->
+      <path d="M520 140 Q600 180 680 228" fill="none" stroke="#444466" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+
+      <!-- espy ↔ cryo (secondaire) -->
+      <path d="M630 140 Q500 180 370 228" fill="none" stroke="#444466" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+
+      <!-- dosinge ↔ baiedhiver (secondaire) -->
+      <path d="M420 170 Q300 230 220 295" fill="none" stroke="#444466" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+
+      <!-- cryo — baiedhiver (frère, orange) -->
+      <line x1="260" y1="256" x2="200" y2="298" stroke="#d97706" stroke-width="2" marker-end="url(#arr)" marker-start="url(#arr)"/>
+      <text font-family="Segoe UI,system-ui,sans-serif" font-size="10" fill="#d97706" x="206" y="272">frères</text>
+
+      <!-- cryo — kimyaku (époux, orange) -->
+      <line x1="270" y1="250" x2="148" y2="330" stroke="#d97706" stroke-width="2" marker-end="url(#arr)" marker-start="url(#arr)"/>
+      <text font-family="Segoe UI,system-ui,sans-serif" font-size="10" fill="#d97706" x="175" y="298">époux</text>
+
+      <!-- cryo — thélio (père, orange) -->
+      <line x1="290" y1="268" x2="248" y2="360" stroke="#d97706" stroke-width="1.5" marker-end="url(#arr)"/>
+      <text font-family="Segoe UI,system-ui,sans-serif" font-size="10" fill="#d97706" x="272" y="320">père</text>
+
+      <!-- kimyaku — thélio (mère) -->
+      <line x1="140" y1="358" x2="190" y2="380" stroke="#d97706" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#arr)"/>
+
+      <!-- elbariel (lien faible vers le groupe) -->
+      <path d="M820 150 Q760 160 700 148" fill="none" stroke="#333355" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#arr)"/>
+
+      <!-- ═══ NŒUDS ═══ -->
+
+      <!-- dosinge -->
+      <g>
+        <rect x="390" y="80" width="170" height="64" rx="10" fill="#1e1535" stroke="#7c3aed" stroke-width="1.5"/>
+        <text font-family="Segoe UI,system-ui,sans-serif" font-size="14" font-weight="700" fill="#a78bfa" x="475" y="108" text-anchor="middle">dosinge</text>
+        <text font-family="Segoe UI,system-ui,sans-serif" font-size="11" fill="#8888aa" x="475" y="126" text-anchor="middle">20 571 msgs · pivot</text>
+      </g>
+
+      <!-- espy -->
+      <g>
+        <rect x="590" y="80" width="160" height="64" rx="10" fill="#0a1f1f" stroke="#0f7a8a" stroke-width="1.5"/>
+        <text font-family="Segoe UI,system-ui,sans-serif" font-size="14" font-weight="700" fill="#5eead4" x="670" y="108" text-anchor="middle">espy</text>
+        <text font-family="Segoe UI,system-ui,sans-serif" font-size="11" fill="#8888aa" x="670" y="126" text-anchor="middle">12 390 msgs · répondant</text>
+      </g>
+
+      <!-- cryoslinger -->
+      <g>
+        <rect x="254" y="218" width="170" height="64" rx="10" fill="#1f1208" stroke="#c2410c" stroke-width="1.5"/>
+        <text font-family="Segoe UI,system-ui,sans-serif" font-size="14" font-weight="700" fill="#fb923c" x="339" y="246" text-anchor="middle">cryoslinger</text>
+        <text font-family="Segoe UI,system-ui,sans-serif" font-size="11" fill="#8888aa" x="339" y="264" text-anchor="middle">7 666 msgs · organisateur</text>
+      </g>
+
+      <!-- layvi -->
+      <g>
+        <rect x="640" y="218" width="160" height="64" rx="10" fill="#1c1505" stroke="#d97706" stroke-width="1.5"/>
+        <text font-family="Segoe UI,system-ui,sans-serif" font-size="14" font-weight="700" fill="#fbbf24" x="720" y="246" text-anchor="middle">layvi</text>
+        <text font-family="Segoe UI,system-ui,sans-serif" font-size="11" fill="#8888aa" x="720" y="264" text-anchor="middle">6 014 msgs · streamer</text>
+      </g>
+
+      <!-- baiedhiver -->
+      <g>
+        <rect x="138" y="296" width="150" height="56" rx="10" fill="#0a1a0c" stroke="#16a34a" stroke-width="1.2"/>
+        <text font-family="Segoe UI,system-ui,sans-serif" font-size="13" font-weight="700" fill="#4ade80" x="213" y="320" text-anchor="middle">baiedhiver</text>
+        <text font-family="Segoe UI,system-ui,sans-serif" font-size="11" fill="#8888aa" x="213" y="338" text-anchor="middle">1 144 msgs · frère cryo</text>
+      </g>
+
+      <!-- kimyaku -->
+      <g>
+        <rect x="60" y="326" width="140" height="56" rx="10" fill="#1e0a14" stroke="#be185d" stroke-width="1.2"/>
+        <text font-family="Segoe UI,system-ui,sans-serif" font-size="13" font-weight="700" fill="#f9a8d4" x="130" y="350" text-anchor="middle">kimyaku</text>
+        <text font-family="Segoe UI,system-ui,sans-serif" font-size="11" fill="#8888aa" x="130" y="368" text-anchor="middle">700 msgs · femme cryo</text>
+      </g>
+
+      <!-- thélio -->
+      <g>
+        <rect x="186" y="368" width="130" height="50" rx="10" fill="#111827" stroke="#475569" stroke-width="1"/>
+        <text font-family="Segoe UI,system-ui,sans-serif" font-size="13" font-weight="700" fill="#94a3b8" x="251" y="390" text-anchor="middle">Thélio</text>
+        <text font-family="Segoe UI,system-ui,sans-serif" font-size="11" fill="#8888aa" x="251" y="408" text-anchor="middle">fils · hors-groupe</text>
+      </g>
+
+      <!-- elbariel -->
+      <g>
+        <rect x="780" y="120" width="110" height="50" rx="10" fill="#0f1030" stroke="#4338ca" stroke-width="1"/>
+        <text font-family="Segoe UI,system-ui,sans-serif" font-size="13" font-weight="700" fill="#818cf8" x="835" y="142" text-anchor="middle">elbariel</text>
+        <text font-family="Segoe UI,system-ui,sans-serif" font-size="11" fill="#8888aa" x="835" y="160" text-anchor="middle">250 msgs</text>
+      </g>
+
+      <!-- Légende -->
+      <line x1="390" y1="420" x2="430" y2="420" stroke="#7c3aed" stroke-width="2.5"/>
+      <text font-family="Segoe UI,system-ui,sans-serif" font-size="10" fill="#8888aa" x="436" y="424">lien fort</text>
+      <line x1="510" y1="420" x2="550" y2="420" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="5 3"/>
+      <text font-family="Segoe UI,system-ui,sans-serif" font-size="10" fill="#8888aa" x="556" y="424">lien moyen</text>
+      <line x1="630" y1="420" x2="670" y2="420" stroke="#444466" stroke-width="1" stroke-dasharray="4 3"/>
+      <text font-family="Segoe UI,system-ui,sans-serif" font-size="10" fill="#8888aa" x="676" y="424">lien secondaire</text>
+      <line x1="750" y1="420" x2="790" y2="420" stroke="#d97706" stroke-width="2"/>
+      <text font-family="Segoe UI,system-ui,sans-serif" font-size="10" fill="#d97706" x="796" y="424">lien familial</text>
+    </svg>
+  </div>
+
+  <!-- ══ FICHES MEMBRES ══ -->
+  <div class="section-title">Fiches membres</div>
+  <div class="members-grid">
+
+    <!-- dosinge -->
+    <div class="member-card">
+      <div class="member-header">
+        <div class="member-avatar av-dosinge">D</div>
+        <div>
+          <div class="member-name col-dosinge">dosinge</div>
+          <div class="member-role">Pivot du groupe · membre fondateur</div>
+        </div>
+      </div>
+      <div class="member-stats">
+        <span class="stat-pill">20 571 msgs</span>
+        <span class="stat-pill">🥇 #1 volume</span>
+        <span class="stat-pill">2018 → 2026</span>
+      </div>
+      <div class="bar-wrap" id="bar-dosinge"></div>
+      <p class="member-desc" style="margin-top:8px">Le plus prolixe du groupe. Initie, convoque, amplifie. Son activité culmine en 2020 (5 339 msgs) et décline progressivement depuis. Inventeur de sobriquets pour layvi ("semoule"). Appelle cryo par son prénom.</p>
+      <div class="badges">
+        <span class="badge" style="background:#2a1a5a; color:#a78bfa">initiateur</span>
+        <span class="badge" style="background:#2a1a5a; color:#a78bfa">convocateur</span>
+        <span class="badge" style="background:#2a1a5a; color:#a78bfa">amplifiant</span>
+      </div>
+    </div>
+
+    <!-- espy -->
+    <div class="member-card">
+      <div class="member-header">
+        <div class="member-avatar av-espy">E</div>
+        <div>
+          <div class="member-name col-espy">espy</div>
+          <div class="member-role">Répondant · pourvoyeur culturel</div>
+        </div>
+      </div>
+      <div class="member-stats">
+        <span class="stat-pill">12 390 msgs</span>
+        <span class="stat-pill">#2 volume</span>
+        <span class="stat-pill">2018 → 2026</span>
+      </div>
+      <div class="bar-wrap" id="bar-espy"></div>
+      <p class="member-desc" style="margin-top:8px">Arrivé le premier sur le serveur (déc. 2018). Répond plus qu'il n'initie, mais ses messages sont plus longs (44 car en moyenne). Mythologise dosinge en 2023 ("duel de sorciers"). Chien, cours le soir, gaming tardif.</p>
+      <div class="badges">
+        <span class="badge" style="background:#0a2030; color:#5eead4">répondant</span>
+        <span class="badge" style="background:#0a2030; color:#5eead4">recommandeur</span>
+        <span class="badge" style="background:#0a2030; color:#5eead4">mythologiseur</span>
+      </div>
+    </div>
+
+    <!-- cryoslinger -->
+    <div class="member-card">
+      <div class="member-header">
+        <div class="member-avatar av-cryo">C</div>
+        <div>
+          <div class="member-name col-cryo">cryoslinger</div>
+          <div class="member-role">Organisateur · nœud familial</div>
+        </div>
+      </div>
+      <div class="member-stats">
+        <span class="stat-pill">7 666 msgs</span>
+        <span class="stat-pill">#3 volume</span>
+        <span class="stat-pill">2019 → 2026</span>
+      </div>
+      <div class="bar-wrap" id="bar-cryo"></div>
+      <p class="member-desc" style="margin-top:8px">Nœud familial central : époux de kimyaku, père de Thélio, frère de baiedhiver. Organisateur des soirées (Codenames ×164). Inventeur d'une mythologie onomastique entière pour dosinge ("dod", "dodent", "doderino"…). Messages courts, précis, percutants.</p>
+      <div class="badges">
+        <span class="badge" style="background:#2a1205; color:#fb923c">organisateur</span>
+        <span class="badge" style="background:#2a1205; color:#fb923c">onomaste</span>
+        <span class="badge" style="background:#2a1205; color:#fb923c">noyau familial</span>
+      </div>
+    </div>
+
+    <!-- layvi -->
+    <div class="member-card">
+      <div class="member-header">
+        <div class="member-avatar av-layvi">L</div>
+        <div>
+          <div class="member-name col-layvi">layvi</div>
+          <div class="member-role">Streamer · pourvoyeur de contenu</div>
+        </div>
+      </div>
+      <div class="member-stats">
+        <span class="stat-pill">6 014 msgs</span>
+        <span class="stat-pill">#4 volume</span>
+        <span class="stat-pill">2018 → 2026</span>
+      </div>
+      <div class="bar-wrap" id="bar-layvi"></div>
+      <p class="member-desc" style="margin-top:8px">Arrivé avant cryo, décline plus vite depuis 2022. Streamer Twitch intégré au groupe (stream partagé dans le canal). Surnommé "semoule" par dosinge. S'excuse souvent de ses absences. Appelle cryo "Théo" — le seul à utiliser son prénom couramment.</p>
+      <div class="badges">
+        <span class="badge" style="background:#2a1f05; color:#fbbf24">streamer</span>
+        <span class="badge" style="background:#2a1f05; color:#fbbf24">esport</span>
+        <span class="badge" style="background:#2a1f05; color:#fbbf24">semoule</span>
+      </div>
+    </div>
+
+    <!-- baiedhiver -->
+    <div class="member-card">
+      <div class="member-header">
+        <div class="member-avatar av-baie">B</div>
+        <div>
+          <div class="member-name col-baie">baiedhiver</div>
+          <div class="member-role">Frère de cryo · arrivée tardive</div>
+        </div>
+      </div>
+      <div class="member-stats">
+        <span class="stat-pill">1 144 msgs</span>
+        <span class="stat-pill">actif 2022→</span>
+        <span class="stat-pill">frère de cryo</span>
+      </div>
+      <div class="bar-wrap" id="bar-baie"></div>
+      <p class="member-desc" style="margin-top:8px">Arrivé tardivement (première trace 2021, vraiment actif en 2022). Lien de sang avec cryo. Ton littéraire distinctif — actes notariaux fictifs, citations philosophiques, humour absurde et dense. Co-signe l'"attestation d'existence" de dosinge en 2023.</p>
+      <div class="badges">
+        <span class="badge" style="background:#0a2010; color:#4ade80">littéraire</span>
+        <span class="badge" style="background:#0a2010; color:#4ade80">absurde</span>
+        <span class="badge" style="background:#0a2010; color:#4ade80">tardif</span>
+      </div>
+    </div>
+
+    <!-- kimyaku -->
+    <div class="member-card">
+      <div class="member-header">
+        <div class="member-avatar av-kim">K</div>
+        <div>
+          <div class="member-name col-kim">kimyaku</div>
+          <div class="member-role">Femme de cryo · présence périphérique</div>
+        </div>
+      </div>
+      <div class="member-stats">
+        <span class="stat-pill">700 msgs</span>
+        <span class="stat-pill">épouse cryo</span>
+        <span class="stat-pill">running gag</span>
+      </div>
+      <p class="member-desc" style="margin-top:8px">Présente mais périphérique. Son identité sur le serveur est indissociable de cryo — le groupe la mentionne quasi exclusivement en référence à lui. Le running gag ("juste la femme de cryo") est documenté dès 2020, notamment dans la "liste des faiblesses du Discordeum" (espy, 2024) : <em>"Kimberley : Théo"</em>.</p>
+      <div class="badges">
+        <span class="badge" style="background:#2a0a1a; color:#f9a8d4">périphérique</span>
+        <span class="badge" style="background:#2a0a1a; color:#f9a8d4">running gag</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ CELLULE FAMILIALE CRYO ══ -->
+  <div class="section-title">La cellule familiale — cryoslinger</div>
+  <div class="family-tree">
+    <div class="family-title">Liens de sang et d'alliance</div>
+    <div style="display:grid; grid-template-columns: 1fr 40px 1fr 40px 1fr; align-items:center; gap:0; text-align:center">
+
+      <div class="fam-node">
+        <div class="fam-name col-baie">baiedhiver</div>
+        <div class="fam-label">frère · 1 144 msgs</div>
+      </div>
+      <div class="fam-link">——</div>
+      <div class="fam-node" style="border: 1px solid #c2410c; border-radius:8px; padding:12px; background:#1f1208">
+        <div class="fam-name col-cryo">cryoslinger</div>
+        <div class="fam-label">noyau · père · époux</div>
+      </div>
+      <div class="fam-link">——</div>
+      <div class="fam-node">
+        <div class="fam-name col-kim">kimyaku</div>
+        <div class="fam-label">épouse · 700 msgs</div>
+      </div>
+
+    </div>
+    <div style="text-align:center; margin: 8px 0 4px; color:#d97706; font-size:18px">↓</div>
+    <div style="text-align:center">
+      <div class="fam-node" style="display:inline-block; border: 1px solid #475569; border-radius:8px; padding:10px 20px; background:#111827">
+        <div class="fam-name col-thelio">Thélio</div>
+        <div class="fam-label">fils · hors-groupe · next Zobal (layvi, 2024)</div>
+      </div>
+    </div>
+    <div class="running-gag">
+      <strong>Running gag "kimyaku"</strong> — Le groupe mentionne systématiquement kimyaku en référence à cryo, jamais comme entité propre. Formulation canonique documentée par espy (2024) dans la liste des faiblesses du Discordeum : <em>"Kimberley : Théo"</em>. Sa faiblesse, c'est son mari.
+    </div>
+  </div>
+
+  <!-- ══ MATRICE DES DYNAMIQUES ══ -->
+  <div class="section-title">Matrice des dynamiques relationnelles</div>
+  <div class="matrix-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th style="color:#a78bfa">dosinge</th>
+          <th style="color:#5eead4">espy</th>
+          <th style="color:#fb923c">cryo</th>
+          <th style="color:#fbbf24">layvi</th>
+          <th style="color:#4ade80">baiedhiver</th>
+          <th style="color:#f9a8d4">kimyaku</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="color:#a78bfa">dosinge</td>
+          <td class="cell-self">—</td>
+          <td class="cell-hot">★★★<span class="dyn-label">duo pivot<br>7 ans</span></td>
+          <td class="cell-hot">★★★<span class="dyn-label">convocateur<br>mythologisé</span></td>
+          <td class="cell-mid">★★<span class="dyn-label">surnomme<br>"semoule"</span></td>
+          <td class="cell-mid">★★<span class="dyn-label">acte notarial<br>co-signé</span></td>
+          <td class="cell-cold">★<span class="dyn-label">périphérique</span></td>
+        </tr>
+        <tr>
+          <td style="color:#5eead4">espy</td>
+          <td class="cell-hot">★★★<span class="dyn-label">mythologise<br>dosinge</span></td>
+          <td class="cell-self">—</td>
+          <td class="cell-mid">★★<span class="dyn-label">lien solide<br>secondaire</span></td>
+          <td class="cell-hot">★★★<span class="dyn-label">relaye<br>stream layvi</span></td>
+          <td class="cell-mid">★<span class="dyn-label">tardif</span></td>
+          <td class="cell-cold">★<span class="dyn-label">gag documenté</span></td>
+        </tr>
+        <tr>
+          <td style="color:#fb923c">cryo</td>
+          <td class="cell-hot">★★★<span class="dyn-label">200+ sobriquets<br>"dod"</span></td>
+          <td class="cell-mid">★★<span class="dyn-label">lien solide</span></td>
+          <td class="cell-self">—</td>
+          <td class="cell-hot">★★★<span class="dyn-label">1053 échanges<br>rapides</span></td>
+          <td class="cell-fam">⬡ frère<span class="dyn-label">lien de sang</span></td>
+          <td class="cell-fam">⬡ époux<span class="dyn-label">lien conjugal</span></td>
+        </tr>
+        <tr>
+          <td style="color:#fbbf24">layvi</td>
+          <td class="cell-mid">★★<span class="dyn-label">surnommé<br>"semoule"</span></td>
+          <td class="cell-hot">★★★<span class="dyn-label">duo solide<br>depuis 2018</span></td>
+          <td class="cell-hot">★★★<span class="dyn-label">appelle "Théo"<br>relais naturel</span></td>
+          <td class="cell-self">—</td>
+          <td class="cell-cold">★<span class="dyn-label">lien faible</span></td>
+          <td class="cell-cold">★<span class="dyn-label">périphérique</span></td>
+        </tr>
+        <tr>
+          <td style="color:#4ade80">baiedhiver</td>
+          <td class="cell-mid">★★<span class="dyn-label">chambre<br>affectueusement</span></td>
+          <td class="cell-cold">★<span class="dyn-label">lien faible</span></td>
+          <td class="cell-fam">⬡ frère<span class="dyn-label">lien de sang</span></td>
+          <td class="cell-cold">★<span class="dyn-label">lien faible</span></td>
+          <td class="cell-self">—</td>
+          <td class="cell-fam">⬡ belle-sœur<span class="dyn-label">par alliance</span></td>
+        </tr>
+        <tr>
+          <td style="color:#f9a8d4">kimyaku</td>
+          <td class="cell-cold">★</td>
+          <td class="cell-cold">★</td>
+          <td class="cell-fam">⬡ épouse<span class="dyn-label">lien conjugal</span></td>
+          <td class="cell-cold">★</td>
+          <td class="cell-fam">⬡ belle-sœur</td>
+          <td class="cell-self">—</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="legend-row" style="margin-top:14px">
+      <div class="legend-item"><div class="legend-dot" style="background:#a78bfa"></div> ★★★ lien fort analysé</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#555577"></div> ★★ lien moyen</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#2a2a45"></div> ★ lien faible / périphérique</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div> ⬡ lien familial</div>
+    </div>
+  </div>
+
+  <!-- ══ VERDICT ══ -->
+  <div class="verdict">
+    <h3>Portrait du groupe</h3>
+    <p>
+      Le Discordeum est un groupe d'amis réels structuré autour d'un <strong style="color:#a78bfa">noyau dur de quatre membres</strong> (dosinge, espy, cryoslinger, layvi) actifs depuis 2018-2019, avec une <strong style="color:#d97706">cellule familiale dense autour de cryo</strong> — époux, père, frère — qui en fait le nœud le plus ancré socialement. Les liens forts sont triangulés : dosinge/espy, dosinge/cryo, espy/layvi, cryo/layvi forment un carré presque complet. baiedhiver arrive tardivement mais s'intègre vite grâce au lien fraternel. kimyaku reste en périphérie — sa présence sur le serveur est documentée mais son identité y est systématiquement absorbée dans celle de cryo. Le groupe a connu son apogée en 2020 (confinement) et décline progressivement depuis 2022, mais maintient une activité régulière en 2025-2026. Sept ans de texte, une amitié qui ne s'est jamais formalisée mais ne s'est jamais effacée.
+    </p>
+  </div>
+
+</div>
+
+<script>
+const data = {
+  dosinge:  [0,2650,5339,2053,1499,588,216,296,85],
+  espy:     [25,2397,3818,1775,933,624,556,240,37],
+  cryo:     [0,511,2945,1062,830,575,429,268,58],
+  layvi:    [22,982,2457,873,390,276,208,108,30],
+  baie:     [0,0,0,5,242,249,110,125,19],
+};
+const colors = {
+  dosinge:'#a78bfa', espy:'#5eead4', cryo:'#fb923c', layvi:'#fbbf24', baie:'#4ade80'
+};
+
+Object.entries(data).forEach(([key, vals]) => {
+  const wrap = document.getElementById('bar-' + key);
+  if (!wrap) return;
+  const max = Math.max(...vals);
+  vals.forEach(v => {
+    const seg = document.createElement('div');
+    seg.className = 'bar-seg';
+    seg.style.height = (v / max * 100) + '%';
+    seg.style.background = colors[key] + '66';
+    seg.title = v + ' msgs';
+    wrap.appendChild(seg);
+  });
+});
+</script>
+</body>
+</html>

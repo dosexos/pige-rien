@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les JCS — L'autre vie de dosinge</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+  :root {
+    --bg:      #080810;
+    --bg2:     #0d0d1a;
+    --bg3:     #131325;
+    --border:  #1e1e35;
+    --text:    #b8b8d0;
+    --muted:   #505068;
+    --accent:  #a78bfa;
+    --accent2: #7c5af0;
+    --yellow:  #f0d060;
+    --red:     #e05050;
+    --green:   #50d090;
+    --dim:     #303050;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO — style terminal/rapport ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 48px;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+    background:
+      radial-gradient(ellipse at 80% 20%, rgba(167,139,250,0.05) 0%, transparent 50%),
+      var(--bg);
+  }
+
+  .hero-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 32px;
+    opacity: 0; animation: fadeIn 0.6s ease forwards 0.2s;
+  }
+
+  .hero h1 {
+    font-size: clamp(40px, 7vw, 80px);
+    font-weight: 700; line-height: 1;
+    color: #fff; margin-bottom: 8px;
+    opacity: 0; animation: fadeIn 0.6s ease forwards 0.5s;
+  }
+
+  .hero h1 .sub {
+    display: block; font-size: clamp(18px, 3vw, 28px);
+    font-weight: 300; color: var(--accent);
+    margin-top: 8px;
+  }
+
+  .hero-desc {
+    max-width: 520px; font-size: 15px; color: var(--muted);
+    margin-top: 28px; line-height: 1.8;
+    opacity: 0; animation: fadeIn 0.6s ease forwards 0.8s;
+  }
+
+  .hero-stats {
+    display: flex; gap: 40px; margin-top: 48px; flex-wrap: wrap;
+    opacity: 0; animation: fadeIn 0.6s ease forwards 1.1s;
+  }
+  .hs { display: flex; flex-direction: column; }
+  .hs-n {
+    font-family: 'Space Mono', monospace;
+    font-size: 28px; font-weight: 700; color: var(--accent);
+    line-height: 1;
+  }
+  .hs-l {
+    font-size: 11px; color: var(--muted); margin-top: 4px;
+    letter-spacing: 1px;
+  }
+
+  /* ── CONTAINER ── */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 40px; }
+
+  /* ── SECTIONS ── */
+  .section { padding: 72px 0 0; }
+  .section-header {
+    display: flex; align-items: baseline; gap: 16px;
+    margin-bottom: 36px; padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 2px; color: var(--muted);
+  }
+  .section-title {
+    font-size: clamp(20px, 3vw, 28px); font-weight: 700; color: #fff;
+  }
+
+  /* ── PROSE ── */
+  .prose {
+    font-size: 15px; line-height: 1.9; color: var(--text);
+    margin-bottom: 24px; max-width: 700px;
+  }
+  .prose strong { color: #fff; font-weight: 500; }
+  .prose em { color: var(--accent); font-style: normal; font-weight: 500; }
+
+  /* ── CITATIONS TERMINAL ── */
+  .terminal {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent2);
+    border-radius: 4px;
+    padding: 18px 22px;
+    margin: 20px 0;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: #c0c0e0;
+    line-height: 1.6;
+    position: relative;
+  }
+  .terminal::before {
+    content: attr(data-who) ' · ' attr(data-date);
+    display: block;
+    font-size: 10px; color: var(--muted); margin-bottom: 8px;
+    letter-spacing: 1px;
+  }
+  .terminal.yellow { border-left-color: var(--yellow); }
+  .terminal.yellow::before { color: var(--yellow); }
+  .terminal.red { border-left-color: var(--red); }
+  .terminal.red::before { color: var(--red); }
+  .terminal.green { border-left-color: var(--green); }
+  .terminal.green::before { color: var(--green); }
+
+  /* ── TIMELINE HORIZONTALE ── */
+  .htl {
+    position: relative;
+    margin: 40px 0;
+    padding-bottom: 8px;
+  }
+  .htl-line {
+    position: absolute;
+    top: 20px; left: 0; right: 0;
+    height: 1px; background: var(--border);
+  }
+  .htl-items {
+    display: flex; gap: 0;
+    overflow-x: auto; padding-bottom: 12px;
+  }
+  .htl-item {
+    flex-shrink: 0;
+    width: 120px; padding-top: 40px;
+    position: relative; text-align: center;
+  }
+  .htl-dot {
+    position: absolute; top: 14px; left: 50%;
+    transform: translateX(-50%);
+    width: 12px; height: 12px;
+    border-radius: 50%; background: var(--border);
+    border: 2px solid var(--bg);
+  }
+  .htl-item.active .htl-dot { background: var(--accent); }
+  .htl-item.peak .htl-dot { background: var(--yellow); width: 16px; height: 16px; top: 12px; }
+  .htl-year {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; color: var(--accent); letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .htl-label { font-size: 11px; color: var(--muted); line-height: 1.4; }
+  .htl-count {
+    font-family: 'Space Mono', monospace;
+    font-size: 16px; font-weight: 700; color: #fff;
+    margin-bottom: 2px;
+  }
+
+  /* ── GRILLE DE CITATIONS ── */
+  .quote-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 12px; margin: 28px 0;
+  }
+  @media (max-width: 600px) { .quote-grid { grid-template-columns: 1fr; } }
+  .qg-item {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 4px; padding: 14px 16px;
+  }
+  .qg-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; color: #b0b0d0; line-height: 1.6;
+    margin-bottom: 8px;
+  }
+  .qg-meta { font-size: 10px; color: var(--muted); letter-spacing: 0.5px; }
+
+  /* ── TABLEAU DOSINGE vs LE GROUPE ── */
+  .comparison {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 16px; margin: 28px 0;
+  }
+  @media (max-width: 600px) { .comparison { grid-template-columns: 1fr; } }
+  .comp-side {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 4px; padding: 18px;
+  }
+  .comp-title {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; margin-bottom: 14px;
+  }
+  .comp-title.dos { color: var(--accent); }
+  .comp-title.grp { color: var(--yellow); }
+  .comp-item {
+    font-size: 13px; color: var(--text);
+    padding: 6px 0; border-bottom: 1px solid var(--border);
+    line-height: 1.5;
+  }
+  .comp-item:last-child { border-bottom: none; }
+  .comp-item em { font-style: normal; color: var(--muted); font-size: 11px; display: block; margin-top: 2px; }
+
+  /* ── BAR CHART ACTIVITÉ ── */
+  .bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 80px; margin: 28px 0; }
+  .bar-col { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+  .bar-fill { width: 100%; border-radius: 2px 2px 0 0; background: var(--accent); opacity: 0.6; }
+  .bar-fill.peak { background: var(--yellow); opacity: 1; }
+  .bar-fill.low { background: var(--dim); opacity: 1; }
+  .bar-year {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; color: var(--muted);
+  }
+  .bar-val {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; color: var(--accent);
+  }
+
+  /* ── VERDICT ── */
+  .verdict {
+    background: var(--bg2);
+    border: 1px solid var(--accent2);
+    border-radius: 4px; padding: 28px 32px;
+    margin-top: 48px;
+  }
+  .verdict-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 14px;
+  }
+  .verdict-text { font-size: 15px; color: var(--text); line-height: 1.85; max-width: 680px; }
+  .verdict-text strong { color: #fff; font-weight: 500; }
+  .verdict-text em { color: var(--accent); font-style: normal; }
+
+  /* ── ÉPILOGUE ── */
+  .epilogue {
+    padding: 80px 0; margin-top: 64px;
+    border-top: 1px solid var(--border);
+    text-align: left;
+  }
+  .epilogue-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 3px; color: var(--muted);
+    text-transform: uppercase; margin-bottom: 20px;
+  }
+  .epilogue-text { font-size: 14px; color: var(--muted); max-width: 580px; line-height: 1.85; margin-bottom: 14px; }
+  .fin {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 4px; color: var(--border);
+    text-transform: uppercase; margin-top: 48px;
+  }
+
+  /* ── DIVIDER ── */
+  .sep {
+    height: 1px; background: var(--border);
+    margin: 56px 0;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">Discordeum · Archives · Portrait</div>
+  <h1>
+    Les JCS
+    <span class="sub">L'autre vie de dosinge</span>
+  </h1>
+  <p class="hero-desc">
+    Six ans de mentions. Une communauté LoL parallèle que dosinge habite, observe, documente et rapatrie dans le Discordeum comme correspondant de guerre depuis une zone incompréhensible pour le reste du groupe.
+  </p>
+  <div class="hero-stats">
+    <div class="hs">
+      <div class="hs-n">39</div>
+      <div class="hs-l">mentions par dosinge</div>
+    </div>
+    <div class="hs">
+      <div class="hs-n">2020</div>
+      <div class="hs-l">→ 2026 · présence continue</div>
+    </div>
+    <div class="hs">
+      <div class="hs-n">~0</div>
+      <div class="hs-l">membres du groupe qui comprennent</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- SECTION 1 — C'EST QUOI LES JCS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">01</div>
+      <div class="section-title">C'est quoi les JCS ?</div>
+    </div>
+
+    <p class="prose">
+      Les JCS — <em>Joutes des Créateurs de Stream</em> — sont une communauté LoL amateur organisée autour d'un Discord commun, avec des tournois, un système de saisons, des académies et un classement interne. C'est le pendant "sérieux" de pishot : là où pishot est un roleplay esport amateur, les JCS ressemblent davantage à une ligue structurée, avec ses rangs, ses dramas et sa propre culture.
+    </p>
+
+    <p class="prose">
+      Dosinge y est présent depuis au moins janvier 2020. Il joue en compétition, connaît des gens là-bas — les "zgegs JCS", les "collegues JCS", les "key JCS" — et rapporte régulièrement dans le Discordeum des informations sur ce qui s'y passe, comme s'il rendait un compte-rendu de terrain depuis une expédition.
+    </p>
+
+    <div class="terminal" data-who="dosinge" data-date="29 avril 2020">
+      Terrible, quitte à vouloir faire des tournois il aurait dû go jcs c'est dix fois mieux y a un lvl correct
+    </div>
+
+    <div class="terminal" data-who="dosinge" data-date="1er mai 2020">
+      Même en acad aux jcs ça joue mieux
+    </div>
+
+    <div class="terminal" data-who="dosinge" data-date="10 novembre 2020">
+      J'adore le serv jcs, toujours des clash de collegiens je trouve ça distrayant
+    </div>
+
+    <p class="prose">
+      Ce dernier message est la clé de voûte. Dosinge <strong>adore</strong> les JCS. Mais il les adore comme on adore un aquarium — pour ce qu'on y observe, pas pour ce qu'on y vit. Les "collégiens", les dramas nocturnes, les parties en couille : tout ça est du <em>divertissement</em> pour lui, pas une frustration.
+    </p>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- SECTION 2 — ACTIVITÉ CHRONOLOGIQUE -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">02</div>
+      <div class="section-title">Six ans de présence</div>
+    </div>
+
+    <p class="prose">
+      L'activité JCS de dosinge dans le Discordeum suit une courbe claire : un pic en 2020-2021, période pendant laquelle il tente d'y recruter ses amis, puis un maintien à faible intensité jusqu'en 2026. Les JCS restent actifs dans sa vie bien après que pishot s'est écroulé.
+    </p>
+
+    <!-- Bar chart -->
+    <div class="bar-chart">
+      <div class="bar-col">
+        <div class="bar-val">18</div>
+        <div class="bar-fill peak" style="height:100%"></div>
+        <div class="bar-year">2020</div>
+      </div>
+      <div class="bar-col">
+        <div class="bar-val">13</div>
+        <div class="bar-fill" style="height:72%"></div>
+        <div class="bar-year">2021</div>
+      </div>
+      <div class="bar-col">
+        <div class="bar-val">2</div>
+        <div class="bar-fill low" style="height:11%"></div>
+        <div class="bar-year">2022</div>
+      </div>
+      <div class="bar-col">
+        <div class="bar-val">2</div>
+        <div class="bar-fill low" style="height:11%"></div>
+        <div class="bar-year">2023</div>
+      </div>
+      <div class="bar-col">
+        <div class="bar-val">1</div>
+        <div class="bar-fill low" style="height:6%"></div>
+        <div class="bar-year">2024</div>
+      </div>
+      <div class="bar-col">
+        <div class="bar-val">2</div>
+        <div class="bar-fill low" style="height:11%"></div>
+        <div class="bar-year">2025</div>
+      </div>
+      <div class="bar-col">
+        <div class="bar-val">1</div>
+        <div class="bar-fill low" style="height:6%"></div>
+        <div class="bar-year">2026</div>
+      </div>
+    </div>
+
+    <!-- Timeline horizontale -->
+    <div class="htl">
+      <div class="htl-line"></div>
+      <div class="htl-items">
+        <div class="htl-item active">
+          <div class="htl-dot"></div>
+          <div class="htl-year">JAN 2020</div>
+          <div class="htl-label">Première mention — "j'ai ma game de jcs"</div>
+        </div>
+        <div class="htl-item peak">
+          <div class="htl-dot"></div>
+          <div class="htl-year">SEPT 2020</div>
+          <div class="htl-label">Pic — tente de recruter espy et layvi</div>
+        </div>
+        <div class="htl-item active">
+          <div class="htl-dot"></div>
+          <div class="htl-year">NOV 2020</div>
+          <div class="htl-label">"J'adore le serv jcs, toujours des clash de collégiens"</div>
+        </div>
+        <div class="htl-item active">
+          <div class="htl-dot"></div>
+          <div class="htl-year">MARS 2021</div>
+          <div class="htl-label">Cherche un nom pour sa team JCS</div>
+        </div>
+        <div class="htl-item active">
+          <div class="htl-dot"></div>
+          <div class="htl-year">AVR 2021</div>
+          <div class="htl-label">"Full drama cette nuit sur le lobby jcs"</div>
+        </div>
+        <div class="htl-item active">
+          <div class="htl-dot"></div>
+          <div class="htl-year">SEPT 2021</div>
+          <div class="htl-label">Invitations, drafts, vocaux JCS en parallèle du Discordeum</div>
+        </div>
+        <div class="htl-item active">
+          <div class="htl-dot"></div>
+          <div class="htl-year">2023-2026</div>
+          <div class="htl-label">Présence passive — "une discussion normale sur les jcs"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- SECTION 3 — LE RECRUTEUR INFATIGABLE -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">03</div>
+      <div class="section-title">Le recruteur infatigable</div>
+    </div>
+
+    <p class="prose">
+      En 2020, dosinge essaie activement de faire venir ses amis aux JCS. Il convoque espy, layvi, cryo. Il leur envoie des invitations de lobby. Il demande à espy s'il est "confirmax ou disposax". Il annonce qu'il reste "deux semaines pour s'inscrire." Il propose les JCS comme alternative à pishot immédiatement après la démission collective.
+    </p>
+
+    <div class="quote-grid">
+      <div class="qg-item">
+        <div class="qg-text">"Plus que deux semaines pour s'inscrire aux jcs et jouer avec les plus grands dégénérés d'euw qu'attends tu pour t'inscrire"</div>
+        <div class="qg-meta">dosinge → espy · 25 août 2020</div>
+      </div>
+      <div class="qg-item">
+        <div class="qg-text">"Go disband et go s'inscrire aux jcs"</div>
+        <div class="qg-meta">dosinge · 23 août 2020 · le lendemain de la démission pishot</div>
+      </div>
+      <div class="qg-item">
+        <div class="qg-text">"Tu veux que je demande à des zgegs jcs ?"</div>
+        <div class="qg-meta">dosinge → espy · 8 juillet 2020 · pour compléter la roster pishot</div>
+      </div>
+      <div class="qg-item">
+        <div class="qg-text">"Souhil tu veux pas go jcs acad aya ?"</div>
+        <div class="qg-meta">dosinge · mars 2021 · tentative de recrutement tardif</div>
+      </div>
+    </div>
+
+    <p class="prose">
+      Le groupe ne suit jamais. Espy dit "ono les jcs." Cryo remarque que dosinge parle JCS pendant que les autres sortent se baigner. Layvi pense que "les JCS te jouent des tours." Pour eux, les JCS sont un monde abstrait — un bruit de fond régulier dans les messages de dosinge, sans substance ni intérêt apparent.
+    </p>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- SECTION 4 — CORRESPONDANT DE GUERRE -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">04</div>
+      <div class="section-title">Correspondant de guerre depuis les JCS</div>
+    </div>
+
+    <p class="prose">
+      La vraie nature du rôle de dosinge dans cette histoire n'est pas celle d'un joueur compétitif : c'est celle d'un <em>ethnographe</em>. Il observe les JCS avec la distance amusée d'un anthropologue, et il envoie des rapports de terrain dans le Discordeum. Dramas nocturnes, informations de "key JCS", créations des "collègues JCS" — tout transite par lui.
+    </p>
+
+    <div class="terminal yellow" data-who="dosinge" data-date="12 avril 2021">
+      Ah mais c'est chaud c'est parti full drama cette nuit sur le lobby jcs. Va y avoir des règlements de compte ce soir
+    </div>
+
+    <div class="terminal yellow" data-who="dosinge" data-date="7 novembre 2020">
+      D'ailleurs une info que j'ai eu d'un key jcs
+    </div>
+
+    <div class="terminal yellow" data-who="dosinge" data-date="11 juillet 2021">
+      kk merci j'ai check, j'essaie de recup des infos diverses des singes jcs aussi
+    </div>
+
+    <div class="terminal yellow" data-who="dosinge" data-date="23 septembre 2021">
+      Sont déjà lvl 50 les chômeurs jcs
+    </div>
+
+    <div class="terminal yellow" data-who="dosinge" data-date="26 juillet 2025">
+      Une discussion normale sur les jcs
+    </div>
+
+    <p class="prose">
+      Ce dernier message — envoyé en 2025, cinq ans après les premiers — est peut-être le plus révélateur. Dosinge poste un lien ou une capture depuis le discord JCS, et le commente avec deux mots : <strong>"une discussion normale."</strong> Aucune explication. Aucun contexte. Le groupe sait à quoi s'attendre.
+    </p>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- SECTION 5 — LE GROUPE FACE AUX JCS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">05</div>
+      <div class="section-title">Le groupe face à l'incompréhensible</div>
+    </div>
+
+    <p class="prose">
+      Le groupe n'a jamais intégré les JCS. Leurs réactions aux mentions de dosinge oscillent entre l'ironie bienveillante et la perplexité sincère. En six ans, personne n'a demandé "c'est quoi exactement les JCS ?"
+    </p>
+
+    <div class="comparison">
+      <div class="comp-side">
+        <div class="comp-title dos">dosinge · point de vue</div>
+        <div class="comp-item">
+          "Les JCS c'est dix fois mieux que pishot, y a un lvl correct"
+          <em>avril 2020</em>
+        </div>
+        <div class="comp-item">
+          "J'adore le serv jcs, toujours des clash de collegiens"
+          <em>novembre 2020</em>
+        </div>
+        <div class="comp-item">
+          Recrute activement ses amis (sans succès)
+          <em>2020-2021</em>
+        </div>
+        <div class="comp-item">
+          "Un collegue jcs m'a aidé pendant un temps certain"
+          <em>septembre 2023 · lien d'amitié durable</em>
+        </div>
+        <div class="comp-item">
+          "Ca sort les gdoc sur les jcs pour le rush dofus"
+          <em>décembre 2024 · communauté vivante cross-game</em>
+        </div>
+      </div>
+      <div class="comp-side">
+        <div class="comp-title grp">le groupe · point de vue</div>
+        <div class="comp-item">
+          "ono les jcs"
+          <em>espy · août 2020 · réaction à l'invitation</em>
+        </div>
+        <div class="comp-item">
+          "dorian parle jcs et toi tu sors oui piscine"
+          <em>cryo · août 2020 · parallélisme absurde</em>
+        </div>
+        <div class="comp-item">
+          "ça va monarque des jcs c'est pas très glorieux"
+          <em>espy · décembre 2020 · sur le pseudo de dosinge</em>
+        </div>
+        <div class="comp-item">
+          "Je pense que les JCS te jouent des tours mec"
+          <em>layvi · novembre 2020</em>
+        </div>
+        <div class="comp-item">
+          "La boucle 'je rush pas' pour finir en marathon 300h avec les glands du jcs"
+          <em>cryo · septembre 2023 · encore sceptique</em>
+        </div>
+      </div>
+    </div>
+
+    <p class="prose">
+      En 2023, espy formule avec une légère irritation ce que tous pensent implicitement depuis le début : il se fout de savoir si dosinge va "partir rusher avec ses amis des JCS et le préinscrire au pif quelque part." Les JCS font partie du paysage — comme une mauvaise habitude que personne ne cherche vraiment à corriger.
+    </p>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- SECTION 6 — SARDOCHE & L'ÉCOSYSTÈME -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">06</div>
+      <div class="section-title">Sardoche — le saint patron</div>
+    </div>
+
+    <p class="prose">
+      On ne peut pas parler des JCS sans mentionner Sardoche — streamer LoL français, figure tutélaire et punching-ball affectueux du groupe. Dosinge et espy suivent Sardoche depuis 2019 avec une intensité qui dépasse le simple visionnage : ils documentent ses polémiques, ses bans, ses revirements, ses coups d'éclat. Le GIF de "Sardoche rage-quitte son clavier" est le réflexe universel du groupe face à toute situation de frustration gaming.
+    </p>
+
+    <p class="prose">
+      Les JCS et Sardoche appartiennent au même écosystème dans l'imaginaire de dosinge : la scène LoL amateur/semi-pro française, avec ses codes, ses dramas et sa sociologie propre. Dosinge y a un pied — le groupe le suit de loin, avec l'amusement de ceux qui regardent un documentaire.
+    </p>
+
+    <div class="terminal red" data-who="dosinge" data-date="7 juin 2020">
+      Tu peux pas inciter les gens au suicide oklm et vouloir porter plainte contre un mec qui dit sardoche hardstuck d2 sur un forum de jeux videos
+    </div>
+
+    <div class="terminal red" data-who="dosinge" data-date="8 juillet 2020">
+      En dix secondes t'outdamage sardoche sur une game
+    </div>
+
+    <div class="terminal red" data-who="espy" data-date="28 mai 2023">
+      alerte @everyone dans 15 min Sardoche se fait BOXER LE CUL
+    </div>
+  </div>
+
+  <!-- VERDICT -->
+  <div class="verdict">
+    <div class="verdict-label">// Verdict</div>
+    <p class="verdict-text">
+      Les JCS ne sont pas un arc — ils sont une <strong>constante</strong>. Là où pishot est une aventure avec un début, un milieu et une fin (et des lettres de démission PDF), les JCS sont le bruit de fond permanent de la vie gaming de dosinge depuis 2020. Une communauté parallèle qu'il n'a jamais réussi à faire partager à ses amis et qu'il n'a jamais vraiment essayé d'expliquer non plus. Il envoie des rapports de terrain depuis un pays que personne d'autre ne connaît. Le groupe acquiesce vaguement. Dosinge repart. Six ans que ça dure. En 2026, il poste encore depuis le discord JCS. <em>"Ça vit sur les jcs."</em> Ça vivra probablement encore longtemps.
+    </p>
+  </div>
+
+  <!-- ÉPILOGUE -->
+  <div class="epilogue">
+    <div class="epilogue-label">// Épilogue</div>
+    <p class="epilogue-text">
+      La dernière entrée dans les archives : février 2026. Dosinge partage un GIF depuis le discord JCS. Pas d'explication. Pas de contexte. Le groupe ne réagit pas — ou si quelqu'un réagit, c'est hors du canal analysé ici.
+    </p>
+    <p class="epilogue-text">
+      Les JCS ont traversé six ans, deux saisons LoL majeures, la fin de pishot, le mariage de cryo, la naissance de Thélio, et le progressif ralentissement du groupe. Ils sont toujours là. Dosinge aussi.
+    </p>
+    <div class="fin">// fin du portrait · 2020–2026</div>
+  </div>
+
+</div>
+</body>
+</html>
