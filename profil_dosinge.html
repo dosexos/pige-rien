@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dosinge — Profil · Le Discordeum</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+  :root {
+    --bg:      #090910;
+    --bg2:     #0e0e18;
+    --bg3:     #141420;
+    --border:  #1e1e30;
+    --text:    #b0b0cc;
+    --muted:   #484860;
+    --dim:     #242438;
+    --white:   #e8e8f8;
+
+    --p:       #a078e0;   /* violet dosinge */
+    --p2:      #7050c0;
+    --p3:      #2a1a5a;
+    --teal:    #5eead4;
+    --orange:  #fb923c;
+    --amber:   #fbbf24;
+    --green:   #4ade80;
+    --red:     #f87171;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+  }
+
+  .hero-left {
+    padding: 100px 8vw 80px;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    position: relative; z-index: 1;
+    border-right: 1px solid var(--border);
+  }
+
+  .hero-right {
+    background: var(--bg2);
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    padding: 60px 40px;
+    gap: 32px;
+    position: relative; overflow: hidden;
+  }
+  /* Gros D en fond */
+  .hero-right::before {
+    content: 'D';
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 480px; color: var(--p);
+    opacity: 0.04; line-height: 1;
+    pointer-events: none; user-select: none;
+  }
+
+  .hero-back {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 3px; color: var(--muted);
+    text-transform: uppercase; margin-bottom: 32px;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    transition: color 0.2s; align-self: flex-start;
+  }
+  .hero-back:hover { color: var(--white); }
+  .hero-back::before { content: '←'; }
+
+  .hero-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--p); margin-bottom: 16px;
+    opacity: 0; animation: rise 0.7s ease forwards 0.1s;
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 12vw, 140px);
+    color: var(--white); line-height: 0.9; letter-spacing: 3px;
+    opacity: 0; animation: rise 0.7s ease forwards 0.3s;
+  }
+
+  .hero-role {
+    font-family: 'Crimson Pro', serif;
+    font-size: clamp(16px, 2vw, 20px); font-style: italic;
+    color: var(--muted); margin-top: 20px; line-height: 1.5;
+    max-width: 420px;
+    opacity: 0; animation: rise 0.7s ease forwards 0.6s;
+  }
+  .hero-role strong { color: var(--p); font-style: normal; font-weight: 600; }
+
+  .hero-stats-row {
+    display: flex; gap: 32px; margin-top: 48px; flex-wrap: wrap;
+    opacity: 0; animation: rise 0.7s ease forwards 0.9s;
+  }
+  .hs { display: flex; flex-direction: column; gap: 3px; }
+  .hs-v { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--p); line-height: 1; }
+  .hs-l { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: 1px; }
+
+  /* Stat cards côté droit */
+  .stat-card {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 3px; padding: 18px 22px; width: 100%; max-width: 340px;
+    position: relative; z-index: 1;
+  }
+  .sc-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--p); margin-bottom: 8px;
+  }
+  .sc-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: #8888b0; line-height: 1.6;
+    font-style: italic;
+  }
+
+  /* ── CONTAINER ── */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 8vw; }
+
+  /* ── SECTIONS ── */
+  .section { padding: 72px 0; border-bottom: 1px solid var(--border); }
+  .section:last-of-type { border-bottom: none; }
+  .sh {
+    display: flex; align-items: baseline; gap: 16px; margin-bottom: 40px;
+  }
+  .sh-num { font-family: 'Bebas Neue', sans-serif; font-size: 40px; color: var(--dim); line-height: 1; }
+  .sh-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(24px, 4vw, 38px); color: var(--white); letter-spacing: 1px; }
+
+  /* ── PROSE ── */
+  .prose { font-size: 15px; line-height: 1.9; color: var(--text); margin-bottom: 22px; max-width: 680px; }
+  .prose strong { color: var(--white); font-weight: 600; }
+  .prose em { color: var(--p); font-style: italic; }
+
+  /* ── GRAPHIQUE ACTIVITÉ ── */
+  .year-chart { display: flex; align-items: flex-end; gap: 6px; height: 120px; margin: 32px 0; }
+  .yc-col { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; }
+  .yc-val { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--p); }
+  .yc-bar {
+    width: 100%; border-radius: 2px 2px 0 0;
+    background: var(--p); opacity: 0.7;
+    transition: opacity 0.2s;
+    position: relative;
+  }
+  .yc-bar:hover { opacity: 1; }
+  .yc-bar.peak { background: var(--p); opacity: 1; }
+  .yc-bar.low { background: var(--dim); opacity: 1; }
+  .yc-year { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); }
+
+  /* ── HEATMAP HORAIRE ── */
+  .hour-map {
+    display: grid; grid-template-columns: repeat(24, 1fr);
+    gap: 3px; margin: 20px 0;
+  }
+  .hm-cell {
+    height: 28px; border-radius: 2px;
+    position: relative;
+  }
+  .hm-cell:hover::after {
+    content: attr(data-label);
+    position: absolute; bottom: 110%; left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg2); border: 1px solid var(--border);
+    padding: 3px 7px; border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    color: var(--white); white-space: nowrap; z-index: 10;
+  }
+  .hour-labels {
+    display: grid; grid-template-columns: repeat(24, 1fr);
+    gap: 3px; margin-top: 4px;
+  }
+  .hl { font-family: 'JetBrains Mono', monospace; font-size: 8px; color: var(--muted); text-align: center; }
+
+  /* ── SAISONS GAMING ── */
+  .gaming-timeline { display: flex; flex-direction: column; gap: 10px; margin: 24px 0; }
+  .gt-row { display: flex; align-items: center; gap: 12px; }
+  .gt-year { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); width: 36px; flex-shrink: 0; }
+  .gt-games { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; }
+  .gt-game {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; padding: 2px 10px; border-radius: 20px;
+    border: 1px solid; letter-spacing: 0.5px;
+  }
+  .g-lol    { color: #c89b3c; border-color: rgba(200,155,60,0.3); background: rgba(200,155,60,0.08); }
+  .g-tft    { color: #7dd6f0; border-color: rgba(125,214,240,0.3); background: rgba(125,214,240,0.08); }
+  .g-terra  { color: #7cdb82; border-color: rgba(124,219,130,0.3); background: rgba(124,219,130,0.08); }
+  .g-mhw    { color: #e06030; border-color: rgba(224,96,48,0.3); background: rgba(224,96,48,0.08); }
+  .g-dofus  { color: #e0a830; border-color: rgba(224,168,48,0.3); background: rgba(224,168,48,0.08); }
+  .g-ffxiv  { color: #b0a0ff; border-color: rgba(176,160,255,0.3); background: rgba(176,160,255,0.08); }
+  .g-facto  { color: #f0a040; border-color: rgba(240,160,64,0.3); background: rgba(240,160,64,0.08); }
+  .g-jcs    { color: var(--p); border-color: rgba(160,120,224,0.3); background: rgba(160,120,224,0.08); }
+
+  /* ── SURNOMS / LEXIQUE ── */
+  .lexique { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 24px 0; }
+  @media (max-width: 600px) { .lexique { grid-template-columns: 1fr; } }
+  .lex-item {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 3px; padding: 14px 16px;
+  }
+  .lex-word {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px; color: var(--p); letter-spacing: 1px; margin-bottom: 4px;
+  }
+  .lex-def { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .lex-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: var(--dim); margin-top: 6px;
+  }
+
+  /* ── CITATIONS ── */
+  .citations { display: flex; flex-direction: column; gap: 16px; margin: 24px 0; }
+  .cit {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-left: 3px solid var(--p); border-radius: 0 3px 3px 0;
+    padding: 16px 20px;
+  }
+  .cit-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: #9090c0; line-height: 1.65;
+    margin-bottom: 8px;
+  }
+  .cit-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: var(--muted); letter-spacing: 1px;
+  }
+  .cit.faded { border-left-color: var(--dim); }
+  .cit.faded .cit-text { color: #606070; }
+
+  /* ── RELATIONS ── */
+  .relations { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 24px 0; }
+  @media (max-width: 600px) { .relations { grid-template-columns: 1fr; } }
+  .rel-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 3px; padding: 18px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .rel-av {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif; font-size: 16px;
+  }
+  .rel-name { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: var(--white); letter-spacing: 1px; }
+  .rel-surnom {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--p); letter-spacing: 1px;
+  }
+  .rel-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 48px 8vw;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: var(--dim); letter-spacing: 2px; }
+  .footer-nav { display: flex; gap: 24px; }
+  .footer-link {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--muted); letter-spacing: 2px; text-transform: uppercase;
+    text-decoration: none; transition: color 0.2s;
+  }
+  .footer-link:hover { color: var(--white); }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 0 24px; }
+    footer { padding: 40px 24px; }
+    .hero-left { padding: 60px 24px 56px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="hero-left">
+    <a href="index.html" class="hero-back">Retour aux archives</a>
+    <div class="hero-tag">Profil · Membre fondateur</div>
+    <h1>dosinge</h1>
+    <p class="hero-role">
+      <strong>Initiateur, analyste, convocateur.</strong> Le membre le plus prolixe du Discordeum — et celui dont la présence s'est le plus effilochée après 2020. Sept ans de messages depuis un chantier, un bureau, un lit à 3h du matin.
+    </p>
+    <div class="hero-stats-row">
+      <div class="hs"><div class="hs-v">12 726</div><div class="hs-l">messages</div></div>
+      <div class="hs"><div class="hs-v">#1</div><div class="hs-l">volume canal général</div></div>
+      <div class="hs"><div class="hs-v">2019</div><div class="hs-l">→ 2026</div></div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="stat-card">
+      <div class="sc-label">Citation signature</div>
+      <div class="sc-text">"Je tourne ma tête je vois mon dessin de Lysithea je suis heureux puis retour à la réalité je retourne ma tête et j'ai le droit à un KO CHE MARRRRREEEE"</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Heure de pointe</div>
+      <div class="sc-text">20h — 1 265 messages. Mais aussi présent à 8h du matin depuis le chantier, à midi depuis la pause déjeuner, et parfois à 3h09 pour annoncer une fièvre à 38°c.</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Mot le plus utilisé</div>
+      <div class="sc-text">"chromosome" · 457 occurrences sur 6 ans. Inventé par cryo, adopté par dosinge comme émote et ponctuation universelle.</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ══ 1. COURBE DE PRÉSENCE ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">01</div><div class="sh-title">La courbe de présence</div></div>
+
+    <p class="prose">
+      Dosinge arrive en juin 2019 — six mois après espy et layvi. Il rattrape vite le retard : <strong>2 650 messages la première année</strong>, puis l'explosion de 2020 avec <em>5 339 messages</em>, porté par le confinement, pishot et les nuits TFT. Puis la chute : 2021, 2022, 2023 perdent chacun plus de la moitié du volume précédent. En 2024, il n'envoie plus que 216 messages dans le canal. Il est toujours là — mais de loin.
+    </p>
+
+    <div class="year-chart">
+      <!-- max = 5339, on normalise sur 120px -->
+      <div class="yc-col">
+        <div class="yc-val">2 650</div>
+        <div class="yc-bar" style="height:60px"></div>
+        <div class="yc-year">2019</div>
+      </div>
+      <div class="yc-col">
+        <div class="yc-val">5 339</div>
+        <div class="yc-bar peak" style="height:120px"></div>
+        <div class="yc-year">2020</div>
+      </div>
+      <div class="yc-col">
+        <div class="yc-val">2 053</div>
+        <div class="yc-bar" style="height:46px"></div>
+        <div class="yc-year">2021</div>
+      </div>
+      <div class="yc-col">
+        <div class="yc-val">1 499</div>
+        <div class="yc-bar" style="height:34px"></div>
+        <div class="yc-year">2022</div>
+      </div>
+      <div class="yc-col">
+        <div class="yc-val">588</div>
+        <div class="yc-bar low" style="height:14px; background: var(--p); opacity:0.4"></div>
+        <div class="yc-year">2023</div>
+      </div>
+      <div class="yc-col">
+        <div class="yc-val">216</div>
+        <div class="yc-bar low" style="height:6px"></div>
+        <div class="yc-year">2024</div>
+      </div>
+      <div class="yc-col">
+        <div class="yc-val">296</div>
+        <div class="yc-bar low" style="height:7px; background: var(--p); opacity:0.4"></div>
+        <div class="yc-year">2025</div>
+      </div>
+      <div class="yc-col">
+        <div class="yc-val">85</div>
+        <div class="yc-bar low" style="height:3px"></div>
+        <div class="yc-year">2026</div>
+      </div>
+    </div>
+
+    <p class="prose">
+      La chute post-2020 n'est pas une brouille — c'est une dérive. Le boulot prend plus de place, les sessions gaming se font plus rares, les soirées communes s'espacent. Dosinge continue d'envoyer des nouvelles — une narine qui bloque en 2024, un genou à l'escalade en 2025, un "3h du matin la liste hein" en 2026 — mais le flux n'est plus le même.
+    </p>
+
+    <!-- Heatmap horaire -->
+    <p class="prose" style="margin-top: 36px;">Sa journée type, heure par heure :</p>
+    <div class="hour-map">
+      <!-- données normalisées, max=1265 (20h) -->
+      <div class="hm-cell" style="background: rgba(160,120,224,0.06)" data-label="00h · 89"></div>
+      <div class="hm-cell" style="background: rgba(160,120,224,0.04)" data-label="01h · 33"></div>
+      <div class="hm-cell" style="background: rgba(160,120,224,0.02)" data-label="02h · 5"></div>
+      <div class="hm-cell" style="background: rgba(160,120,224,0.03)" data-label="03h · 9"></div>
+      <div class="hm-cell" style="background: rgba(160,120,224,0.01)" data-label="04h · 1"></div>
+      <div class="hm-cell" style="background: rgba(160,120,224,0.06)" data-label="05h · 18"></div>
+      <div class="hm-cell" style="background: rgba(160,120,224,0.12)" data-label="06h · 41"></div>
+      <div class="hm-cell" style="background: rgba(160,120,224,0.22)" data-label="07h · 204"></div>
+      <div class="hm-cell" style="background: rgba(160,120,224,0.27)" data-label="08h · 287"></div>
+      <div class="hm-cell" style="background: rgba(160,120,224,0.33)" data-label="09h · 371"></div>
+      <div class="hm-cell" style="background: rgba(160,120,224,0.40)" data-label="10h · 449"></div>
+      <div class="hm-cell" style="background: rgba(160,120,224,0.65)" data-label="11h · 831"></div>
+      <div class="hm-cell" style="background: rgba(160,120,224,0.75)" data-label="12h · 963"></div>
+      <div class="hm-cell" style="background: rgba(160,120,224,0.74)" data-label="13h · 950"></div>
+      <div class="hm-cell" style="background: rgba(160,120,224,0.70)" data-label="14h · 895"></div>
+      <div class="hm-cell" style="background: rgba(160,120,224,0.66)" data-label="15h · 841"></div>
+      <div class="hm-cell" style="background: rgba(160,120,224,0.64)" data-label="16h · 813"></div>
+      <div class="hm-cell" style="background: rgba(160,120,224,0.62)" data-label="17h · 794"></div>
+      <div class="hm-cell" style="background: rgba(160,120,224,0.77)" data-label="18h · 976"></div>
+      <div class="hm-cell" style="background: rgba(160,120,224,0.76)" data-label="19h · 961"></div>
+      <div class="hm-cell" style="background: rgba(160,120,224,1.00); border-radius:2px 2px 0 0;" data-label="20h · 1265 ← PEAK"></div>
+      <div class="hm-cell" style="background: rgba(160,120,224,0.67)" data-label="21h · 849"></div>
+      <div class="hm-cell" style="background: rgba(160,120,224,0.55)" data-label="22h · 699"></div>
+      <div class="hm-cell" style="background: rgba(160,120,224,0.30)" data-label="23h · 382"></div>
+    </div>
+    <div class="hour-labels">
+      <div class="hl">0</div><div class="hl">1</div><div class="hl">2</div><div class="hl">3</div>
+      <div class="hl">4</div><div class="hl">5</div><div class="hl">6</div><div class="hl">7</div>
+      <div class="hl">8</div><div class="hl">9</div><div class="hl">10</div><div class="hl">11</div>
+      <div class="hl">12</div><div class="hl">13</div><div class="hl">14</div><div class="hl">15</div>
+      <div class="hl">16</div><div class="hl">17</div><div class="hl">18</div><div class="hl">19</div>
+      <div class="hl" style="color:var(--p)">20</div><div class="hl">21</div><div class="hl">22</div><div class="hl">23</div>
+    </div>
+    <p class="prose" style="margin-top:12px; font-size:13px; color:var(--muted)">
+      Pic à 20h. Mais actif dès 7h — souvent depuis le boulot, entre deux tâches. La pause déjeuner (12h-13h) est son deuxième sommet. Il ne dort jamais vraiment tard.
+    </p>
+  </section>
+
+  <!-- ══ 2. PORTRAIT ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">02</div><div class="sh-title">Portrait</div></div>
+
+    <p class="prose">
+      Dans le groupe, dosinge occupe une fonction précise : il est celui qui <strong>lance</strong>. Les calls, les sessions, les soirées watch-together, les propositions de jeux. C'est lui qui ping à 20h, qui demande "t lo ?", qui envoie un lien w2g sans prévenir. Quand personne ne prend l'initiative, c'est souvent lui qui rompt le silence.
+    </p>
+
+    <p class="prose">
+      Parallèlement, il est l'<em>analyste du groupe</em> — celui qui regarde les replays, qui rédige des pavés sur la botlane, qui théorise les builds et les metas. Ces analyses ont deux caractéristiques constantes : elles sont sérieuses, et personne ne les applique. Ce décalage entre l'effort d'analyse et l'indifférence des destinataires est l'un des fils rouges de sa présence en 2020.
+    </p>
+
+    <p class="prose">
+      Il y a aussi le dosinge discret que les données révèlent en creux : le <strong>dessinateur weeb</strong>. Fan de Fire Emblem, de Midona, de Lysithea. Il parle de dessins, de tablette graphique, de fan art — pas souvent, jamais très longtemps, mais régulièrement. Un jardin secret que le groupe connaît mais ne commente presque pas. En 2020, au pic de son activité, il a son dessin de Lysithea accroché dans sa chambre et il en parle avec une affection sincère.
+    </p>
+
+    <p class="prose">
+      Enfin, dosinge est un ouvrier de chantier qui envoie des messages depuis le boulot à 8h du matin. Cette information transite dans le canal sous forme d'échos : "j'ai la clim au moins", "on se branle les couilles avec les pouces", "encore deux semaines de plus pour la backlog". Le travail est une contrainte réelle dans sa vie, pas un décor.
+    </p>
+  </section>
+
+  <!-- ══ 3. L'UNIVERS GAMING ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">03</div><div class="sh-title">Les saisons gaming</div></div>
+
+    <p class="prose">
+      Dosinge traverse plusieurs ères gaming en sept ans. LoL reste le fil rouge, mais chaque année a sa couleur propre — parfois deux ou trois jeux coexistent, parfois un seul domine tout.
+    </p>
+
+    <div class="gaming-timeline">
+      <div class="gt-row">
+        <div class="gt-year">2019</div>
+        <div class="gt-games">
+          <span class="gt-game g-lol">LoL</span>
+          <span class="gt-game g-tft">TFT</span>
+          <span class="gt-game g-dofus">Dofus / Wakfu</span>
+        </div>
+      </div>
+      <div class="gt-row">
+        <div class="gt-year">2020</div>
+        <div class="gt-games">
+          <span class="gt-game g-lol">LoL</span>
+          <span class="gt-game g-tft">TFT</span>
+          <span class="gt-game g-terra">Terraria · Calamity</span>
+          <span class="gt-game g-mhw">Monster Hunter World</span>
+          <span class="gt-game g-facto">Factorio</span>
+          <span class="gt-game g-jcs">JCS</span>
+        </div>
+      </div>
+      <div class="gt-row">
+        <div class="gt-year">2021</div>
+        <div class="gt-games">
+          <span class="gt-game g-tft">TFT</span>
+          <span class="gt-game g-dofus">Dofus</span>
+          <span class="gt-game g-ffxiv">FFXIV</span>
+          <span class="gt-game g-jcs">JCS</span>
+        </div>
+      </div>
+      <div class="gt-row">
+        <div class="gt-year">2022</div>
+        <div class="gt-games">
+          <span class="gt-game g-tft">TFT</span>
+          <span class="gt-game g-dofus">Dofus</span>
+          <span class="gt-game g-lol">LoL (résiduel)</span>
+        </div>
+      </div>
+      <div class="gt-row">
+        <div class="gt-year">2023–26</div>
+        <div class="gt-games">
+          <span class="gt-game g-tft">TFT</span>
+          <span class="gt-game g-dofus">Dofus (rush)</span>
+          <span class="gt-game g-jcs">JCS (présence)</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="prose" style="margin-top: 16px;">
+      La trajectoire est lisible : 2020 est l'année de tous les jeux en même temps — confinement oblige. Après, la liste se réduit. TFT et Dofus deviennent les constantes tardives. LoL disparaît presque entièrement après 2022. Les JCS restent une présence fantôme jusqu'en 2026 — dosinge y est toujours abonné, même quand il ne joue plus rien d'autre.
+    </p>
+  </section>
+
+  <!-- ══ 4. LEXIQUE ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">04</div><div class="sh-title">Son lexique</div></div>
+
+    <p class="prose">
+      Dosinge a un style textuel immédiatement reconnaissable : des mots coupés, des majuscules explosives, des onomatopées de rage gaming, et un vocabulaire d'insultes affectives utilisé comme ponctuation. Quelques entrées du dictionnaire dosinge :
+    </p>
+
+    <div class="lexique">
+      <div class="lex-item">
+        <div class="lex-word">CHROMOSOME</div>
+        <div class="lex-def">Émote et insulte universelle. Signifie à peu près tout — la stupidité ambiante, la résignation, l'absurde. Inventé par cryo en juillet 2019, immédiatement adopté et surexploité.</div>
+        <div class="lex-count">457 usages documentés · 2019 → 2025</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">TOTENT / TOT</div>
+        <div class="lex-def">Surnom de cryoslinger. Déformation affectueuse de "Théo". Utilisé pour l'interpeller directement, parfois avec tendresse, souvent pour lui reprocher quelque chose.</div>
+        <div class="lex-count">156 messages contenant tot/totent</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">SEMOULE</div>
+        <div class="lex-def">Surnom de layvi. Origine incertaine — probablement sonore, probablement dosinge. Utilisé avec une affection légèrement condescendante.</div>
+        <div class="lex-count">31 usages par dosinge</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">LUCO / LUCA</div>
+        <div class="lex-def">Surnom d'espy. Moins utilisé que les autres — espy et dosinge communiquent souvent sans se nommer, leurs échanges étant implicitement adressés.</div>
+        <div class="lex-count">24 usages documentés</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">TOTENT / SOUS</div>
+        <div class="lex-def">Deux des surnoms de layvi selon le contexte — "sous" ou "souhil" pour les moments neutres, "semoule" pour les moments d'exaspération affectueuse.</div>
+        <div class="lex-count">79 usages de sous/souhil</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">ISSOU · BORDEL · PUTAIN</div>
+        <div class="lex-def">La trinité. "Issou" pour la résignation comique, "bordel" pour la surprise, "putain" comme intensificateur universel. Ces trois mots structurent une partie significative de ses messages.</div>
+        <div class="lex-count">putain: 284× · bordel: 131×</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 5. CITATIONS ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">05</div><div class="sh-title">Citations</div></div>
+
+    <p class="prose">Une sélection de messages qui capturent les différentes facettes de dosinge — l'analyste, l'artiste discret, le malade contrarié, le travailleur las, le rageur gaming.</p>
+
+    <div class="citations">
+
+      <div class="cit">
+        <div class="cit-text">"Je tourne ma tête je vois mon dessin de Lysithea je suis heureux puis retour à la réalité je retourne ma tête et j'ai le droit à un KO CHE MARRRRREEEE"</div>
+        <div class="cit-meta">1er mai 2020 · le dessinateur vs le gaming</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"Je suis entrain d'ecrire un roman rien que sur votre botlane et je suis qu'à 13 minutes de jeu"</div>
+        <div class="cit-meta">7 mai 2020 · pishot · l'analyste dans son élément</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"J'aurais bien uninstall mais on doit COACH 🙂"</div>
+        <div class="cit-meta">11 mai 2020 · pishot · l'obligation contre la volonté</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"38°c courbatures maux de tête arrive pas a dormir, du coup j'ai surement le covid de mon père ou c'est moi qui lui ai filé, faudrait p-e vous faire tester"</div>
+        <div class="cit-meta">7 septembre 2020 · 03:07 du matin · responsabilité épidémique immédiate</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"Bon blague à part sinon j'etais pas mal à cran la semaine dernière a cause du taf entre autre et que j'etais en mode full autiste tft alors que le set pue toujours atm et j'avais pas la motivation de faire autre chose à ce moment mais là ca va mieux"</div>
+        <div class="cit-meta">5 novembre 2020 · l'un des rares moments d'introspection directe</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"On me fait rester deux semaines de plus car y a trop de tickets dans la backlog et que le client menace de se barrer"</div>
+        <div class="cit-meta">23 novembre 2020 · le boulot qui déborde</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"Je suis a la clinique pour ma polysomnie je gagne quoi si je vous envoie une photo de moi full électrodes"</div>
+        <div class="cit-meta">10 avril 2023 · même à la clinique, la négociation continue</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"Je viens vers 21h si vous voulez faire des trucs qui me petent pas trop les couilles, je peux meme conceder une aram"</div>
+        <div class="cit-meta">30 septembre 2023 · la présence conditionnelle de 2023</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"Je crois que je me suis défoncé le genou à l'escalade il me faut un poutou magique stp"</div>
+        <div class="cit-meta">22 novembre 2025 · à cryoslinger · l'escalade, la fragilité, la tendresse directe</div>
+      </div>
+
+      <div class="cit faded">
+        <div class="cit-text">"3h du matin la liste hein"</div>
+        <div class="cit-meta">17 février 2026 · 07:36 · commentaire depuis les JCS · dernier vestige</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ 6. RELATIONS ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">06</div><div class="sh-title">Ses relations</div></div>
+
+    <div class="relations">
+      <div class="rel-card">
+        <div class="rel-av" style="background:#0a2030; color:#5eead4">E</div>
+        <div class="rel-name" style="color:#5eead4">espy</div>
+        <div class="rel-surnom">luco · luca</div>
+        <div class="rel-desc">Le duo pivot. 7 ans, initiative partagée, références communes accumulées. Dosinge initie, espy répond — puis s'inverse à partir de 2024.</div>
+      </div>
+      <div class="rel-card">
+        <div class="rel-av" style="background:#201005; color:#e08060">C</div>
+        <div class="rel-name" style="color:#e08060">cryoslinger</div>
+        <div class="rel-surnom">totent · tot · théo</div>
+        <div class="rel-desc">Cryo lui a inventé 12+ surnoms. Dosinge lui en a inventé un seul : "totent". Mais il l'utilise 156 fois. La relation la plus asymétriquement nommée du groupe.</div>
+      </div>
+      <div class="rel-card">
+        <div class="rel-av" style="background:#1a1505; color:#c0a040">L</div>
+        <div class="rel-name" style="color:#c0a040">layvi</div>
+        <div class="rel-surnom">semoule · sous · souhil</div>
+        <div class="rel-desc">Le capitaine pishot, le streamer, l'absent régulier. Dosinge lui a donné "semoule" — le surnom qui a le plus circulé dans tout le groupe.</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Le Discordeum</div>
+  <nav class="footer-nav">
+    <a href="index.html" class="footer-link">← Sommaire</a>
+    <a href="records.html" class="footer-link">Records</a>
+  </nav>
+</footer>
+
+</body>
+</html>
