@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>espy — Profil · Le Discordeum</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+  :root {
+    --bg:      #090910;
+    --bg2:     #0e0e18;
+    --bg3:     #141420;
+    --border:  #1e1e30;
+    --text:    #b0b0cc;
+    --muted:   #484860;
+    --dim:     #242438;
+    --white:   #e8e8f8;
+
+    --p:       #5eead4;   /* teal espy */
+    --p2:      #2ab8a0;
+    --p3:      #0a2a26;
+    --violet:  #a78bfa;
+    --orange:  #fb923c;
+    --amber:   #fbbf24;
+    --green:   #4ade80;
+    --red:     #f87171;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+  }
+
+  .hero-left {
+    padding: 100px 8vw 80px;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    position: relative; z-index: 1;
+    border-right: 1px solid var(--border);
+  }
+
+  .hero-right {
+    background: var(--bg2);
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    padding: 60px 40px;
+    gap: 32px;
+    position: relative; overflow: hidden;
+  }
+  .hero-right::before {
+    content: 'E';
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 480px; color: var(--p);
+    opacity: 0.04; line-height: 1;
+    pointer-events: none; user-select: none;
+  }
+
+  .hero-back {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 3px; color: var(--muted);
+    text-transform: uppercase; margin-bottom: 32px;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    transition: color 0.2s; align-self: flex-start;
+  }
+  .hero-back:hover { color: var(--white); }
+  .hero-back::before { content: '←'; }
+
+  .hero-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--p); margin-bottom: 16px;
+    opacity: 0; animation: rise 0.7s ease forwards 0.1s;
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 12vw, 140px);
+    color: var(--white); line-height: 0.9; letter-spacing: 3px;
+    opacity: 0; animation: rise 0.7s ease forwards 0.3s;
+  }
+
+  .hero-role {
+    font-family: 'Crimson Pro', serif;
+    font-size: clamp(16px, 2vw, 20px); font-style: italic;
+    color: var(--muted); margin-top: 20px; line-height: 1.5;
+    max-width: 420px;
+    opacity: 0; animation: rise 0.7s ease forwards 0.6s;
+  }
+  .hero-role strong { color: var(--p); font-style: normal; font-weight: 600; }
+
+  .hero-stats-row {
+    display: flex; gap: 32px; margin-top: 48px; flex-wrap: wrap;
+    opacity: 0; animation: rise 0.7s ease forwards 0.9s;
+  }
+  .hs { display: flex; flex-direction: column; gap: 3px; }
+  .hs-v { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--p); line-height: 1; }
+  .hs-l { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: 1px; }
+
+  .stat-card {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 3px; padding: 18px 22px; width: 100%; max-width: 340px;
+    position: relative; z-index: 1;
+  }
+  .sc-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--p); margin-bottom: 8px;
+  }
+  .sc-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: #8888b0; line-height: 1.6;
+    font-style: italic;
+  }
+
+  /* ── CONTAINER ── */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 8vw; }
+
+  /* ── SECTIONS ── */
+  .section { padding: 72px 0; border-bottom: 1px solid var(--border); }
+  .section:last-of-type { border-bottom: none; }
+  .sh {
+    display: flex; align-items: baseline; gap: 16px; margin-bottom: 40px;
+  }
+  .sh-num { font-family: 'Bebas Neue', sans-serif; font-size: 40px; color: var(--dim); line-height: 1; }
+  .sh-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(24px, 4vw, 38px); color: var(--white); letter-spacing: 1px; }
+
+  /* ── PROSE ── */
+  .prose { font-size: 15px; line-height: 1.9; color: var(--text); margin-bottom: 22px; max-width: 680px; }
+  .prose strong { color: var(--white); font-weight: 600; }
+  .prose em { color: var(--p); font-style: italic; }
+
+  /* ── GRAPHIQUE ACTIVITÉ ── */
+  .year-chart { display: flex; align-items: flex-end; gap: 6px; height: 120px; margin: 32px 0; }
+  .yc-col { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; }
+  .yc-val { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--p); }
+  .yc-bar {
+    width: 100%; border-radius: 2px 2px 0 0;
+    background: var(--p); opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  .yc-bar:hover { opacity: 1; }
+  .yc-bar.peak { background: var(--p); opacity: 1; }
+  .yc-bar.low { background: var(--dim); opacity: 1; }
+  .yc-year { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); }
+
+  /* ── HEATMAP HORAIRE ── */
+  .hour-map {
+    display: grid; grid-template-columns: repeat(24, 1fr);
+    gap: 3px; margin: 20px 0;
+  }
+  .hm-cell {
+    height: 28px; border-radius: 2px;
+    position: relative;
+  }
+  .hm-cell:hover::after {
+    content: attr(data-label);
+    position: absolute; bottom: 110%; left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg2); border: 1px solid var(--border);
+    padding: 3px 7px; border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    color: var(--white); white-space: nowrap; z-index: 10;
+  }
+  .hour-labels {
+    display: grid; grid-template-columns: repeat(24, 1fr);
+    gap: 3px; margin-top: 4px;
+  }
+  .hl { font-family: 'JetBrains Mono', monospace; font-size: 8px; color: var(--muted); text-align: center; }
+
+  /* ── SAISONS GAMING ── */
+  .gaming-timeline { display: flex; flex-direction: column; gap: 10px; margin: 24px 0; }
+  .gt-row { display: flex; align-items: center; gap: 12px; }
+  .gt-year { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); width: 36px; flex-shrink: 0; }
+  .gt-games { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; }
+  .gt-game {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; padding: 2px 10px; border-radius: 20px;
+    border: 1px solid; letter-spacing: 0.5px;
+  }
+  .g-lol    { color: #c89b3c; border-color: rgba(200,155,60,0.3); background: rgba(200,155,60,0.08); }
+  .g-tft    { color: #7dd6f0; border-color: rgba(125,214,240,0.3); background: rgba(125,214,240,0.08); }
+  .g-mc     { color: #8db360; border-color: rgba(141,179,96,0.3); background: rgba(141,179,96,0.08); }
+  .g-ffxiv  { color: #b0a0ff; border-color: rgba(176,160,255,0.3); background: rgba(176,160,255,0.08); }
+  .g-terra  { color: #7cdb82; border-color: rgba(124,219,130,0.3); background: rgba(124,219,130,0.08); }
+  .g-star   { color: #e8c87a; border-color: rgba(232,200,122,0.3); background: rgba(232,200,122,0.08); }
+  .g-poe    { color: #d06030; border-color: rgba(208,96,48,0.3); background: rgba(208,96,48,0.08); }
+  .g-valh   { color: #a0d4b0; border-color: rgba(160,212,176,0.3); background: rgba(160,212,176,0.08); }
+  .g-ps2    { color: #6090d0; border-color: rgba(96,144,208,0.3); background: rgba(96,144,208,0.08); }
+  .g-sauce  { color: var(--p); border-color: rgba(94,234,212,0.3); background: rgba(94,234,212,0.08); }
+
+  /* ── LEXIQUE ── */
+  .lexique { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 24px 0; }
+  @media (max-width: 600px) { .lexique { grid-template-columns: 1fr; } }
+  .lex-item {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 3px; padding: 14px 16px;
+  }
+  .lex-word {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px; color: var(--p); letter-spacing: 1px; margin-bottom: 4px;
+  }
+  .lex-def { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .lex-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: var(--dim); margin-top: 6px;
+  }
+
+  /* ── CITATIONS ── */
+  .citations { display: flex; flex-direction: column; gap: 16px; margin: 24px 0; }
+  .cit {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-left: 3px solid var(--p); border-radius: 0 3px 3px 0;
+    padding: 16px 20px;
+  }
+  .cit-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: #9090c0; line-height: 1.65;
+    margin-bottom: 8px;
+  }
+  .cit-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: var(--muted); letter-spacing: 1px;
+  }
+  .cit.faded { border-left-color: var(--dim); }
+  .cit.faded .cit-text { color: #606070; }
+
+  /* ── RELATIONS ── */
+  .relations { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 24px 0; }
+  @media (max-width: 600px) { .relations { grid-template-columns: 1fr; } }
+  .rel-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 3px; padding: 18px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .rel-av {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif; font-size: 16px;
+  }
+  .rel-name { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: var(--white); letter-spacing: 1px; }
+  .rel-surnom {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--p); letter-spacing: 1px;
+  }
+  .rel-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* ── TIER BADGE ── */
+  .tier-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 3px; padding: 12px 18px; margin: 16px 0;
+  }
+  .tier-s {
+    font-family: 'Bebas Neue', sans-serif; font-size: 28px;
+    color: #ff4444; line-height: 1; min-width: 28px;
+  }
+  .tier-desc { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); line-height: 1.6; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 48px 8vw;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: var(--dim); letter-spacing: 2px; }
+  .footer-nav { display: flex; gap: 24px; }
+  .footer-link {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--muted); letter-spacing: 2px; text-transform: uppercase;
+    text-decoration: none; transition: color 0.2s;
+  }
+  .footer-link:hover { color: var(--white); }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 0 24px; }
+    footer { padding: 40px 24px; }
+    .hero-left { padding: 60px 24px 56px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="hero-left">
+    <a href="index.html" class="hero-back">Retour aux archives</a>
+    <div class="hero-tag">Profil · Membre fondateur</div>
+    <h1>espy</h1>
+    <p class="hero-role">
+      <strong>Pourvoyeur culturel, malveillance institutionnelle.</strong> Le deuxième volume du Discordeum — et le premier à avoir tout vu venir, sans jamais rien dire à temps. Sept ans de liens, de sauces, et d'une présence qui s'efface avec une précision déconcertante.
+    </p>
+    <div class="hero-stats-row">
+      <div class="hs"><div class="hs-v">10 405</div><div class="hs-l">messages</div></div>
+      <div class="hs"><div class="hs-v">#2</div><div class="hs-l">volume canal général</div></div>
+      <div class="hs"><div class="hs-v">43%</div><div class="hs-l">taux d'absence</div></div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="stat-card">
+      <div class="sc-label">Citation signature</div>
+      <div class="sc-text">"dorian : le joueur qui veut juste jouer à lol et se fait r3kt par l'orga chiante et pas adaptée" — août 2020, l'analyse la plus juste de pishot en dix mots.</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Heure de pointe</div>
+      <div class="sc-text">20h — 1 016 messages. Mais présent dès 11h, avec un plateau étendu jusqu'à 23h. Espy n'a pas de pic brutal : il est là, en continu, du déjeuner jusqu'à minuit.</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Mois record</div>
+      <div class="sc-text">Juin 2019 — 946 messages. Premier été FFXIV, journée record du 28 juin (130 messages le jour du lancement de Shadowbringers qu'il avait préco pour tout le monde).</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ══ 1. COURBE DE PRÉSENCE ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">01</div><div class="sh-title">La courbe de présence</div></div>
+
+    <p class="prose">
+      Espy est là depuis le premier jour — <strong>14 décembre 2018</strong>, troisième message du canal général. Sa montée est immédiate : <em>2 397 messages en 2019</em>, porté par l'été FFXIV et les soirées LoL du premier cercle. 2020 représente son sommet absolu avec <em>3 818 messages</em> — l'année pishot, l'année confinement, l'année où le groupe a le plus existé. Puis la décrue, régulière et sans accroc. Jamais une disparition brutale : juste un retrait progressif, millimétré, presque calculé.
+    </p>
+
+    <div class="year-chart">
+      <!-- max = 3818 (2020), normalisé sur 120px -->
+      <div class="yc-col">
+        <div class="yc-val">25</div>
+        <div class="yc-bar low" style="height:1px"></div>
+        <div class="yc-year">2018</div>
+      </div>
+      <div class="yc-col">
+        <div class="yc-val">2 397</div>
+        <div class="yc-bar" style="height:75px"></div>
+        <div class="yc-year">2019</div>
+      </div>
+      <div class="yc-col">
+        <div class="yc-val">3 818</div>
+        <div class="yc-bar peak" style="height:120px"></div>
+        <div class="yc-year">2020</div>
+      </div>
+      <div class="yc-col">
+        <div class="yc-val">1 775</div>
+        <div class="yc-bar" style="height:56px"></div>
+        <div class="yc-year">2021</div>
+      </div>
+      <div class="yc-col">
+        <div class="yc-val">933</div>
+        <div class="yc-bar" style="height:29px"></div>
+        <div class="yc-year">2022</div>
+      </div>
+      <div class="yc-col">
+        <div class="yc-val">624</div>
+        <div class="yc-bar low" style="height:20px; background: var(--p); opacity: 0.5"></div>
+        <div class="yc-year">2023</div>
+      </div>
+      <div class="yc-col">
+        <div class="yc-val">556</div>
+        <div class="yc-bar low" style="height:17px; background: var(--p); opacity: 0.4"></div>
+        <div class="yc-year">2024</div>
+      </div>
+      <div class="yc-col">
+        <div class="yc-val">240</div>
+        <div class="yc-bar low" style="height:8px"></div>
+        <div class="yc-year">2025</div>
+      </div>
+      <div class="yc-col">
+        <div class="yc-val">37</div>
+        <div class="yc-bar low" style="height:1px"></div>
+        <div class="yc-year">2026</div>
+      </div>
+    </div>
+
+    <p class="prose">
+      Ce qui distingue espy de dosinge dans la décroissance : il ne disparaît pas comme dosinge — il <strong>reste visible</strong>, mais à bas bruit. 556 messages en 2024 contre 216 pour dosinge. Il continue d'envoyer des liens, de commenter, d'apposer la chancla. Sa présence ne s'éteint pas, elle se… comprime.
+    </p>
+
+    <!-- Heatmap horaire -->
+    <p class="prose" style="margin-top: 36px;">Sa journée type, heure par heure :</p>
+    <div class="hour-map">
+      <div class="hm-cell" style="background: rgba(94,234,212,0.17)" data-label="00h · 172"></div>
+      <div class="hm-cell" style="background: rgba(94,234,212,0.05)" data-label="01h · 49"></div>
+      <div class="hm-cell" style="background: rgba(94,234,212,0.01)" data-label="02h · 12"></div>
+      <div class="hm-cell" style="background: rgba(94,234,212,0.00)" data-label="03h · 3"></div>
+      <div class="hm-cell" style="background: rgba(94,234,212,0.00)" data-label="04h · 2"></div>
+      <div class="hm-cell" style="background: rgba(94,234,212,0.01)" data-label="05h · 7"></div>
+      <div class="hm-cell" style="background: rgba(94,234,212,0.01)" data-label="06h · 14"></div>
+      <div class="hm-cell" style="background: rgba(94,234,212,0.03)" data-label="07h · 27"></div>
+      <div class="hm-cell" style="background: rgba(94,234,212,0.06)" data-label="08h · 59"></div>
+      <div class="hm-cell" style="background: rgba(94,234,212,0.13)" data-label="09h · 137"></div>
+      <div class="hm-cell" style="background: rgba(94,234,212,0.22)" data-label="10h · 223"></div>
+      <div class="hm-cell" style="background: rgba(94,234,212,0.53)" data-label="11h · 539"></div>
+      <div class="hm-cell" style="background: rgba(94,234,212,0.59)" data-label="12h · 602"></div>
+      <div class="hm-cell" style="background: rgba(94,234,212,0.68)" data-label="13h · 692"></div>
+      <div class="hm-cell" style="background: rgba(94,234,212,0.62)" data-label="14h · 632"></div>
+      <div class="hm-cell" style="background: rgba(94,234,212,0.70)" data-label="15h · 713"></div>
+      <div class="hm-cell" style="background: rgba(94,234,212,0.75)" data-label="16h · 765"></div>
+      <div class="hm-cell" style="background: rgba(94,234,212,0.88)" data-label="17h · 891"></div>
+      <div class="hm-cell" style="background: rgba(94,234,212,0.82)" data-label="18h · 830"></div>
+      <div class="hm-cell" style="background: rgba(94,234,212,0.85)" data-label="19h · 864"></div>
+      <div class="hm-cell" style="background: rgba(94,234,212,1.00); border-radius:2px 2px 0 0;" data-label="20h · 1016 ← PEAK"></div>
+      <div class="hm-cell" style="background: rgba(94,234,212,0.85)" data-label="21h · 866"></div>
+      <div class="hm-cell" style="background: rgba(94,234,212,0.79)" data-label="22h · 803"></div>
+      <div class="hm-cell" style="background: rgba(94,234,212,0.48)" data-label="23h · 487"></div>
+    </div>
+    <div class="hour-labels">
+      <div class="hl">0</div><div class="hl">1</div><div class="hl">2</div><div class="hl">3</div>
+      <div class="hl">4</div><div class="hl">5</div><div class="hl">6</div><div class="hl">7</div>
+      <div class="hl">8</div><div class="hl">9</div><div class="hl">10</div><div class="hl">11</div>
+      <div class="hl">12</div><div class="hl">13</div><div class="hl">14</div><div class="hl">15</div>
+      <div class="hl">16</div><div class="hl">17</div><div class="hl">18</div><div class="hl">19</div>
+      <div class="hl" style="color:var(--p)">20</div><div class="hl">21</div><div class="hl">22</div><div class="hl">23</div>
+    </div>
+    <p class="prose" style="margin-top:12px; font-size:13px; color:var(--muted)">
+      Pic à 20h. Mais son plateau est exceptionnel : de 11h à 23h, espy maintient plus de 500 messages par tranche horaire. Pas un matin, pas un soir — un présent étendu qui couvre toute la journée active. Il ne dort jamais tôt non plus.
+    </p>
+  </section>
+
+  <!-- ══ 2. PORTRAIT ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">02</div><div class="sh-title">Portrait</div></div>
+
+    <p class="prose">
+      Dans le groupe, espy occupe une fonction que personne n'a officialisée mais que tout le monde reconnaît : il est le <strong>pourvoyeur culturel</strong>. Les liens YouTube à 1h du matin, les articles de presse, les extraits de débats qui méritaient d'être vus — c'est lui. Son usage des liens dépasse de loin les autres membres : <em>1 383 URLs</em> envoyées sur sept ans, soit en moyenne un lien toutes les 7,5 minutes actives. C'est sa monnaie d'échange.
+    </p>
+
+    <p class="prose">
+      Cette fonction de relais culturel n'est pas neutre. Espy ne partage pas pour informer — il partage pour <em>signifier</em>. Chaque lien est une position. En janvier 2019, il envoie à tout le groupe un lien intitulé "Le futur du gaming est en marche". En juin 2020, il construit un bingo pour une émission pop corn. En 2022, il poste un article sur une réserve humaine près de Nantes. La curation est son mode de présence.
+    </p>
+
+    <p class="prose">
+      Il y a aussi le versant moins visible : espy est celui qui <strong>observe</strong>. Quand Sardoche — le streamer LoL que le groupe suit — enchaîne les défaites en live, espy produit en temps réel une liste de 17 raisons : les ongles rongés qui accrochent sur le tapis de souris, les maj Windows, l'humidité trop basse, le manque de soleil, les dévs qui sont des fils de pute. C'est le message le plus long d'espy sur sept ans. Quand dosinge se fait absorber par pishot, il commente en un mot : <em>"dorian : le joueur qui veut juste jouer à lol."</em> Son regard est précis, souvent légèrement en retrait, et il arrive toujours légèrement trop tard pour changer quoi que ce soit.
+    </p>
+
+    <p class="prose">
+      Ce positionnement en observateur nourrit directement sa réputation de malveillance — qui est de <strong>rang S</strong> dans la tier list officielle. Non pas la malveillance bruyante de cryo ou baiedhiver, mais une malveillance institutionnelle : il laisse faire, il note, il commente. Il signe sa lettre de démission pishot depuis "41 allée du sabotage" sous le pseudo "Pantoufle" — et c'est exactement le bon geste. Le sabotage comme acte architectural.
+    </p>
+
+    <div class="tier-badge">
+      <div class="tier-s">S</div>
+      <div class="tier-desc">
+        Tier list malveillance officielle du Discordeum<br>
+        <span style="color:var(--p)">Malveillance institutionnelle.</span> La plus durable, la moins spectaculaire,<br>
+        la plus difficile à contester.
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 3. L'UNIVERS GAMING ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">03</div><div class="sh-title">Les saisons gaming</div></div>
+
+    <p class="prose">
+      Contrairement à dosinge qui construisait autour de LoL, espy traverse les jeux par vagues d'immersion totale puis d'abandon complet. Chaque saison a une cohérence propre — souvent liée à une période du groupe plutôt qu'à une mécanique de jeu.
+    </p>
+
+    <div class="gaming-timeline">
+      <div class="gt-row">
+        <div class="gt-year">2018</div>
+        <div class="gt-games">
+          <span class="gt-game g-lol">LoL</span>
+          <span class="gt-game g-ps2">PlanetSide 2</span>
+          <span class="gt-game g-star">Starbound</span>
+        </div>
+      </div>
+      <div class="gt-row">
+        <div class="gt-year">2019</div>
+        <div class="gt-games">
+          <span class="gt-game g-lol">LoL</span>
+          <span class="gt-game g-ffxiv">FFXIV · Shadowbringers</span>
+          <span class="gt-game g-ps2">PlanetSide 2</span>
+        </div>
+      </div>
+      <div class="gt-row">
+        <div class="gt-year">2020</div>
+        <div class="gt-games">
+          <span class="gt-game g-lol">LoL</span>
+          <span class="gt-game g-mc">Minecraft</span>
+          <span class="gt-game g-terra">Terraria</span>
+          <span class="gt-game g-tft">TFT</span>
+        </div>
+      </div>
+      <div class="gt-row">
+        <div class="gt-year">2021</div>
+        <div class="gt-games">
+          <span class="gt-game g-tft">TFT</span>
+          <span class="gt-game g-valh">Valheim</span>
+          <span class="gt-game g-mc">Minecraft</span>
+          <span class="gt-game g-lol">LoL (résiduel)</span>
+        </div>
+      </div>
+      <div class="gt-row">
+        <div class="gt-year">2022</div>
+        <div class="gt-games">
+          <span class="gt-game g-poe">Path of Exile</span>
+          <span class="gt-game g-tft">TFT</span>
+          <span class="gt-game g-mc">Minecraft</span>
+        </div>
+      </div>
+      <div class="gt-row">
+        <div class="gt-year">2023–26</div>
+        <div class="gt-games">
+          <span class="gt-game g-sauce">liens · sauce · Discord</span>
+          <span class="gt-game g-poe">PoE (phases)</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="prose" style="margin-top: 16px;">
+      L'arc FFXIV d'espy est particulier : il est le seul à avoir précommandé Shadowbringers pour que tout le groupe ait accès au bonus d'XP à temps. Le 28 juin 2019 — journée record du Discordeum — il passe l'après-midi à expliquer les mécaniques d'extension à dosinge, message par message, jusqu'à ce que tout le monde soit connecté. Ce jour-là, il n'est pas seulement pourvoyeur culturel. Il est organisateur.
+    </p>
+  </section>
+
+  <!-- ══ 4. LEXIQUE ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">04</div><div class="sh-title">Son lexique</div></div>
+
+    <p class="prose">
+      Espy a un style textuel économe : phrases courtes, coupures abruptes, ironie à plat. Mais quelques mots reviennent avec une fréquence qui trahit les obsessions. Petit dictionnaire espy :
+    </p>
+
+    <div class="lexique">
+      <div class="lex-item">
+        <div class="lex-word">SAUCE</div>
+        <div class="lex-def">Terme pivot. Désigne une situation confuse, un état d'embourbement, un chaos en cours. "Toujours dans la sauce ?" — sa façon de prendre des nouvelles quand quelqu'un galère. Usage étendu à tout : "la sauce est épaisse", "SAUCENT ?", "QUELLENT SAUCENT AVECENT VOTRENT JUNGLERENT".</div>
+        <div class="lex-count">132 messages contenant "sauce" · 2019 → 2024</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">PANTOUFLE</div>
+        <div class="lex-def">Son pseudo alternatif, son identité de saboteur. Utilisé une fois pour signer sa lettre de démission pishot depuis "41 allée du sabotage". Réapparu en 2021 avec "j'ai mis mes pantouflent" — signe que la saison de retrait a commencé.</div>
+        <div class="lex-count">Pseudo officiel · pishot · sept. 2020</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">KOUFFAR · KUFR</div>
+        <div class="lex-def">Terme de trahison institutionnelle adopté par le groupe. Espy l'utilise avec précision — pour désigner les absents, les récalcitrants, ceux qui ratent les sessions. "c'est bien ce que dirait un kouffar", "le kouffar sousmarinier l'aura jamais".</div>
+        <div class="lex-count">Vocabulaire actif · 2021 → 2026</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">LA CHANCLA</div>
+        <div class="lex-def">La punition symbolique du groupe. Espy en est un utilisateur régulier et un codificateur : il envoie des GIFs de chancla, convoque la chancla pour les absents, et lance des alertes chancla en début de session. "ALERTE · Dispo pour VALHEIM ce soir → LA CHANCLA".</div>
+        <div class="lex-count">Instrument de justice · 2019 → 2026</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">SEMOULE</div>
+        <div class="lex-def">Il n'a pas inventé le surnom de layvi — c'est dosinge — mais espy l'a adopté immédiatement et l'utilise avec la même affection condescendante. En mars 2019 : "semoule ouvre sa chaîne youtube en direct sur le discord et propose son premier vlog".</div>
+        <div class="lex-count">Usage partagé avec dosinge</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">HOP HOP HOP</div>
+        <div class="lex-def">Expression de convocation douce. Moins autoritaire que le ping de dosinge, plus directive que le silence de baiedhiver. "hop hop hop on lance ff", "hop hop hop on sort de la sauce". Le signal qu'il faut se mettre en mouvement — maintenant.</div>
+        <div class="lex-count">Mode opératoire · 2019 → 2021</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 5. CITATIONS ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">05</div><div class="sh-title">Citations</div></div>
+
+    <p class="prose">Une sélection de messages qui capturent les différentes facettes d'espy — le pourvoyeur, l'observateur, le saboteur patient, le codificateur institutionnel.</p>
+
+    <div class="citations">
+
+      <div class="cit">
+        <div class="cit-text">"Le futur du gaming est en marche"</div>
+        <div class="cit-meta">15 janvier 2019 · 19:58 · premier grand envoi culturel · lien YouTube adressé à dosinge et layvi</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"C'est la faute à : Riot / Le taux d'humidité trop basse de sa chambre / Son pc / Ses yeux / La fatigue / Les streams / Les mecs qui le snipe / Ses ongles / Les maj windows / Il bosse comme un taré / Les problèmes IRL / L'invade au red / Le manque de soleil / Les stuck D3 / Les mains Riven / La touche espace / Les dév sont des fils de pute"</div>
+        <div class="cit-meta">31 août 2019 · 23:30 · liste exhaustive des raisons pour lesquelles Sardoche perd au LoL · message le plus long d'espy (1956 c)</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"Y'a d'autres animes excellents qui ont des références assez évidentes au fascisme mais vu que ça génère pas assez de clic c'est pas intéressant"</div>
+        <div class="cit-meta">20 juin 2019 · le pourvoyeur culturel dans sa forme la plus pure</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"La feuille d'algue c'est une métaphore pour la team pishotte"</div>
+        <div class="cit-meta">6 mai 2020 · pishot · en une phrase, il a tout dit</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"dorian : le joueur qui veut juste jouer à lol et se fait r3kt par l'orga chiante et pas adaptée"</div>
+        <div class="cit-meta">27 août 2020 · l'analyse post-pishot · la plus précise, la plus tardive</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"j'ai mis mes pantouflent"</div>
+        <div class="cit-meta">7 janvier 2021 · à cryoslinger · le début de la saison retrait · la pantoufle réapparaît</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"c'est bien ce que dirait un kouffar"</div>
+        <div class="cit-meta">2 mai 2021 · la jurisprudence institutionnelle en six mots</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"Je ne dirais rien du D, je concentre ma malveillance"</div>
+        <div class="cit-meta">5 septembre 2022 · 16:13 · commentaire lors d'une délibération Kouffardor · pleine conscience de son positionnement</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"Reasons to be malevolent : 1. Power and control..."</div>
+        <div class="cit-meta">24 mai 2023 · il envoie un manifeste de la malveillance (1700c) · ironique ou pas, la question reste ouverte</div>
+      </div>
+
+      <div class="cit faded">
+        <div class="cit-text">"le kouffar sousmarinier l'aura jamais"</div>
+        <div class="cit-meta">5 janvier 2026 · 14:08 · 37 messages sur l'année · présent, mais depuis le fond</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ 6. RELATIONS ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">06</div><div class="sh-title">Ses relations</div></div>
+
+    <div class="relations">
+      <div class="rel-card">
+        <div class="rel-av" style="background:#1a0f3a; color:#a78bfa">D</div>
+        <div class="rel-name" style="color:#a78bfa">dosinge</div>
+        <div class="rel-surnom">dorian · luco → luca</div>
+        <div class="rel-desc">Le duo pivot du Discordeum. Dosinge initie, espy valide ou commente. Relation la plus symétrique du groupe — ils se nomment peu mais se parlent le plus. En 2020, espy est le seul à avoir vu dosinge comme il était : "il veut juste jouer à lol".</div>
+      </div>
+      <div class="rel-card">
+        <div class="rel-av" style="background:#201005; color:#fb923c">C</div>
+        <div class="rel-name" style="color:#fb923c">cryoslinger</div>
+        <div class="rel-surnom">totent (par dosinge)</div>
+        <div class="rel-desc">Espy est un observateur attentif de la vie de cryo — Kimyaku, Thélio, le mariage — avec une affection documentée. Il commente, il note, il laisse cryo s'embourber avant d'intervenir. La relation la plus asymétrique du groupe en termes de volume de commentaires.</div>
+      </div>
+      <div class="rel-card">
+        <div class="rel-av" style="background:#1a1505; color:#fbbf24">L</div>
+        <div class="rel-name" style="color:#fbbf24">layvi</div>
+        <div class="rel-surnom">semoule · sous</div>
+        <div class="rel-desc">Le capitaine de la Team A sous son commandement pishot. Espy le convoque avec "hop hop hop" quand il est dans la sauce, le signale à dosinge quand il disparaît, et lui construit le même regard légèrement condescendant qu'il réserve aux gens qu'il apprécie.</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Le Discordeum</div>
+  <nav class="footer-nav">
+    <a href="index.html" class="footer-link">← Sommaire</a>
+    <a href="dosinge_x_espy.html" class="footer-link">dosinge × espy</a>
+    <a href="records.html" class="footer-link">Records</a>
+  </nav>
+</footer>
+
+</body>
+</html>
