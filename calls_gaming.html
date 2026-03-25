@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les Calls Gaming — Le Discordeum</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+  :root {
+    --bg:      #09090f;
+    --bg2:     #0e0e18;
+    --bg3:     #141420;
+    --border:  #1e1e30;
+    --text:    #b0b0cc;
+    --muted:   #484860;
+    --dim:     #242438;
+    --white:   #e8e8f8;
+    --dos: #a78bfa;
+    --esp: #5eead4;
+    --cry: #fb923c;
+    --lay: #fbbf24;
+    --bai: #4ade80;
+    --succes: #4ade80;
+    --mitige: #fbbf24;
+    --echec:  #f87171;
+    --zombie: #94a3b8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'Crimson Pro', Georgia, serif; font-size: 16px; line-height: 1.7; overflow-x: hidden; }
+
+  /* HERO */
+  .hero { min-height: 60vh; padding: 100px 8vw 80px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; justify-content: flex-end; position: relative; overflow: hidden; }
+  .hero::before { content: 'CALLS'; position: absolute; top: 0; right: 0; font-family: 'Bebas Neue', sans-serif; font-size: clamp(120px, 20vw, 260px); color: var(--dos); opacity: 0.03; line-height: 1; pointer-events: none; letter-spacing: -4px; }
+  .hero-back { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; margin-bottom: 32px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: color 0.2s; align-self: flex-start; }
+  .hero-back:hover { color: var(--white); }
+  .hero-back::before { content: '←'; }
+  .hero-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--dos); margin-bottom: 16px; opacity: 0; animation: rise 0.7s ease forwards 0.1s; }
+  .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(52px, 10vw, 110px); color: var(--white); line-height: 0.9; letter-spacing: 2px; opacity: 0; animation: rise 0.7s ease forwards 0.3s; }
+  .hero-sub { font-family: 'Crimson Pro', serif; font-size: clamp(15px, 2vw, 19px); font-style: italic; color: var(--muted); margin-top: 20px; max-width: 640px; line-height: 1.6; opacity: 0; animation: rise 0.7s ease forwards 0.6s; }
+  .hero-sub strong { color: var(--white); font-style: normal; }
+  .hero-meta { display: flex; gap: 40px; margin-top: 48px; flex-wrap: wrap; opacity: 0; animation: rise 0.7s ease forwards 0.9s; }
+  .hm-item { display: flex; flex-direction: column; gap: 3px; }
+  .hm-v { font-family: 'Bebas Neue', sans-serif; font-size: 30px; line-height: 1; }
+  .hm-l { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: 1px; }
+
+  /* LÉGENDE */
+  .legend { display: flex; gap: 20px; flex-wrap: wrap; margin: 40px 0 16px; }
+  .leg-item { display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+  .leg-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+  /* CONTAINER */
+  .container { max-width: 1000px; margin: 0 auto; padding: 0 8vw; }
+
+  /* SECTIONS */
+  .section { padding: 72px 0; border-bottom: 1px solid var(--border); }
+  .section:last-of-type { border-bottom: none; }
+  .sh { display: flex; align-items: baseline; gap: 16px; margin-bottom: 40px; }
+  .sh-num { font-family: 'Bebas Neue', sans-serif; font-size: 40px; color: var(--dim); line-height: 1; }
+  .sh-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(24px, 4vw, 38px); color: var(--white); letter-spacing: 1px; }
+  .prose { font-size: 15px; line-height: 1.9; color: var(--text); margin-bottom: 22px; max-width: 720px; }
+  .prose strong { color: var(--white); font-weight: 600; }
+  .prose em { font-style: italic; }
+
+  /* CALL CARDS */
+  .calls-grid { display: flex; flex-direction: column; gap: 2px; margin: 32px 0; }
+  .call-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 3px; overflow: hidden; transition: border-color 0.2s; }
+  .call-card:hover { border-color: #2e2e50; }
+  .call-header { display: grid; grid-template-columns: 4px 48px 1fr auto auto; align-items: center; gap: 0; cursor: pointer; padding: 0; user-select: none; }
+  .call-accent { height: 100%; min-height: 64px; }
+  .call-rank { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--dim); text-align: center; padding: 0 8px; }
+  .call-info { padding: 16px 20px; }
+  .call-name { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--white); letter-spacing: 1px; line-height: 1.1; margin-bottom: 4px; }
+  .call-meta { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: 1px; }
+  .call-bar-wrap { padding: 16px 24px; min-width: 130px; display: flex; flex-direction: column; gap: 4px; align-items: flex-end; }
+  .call-verdict { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; font-weight: 500; }
+  .call-sessions { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); text-align: right; }
+  .call-toggle { padding: 16px 20px; color: var(--dim); font-family: 'JetBrains Mono', monospace; font-size: 14px; transition: color 0.2s, transform 0.3s; }
+  .call-card.open .call-toggle { transform: rotate(180deg); color: var(--muted); }
+
+  .call-body { display: none; padding: 0 20px 24px 20px; border-top: 1px solid var(--border); margin: 0 4px; }
+  .call-card.open .call-body { display: block; }
+  .call-body-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding-top: 20px; }
+  @media (max-width: 640px) { .call-body-inner { grid-template-columns: 1fr; } }
+
+  .cb-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .cb-prose { font-size: 13px; line-height: 1.75; color: var(--text); }
+  .cb-prose strong { color: var(--white); font-weight: 600; }
+
+  .call-cit { background: var(--bg3); border-left: 3px solid var(--border); border-radius: 0 2px 2px 0; padding: 10px 14px; margin-top: 12px; }
+  .call-cit-text { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #8888b0; line-height: 1.6; }
+  .call-cit-author { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--dim); margin-top: 6px; letter-spacing: 1px; }
+
+  .participants { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .part-dot { font-family: 'JetBrains Mono', monospace; font-size: 9px; padding: 3px 10px; border-radius: 20px; border: 1px solid; letter-spacing: 0.5px; }
+
+  .v-succes { color: var(--succes); }
+  .v-mitige { color: var(--mitige); }
+  .v-echec  { color: var(--echec); }
+  .v-zombie { color: var(--zombie); }
+  .accent-succes { background: var(--succes); }
+  .accent-mitige { background: var(--mitige); }
+  .accent-echec  { background: var(--echec); }
+  .accent-zombie { background: var(--zombie); }
+
+  /* DASHBOARD */
+  .dashboard { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 32px 0; }
+  @media (max-width: 640px) { .dashboard { grid-template-columns: repeat(2, 1fr); } }
+  .dash-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 3px; padding: 18px 16px; display: flex; flex-direction: column; gap: 6px; }
+  .dash-v { font-family: 'Bebas Neue', sans-serif; font-size: 36px; line-height: 1; }
+  .dash-l { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+
+  /* INSTIGATEURS */
+  .instig-bars { display: flex; flex-direction: column; gap: 10px; margin: 24px 0; }
+  .ib-row { display: flex; align-items: center; gap: 12px; }
+  .ib-name { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1px; width: 80px; flex-shrink: 0; }
+  .ib-track { flex: 1; background: var(--dim); height: 6px; border-radius: 3px; overflow: hidden; }
+  .ib-fill { height: 100%; border-radius: 3px; }
+  .ib-count { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); width: 24px; text-align: right; }
+
+  /* CITATIONS */
+  .citations { display: flex; flex-direction: column; gap: 14px; margin: 24px 0; }
+  .cit { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--dim); border-radius: 0 3px 3px 0; padding: 14px 18px; }
+  .cit-text { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #9090c0; line-height: 1.65; margin-bottom: 6px; }
+  .cit-meta { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: 1px; }
+
+  /* FOOTER */
+  footer { padding: 48px 8vw; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; border-top: 1px solid var(--border); }
+  .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: var(--dim); letter-spacing: 2px; }
+  .footer-nav { display: flex; gap: 24px; }
+  .footer-link { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; text-decoration: none; transition: color 0.2s; }
+  .footer-link:hover { color: var(--white); }
+
+  @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  @media (max-width: 600px) { .container { padding: 0 24px; } footer { padding: 40px 24px; } .hero { padding: 60px 24px 56px; } }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <a href="index.html" class="hero-back">Retour aux archives</a>
+  <div class="hero-tag">Analyse · 2018 → 2026</div>
+  <h1>Les Calls Gaming</h1>
+  <p class="hero-sub">Sur sept ans, le groupe a lancé des calls pour une vingtaine de jeux. Certains ont tenu plusieurs semaines. D'autres ont tenu le temps d'un message resté sans réponse. <strong>Voici le bilan, jeu par jeu.</strong></p>
+  <div class="hero-meta">
+    <div class="hm-item"><div class="hm-v" style="color:var(--succes)">4</div><div class="hm-l">succès confirmés</div></div>
+    <div class="hm-item"><div class="hm-v" style="color:var(--mitige)">4</div><div class="hm-l">mitigés</div></div>
+    <div class="hm-item"><div class="hm-v" style="color:var(--echec)">3</div><div class="hm-l">échecs documentés</div></div>
+    <div class="hm-item"><div class="hm-v" style="color:var(--zombie)">2</div><div class="hm-l">zombies permanents</div></div>
+  </div>
+</div>
+
+<div class="container">
+
+  <section class="section">
+    <div class="sh"><div class="sh-num">01</div><div class="sh-title">Anatomie d'un call</div></div>
+    <p class="prose">Dans le Discordeum, un call gaming suit presque toujours le même protocole. D'abord le <strong>ping</strong> — un @everyone ou un message ciblé, souvent de dosinge ou espy. Ensuite les <strong>réponses flottantes</strong> — "chaud", "jspo", "possible ce soir". Puis le <strong>vide</strong>, ou la session. Les calls qui aboutissent à plusieurs sessions collectives sont des succès. Tout le reste est classé selon son degré d'échec.</p>
+    <p class="prose">Critère de succès retenu : <em>le call a abouti à au moins deux ou trois sessions collectives distinctes</em>. Un jeu lancé une seule fois n'est que mitigé. Un jeu encore régulièrement invoqué sans jamais être vraiment joué ensemble est un <em>zombie</em>.</p>
+    <div class="legend">
+      <div class="leg-item"><div class="leg-dot" style="background:var(--succes)"></div>Succès — plusieurs sessions</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--mitige)"></div>Mitigé — lancé, pas relancé</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--echec)"></div>Échec — absorbé par le vide</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--zombie)"></div>Zombie — invoqué en boucle, jamais joué ensemble</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="sh"><div class="sh-num">02</div><div class="sh-title">Le bilan, jeu par jeu</div></div>
+
+    <div class="calls-grid">
+
+      <!-- FFXIV -->
+      <div class="call-card" id="card-ffxiv">
+        <div class="call-header" onclick="toggle('card-ffxiv')">
+          <div class="call-accent accent-succes"></div>
+          <div class="call-rank">01</div>
+          <div class="call-info">
+            <div class="call-name">Final Fantasy XIV</div>
+            <div class="call-meta">2019 · instigateur : <span style="color:var(--esp)">espy</span> · 52 mentions</div>
+          </div>
+          <div class="call-bar-wrap">
+            <div class="call-verdict v-succes">Succès</div>
+            <div class="call-sessions">saison entière · été 2019</div>
+          </div>
+          <div class="call-toggle">▾</div>
+        </div>
+        <div class="call-body">
+          <div class="call-body-inner">
+            <div>
+              <div class="cb-label">Ce qui s'est passé</div>
+              <div class="cb-prose">Espy lance le call en juin 2019 en préachetant Shadowbringers pour que tout le groupe ait le bonus XP avant le 2 juillet. Le 28 juin — journée record du Discordeum avec 333 messages — il passe l'après-midi à expliquer les mécaniques d'extension message par message. <strong>Dosinge, layvi et cryo rejoignent.</strong> Le jeu tient tout l'été.</div>
+              <div class="call-cit">
+                <div class="call-cit-text">"hop hop hop on lance ff"</div>
+                <div class="call-cit-author">espy · 28 juin 2019 · 14:35</div>
+              </div>
+            </div>
+            <div>
+              <div class="cb-label">Participants</div>
+              <div class="participants">
+                <span class="part-dot" style="color:var(--esp);border-color:rgba(94,234,212,0.3);background:rgba(94,234,212,0.06)">espy</span>
+                <span class="part-dot" style="color:var(--dos);border-color:rgba(167,139,250,0.3);background:rgba(167,139,250,0.06)">dosinge</span>
+                <span class="part-dot" style="color:var(--lay);border-color:rgba(251,191,36,0.3);background:rgba(251,191,36,0.06)">layvi</span>
+                <span class="part-dot" style="color:var(--cry);border-color:rgba(251,146,60,0.3);background:rgba(251,146,60,0.06)">cryo</span>
+              </div>
+              <div class="cb-label" style="margin-top:16px">Postérité</div>
+              <div class="cb-prose">FFXIV reste une référence jusqu'en 2024. Cryo y raid encore en 2021. La collab Microsoft FFXIV est encore suivie en 2024. Le call le mieux exécuté de l'histoire du Discordeum — espy a tout géré, tout le monde n'avait qu'à cliquer.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TFT -->
+      <div class="call-card" id="card-tft">
+        <div class="call-header" onclick="toggle('card-tft')">
+          <div class="call-accent accent-succes"></div>
+          <div class="call-rank">02</div>
+          <div class="call-info">
+            <div class="call-name">TFT — Teamfight Tactics</div>
+            <div class="call-meta">2019–2022 · instigateur : <span style="color:var(--dos)">dosinge</span> · 166 mentions</div>
+          </div>
+          <div class="call-bar-wrap">
+            <div class="call-verdict v-succes">Succès</div>
+            <div class="call-sessions">4 ans · constante tardive</div>
+          </div>
+          <div class="call-toggle">▾</div>
+        </div>
+        <div class="call-body">
+          <div class="call-body-inner">
+            <div>
+              <div class="cb-label">Ce qui s'est passé</div>
+              <div class="cb-prose">TFT sort fin juin 2019. Dosinge l'installe le jour même et spamme le canal : "VENEZ TFT", "TFT esport ready", "TU TFT PAS ?". Le jeu se lance depuis le client LoL déjà installé — <strong>zéro friction d'installation</strong>. Il devient la constante de 2020 à 2022, souvent en parallèle d'autre chose.</div>
+              <div class="call-cit">
+                <div class="call-cit-text">"500 minutes de tft"</div>
+                <div class="call-cit-author">dosinge · 29 juin 2019 · le lendemain du lancement</div>
+              </div>
+            </div>
+            <div>
+              <div class="cb-label">Participants</div>
+              <div class="participants">
+                <span class="part-dot" style="color:var(--dos);border-color:rgba(167,139,250,0.3);background:rgba(167,139,250,0.06)">dosinge</span>
+                <span class="part-dot" style="color:var(--esp);border-color:rgba(94,234,212,0.3);background:rgba(94,234,212,0.06)">espy</span>
+                <span class="part-dot" style="color:var(--lay);border-color:rgba(251,191,36,0.3);background:rgba(251,191,36,0.06)">layvi</span>
+              </div>
+              <div class="cb-label" style="margin-top:16px">La clé du succès</div>
+              <div class="cb-prose">C'est le seul call du Discordeum qui a évité toute friction logistique. Pas d'installation, pas de serveur, pas de version à valider. La loi fondamentale du call gaming validée par l'exemple.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VALHEIM -->
+      <div class="call-card" id="card-valheim">
+        <div class="call-header" onclick="toggle('card-valheim')">
+          <div class="call-accent accent-succes"></div>
+          <div class="call-rank">03</div>
+          <div class="call-info">
+            <div class="call-name">Valheim</div>
+            <div class="call-meta">mars 2021 · instigateur : <span style="color:var(--esp)">espy</span> · 35 mentions</div>
+          </div>
+          <div class="call-bar-wrap">
+            <div class="call-verdict v-succes">Succès</div>
+            <div class="call-sessions">1 mois · printemps 2021</div>
+          </div>
+          <div class="call-toggle">▾</div>
+        </div>
+        <div class="call-body">
+          <div class="call-body-inner">
+            <div>
+              <div class="cb-label">Ce qui s'est passé</div>
+              <div class="cb-prose">Espy lance le 10 mars 2021 avec un @everyone. En moins de 48h, layvi crée le serveur et poste le mot de passe dans le canal. Dosinge et cryo rejoignent. Tout mars est ponctué de sessions. <strong>Le groupe partage des builds Reddit, organise des horaires.</strong> C'est l'un des rares calls post-2020 à avoir fonctionné.</div>
+              <div class="call-cit">
+                <div class="call-cit-text">"new mdp valheim : 12365p @here"</div>
+                <div class="call-cit-author">layvi · 12 mars 2021 · le serveur est prêt</div>
+              </div>
+            </div>
+            <div>
+              <div class="cb-label">Participants</div>
+              <div class="participants">
+                <span class="part-dot" style="color:var(--esp);border-color:rgba(94,234,212,0.3);background:rgba(94,234,212,0.06)">espy</span>
+                <span class="part-dot" style="color:var(--dos);border-color:rgba(167,139,250,0.3);background:rgba(167,139,250,0.06)">dosinge</span>
+                <span class="part-dot" style="color:var(--lay);border-color:rgba(251,191,36,0.3);background:rgba(251,191,36,0.06)">layvi</span>
+                <span class="part-dot" style="color:var(--cry);border-color:rgba(251,146,60,0.3);background:rgba(251,146,60,0.06)">cryo</span>
+              </div>
+              <div class="cb-label" style="margin-top:16px">Durée de vie</div>
+              <div class="cb-prose">Valheim revient ponctuellement en 2022 et 2023. Espy convoque encore la chancla pour une session en 2023. La map n'a jamais été officiellement fermée.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MHW -->
+      <div class="call-card" id="card-mhw">
+        <div class="call-header" onclick="toggle('card-mhw')">
+          <div class="call-accent accent-succes"></div>
+          <div class="call-rank">04</div>
+          <div class="call-info">
+            <div class="call-name">Monster Hunter World</div>
+            <div class="call-meta">2020 · instigateur : <span style="color:var(--dos)">dosinge</span> (obstiné) · 48 mentions</div>
+          </div>
+          <div class="call-bar-wrap">
+            <div class="call-verdict v-succes">Succès</div>
+            <div class="call-sessions">sessions · automne 2020</div>
+          </div>
+          <div class="call-toggle">▾</div>
+        </div>
+        <div class="call-body">
+          <div class="call-body-inner">
+            <div>
+              <div class="cb-label">Ce qui s'est passé</div>
+              <div class="cb-prose">MHW est une victoire obtenue à l'usure pure. Dosinge réclame des sessions depuis mars 2020. En octobre, cryo finit par caler. Le groupe joue 2-3 semaines. Mais la marge est étroite : dosinge menace cryo de <strong>"rupture conventionnelle de son existence"</strong> si une session de plus n'est pas organisée.</div>
+              <div class="call-cit">
+                <div class="call-cit-text">"soit on avance sur MHW ce soir, soit je fais une rupture conventionnelle de ton existence"</div>
+                <div class="call-cit-author">dosinge à cryo · 26 octobre 2020</div>
+              </div>
+            </div>
+            <div>
+              <div class="cb-label">Participants</div>
+              <div class="participants">
+                <span class="part-dot" style="color:var(--dos);border-color:rgba(167,139,250,0.3);background:rgba(167,139,250,0.06)">dosinge</span>
+                <span class="part-dot" style="color:var(--cry);border-color:rgba(251,146,60,0.3);background:rgba(251,146,60,0.06)">cryo</span>
+                <span class="part-dot" style="color:var(--esp);border-color:rgba(94,234,212,0.3);background:rgba(94,234,212,0.06)">espy</span>
+              </div>
+              <div class="cb-label" style="margin-top:16px">Succès avec astérisque</div>
+              <div class="cb-prose">Le jeu a été lancé, les sessions ont eu lieu. Mais le ratio effort/résultat est le plus défavorable de toute la liste. Dosinge a dû menacer, négocier et supplier en parallèle pendant sept mois pour obtenir quelques soirées.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TERRARIA -->
+      <div class="call-card" id="card-terraria">
+        <div class="call-header" onclick="toggle('card-terraria')">
+          <div class="call-accent accent-mitige"></div>
+          <div class="call-rank">05</div>
+          <div class="call-info">
+            <div class="call-name">Terraria · Calamity</div>
+            <div class="call-meta">été–automne 2019 · instigateur : <span style="color:var(--dos)">dosinge</span> · 37 mentions</div>
+          </div>
+          <div class="call-bar-wrap">
+            <div class="call-verdict v-mitige">Mitigé</div>
+            <div class="call-sessions">quelques sessions · sans fin</div>
+          </div>
+          <div class="call-toggle">▾</div>
+        </div>
+        <div class="call-body">
+          <div class="call-body-inner">
+            <div>
+              <div class="cb-label">Ce qui s'est passé</div>
+              <div class="cb-prose">L'été 2019, dosinge et espy jouent ensemble avec le mod Calamity. Layvi passe parfois. Les sessions existent mais restent éparses — dosinge relance presque quotidiennement de fin août à mi-septembre, souvent en ciblant espy directement. <strong>Jamais de progression commune satisfaisante.</strong></div>
+              <div class="call-cit">
+                <div class="call-cit-text">"Du coup on abort terraria pour que couscous joue deux heures et rezparte dans le néant ?"</div>
+                <div class="call-cit-author">dosinge · 15 septembre 2019 · résumé exact de la situation</div>
+              </div>
+            </div>
+            <div>
+              <div class="cb-label">Diagnostic</div>
+              <div class="cb-prose">Le mod Calamity ajoute une complexité qui décourage. Dosinge veut progresser sérieusement, espy est moins disponible, layvi est layvi. Le call meurt de sa propre ambition. En 2020, espy relance avec Fargo's Mod — personne ne répond.</div>
+              <div class="call-cit">
+                <div class="call-cit-text">"terraria dead game"</div>
+                <div class="call-cit-author">dosinge · 14 septembre 2019</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MINECRAFT -->
+      <div class="call-card" id="card-mc">
+        <div class="call-header" onclick="toggle('card-mc')">
+          <div class="call-accent accent-mitige"></div>
+          <div class="call-rank">06</div>
+          <div class="call-info">
+            <div class="call-name">Minecraft Moddé</div>
+            <div class="call-meta">2019 et 2020 · instigateur : <span style="color:var(--esp)">espy</span> (architecte) · 44 mentions</div>
+          </div>
+          <div class="call-bar-wrap">
+            <div class="call-verdict v-mitige">Mitigé</div>
+            <div class="call-sessions">serv existant · jamais vraiment joué</div>
+          </div>
+          <div class="call-toggle">▾</div>
+        </div>
+        <div class="call-body">
+          <div class="call-body-inner">
+            <div>
+              <div class="cb-label">Ce qui s'est passé</div>
+              <div class="cb-prose">Deux tentatives majeures. En 2019, layvi demande l'IP du serveur — il existe donc. Espy envoie des modpacks, configure les versions, gère les conflits. En 2020, il conçoit un modpack entier "pour créer le Minecraft d'une timeline alternative où Mojang n'est pas un sac à merde". <strong>Il n'est jamais vraiment joué en groupe.</strong></div>
+              <div class="call-cit">
+                <div class="call-cit-text">"le fameux call minecraft moddé pour au final ne pas y jouer"</div>
+                <div class="call-cit-author">cryo · 15 septembre 2019 · diagnostic à J+14</div>
+              </div>
+            </div>
+            <div>
+              <div class="cb-label">Diagnostic</div>
+              <div class="cb-prose">La friction technique tue le call à chaque tentative : Forge vs Fabric, versions incompatibles, render distance. Espy est le seul à avoir la motivation de tout configurer — mais configurer n'est pas jouer. Cryo pose le diagnostic en temps réel trois semaines après le premier call.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FACTORIO -->
+      <div class="call-card" id="card-factorio">
+        <div class="call-header" onclick="toggle('card-factorio')">
+          <div class="call-accent accent-mitige"></div>
+          <div class="call-rank">07</div>
+          <div class="call-info">
+            <div class="call-name">Factorio</div>
+            <div class="call-meta">juillet–août 2020 · instigateur : <span style="color:var(--dos)">dosinge</span> (seul) · 12 mentions</div>
+          </div>
+          <div class="call-bar-wrap">
+            <div class="call-verdict v-mitige">Mitigé</div>
+            <div class="call-sessions">solo → multi tenté → solo</div>
+          </div>
+          <div class="call-toggle">▾</div>
+        </div>
+        <div class="call-body">
+          <div class="call-body-inner">
+            <div>
+              <div class="cb-label">Ce qui s'est passé</div>
+              <div class="cb-prose">Dosinge lance Factorio initialement avec espy. Espy ne répond pas. Dosinge annonce qu'il va "probablement lancer une game de factorio solo alors issou". Il joue seul tout l'été, partage des mods, demande régulièrement si quelqu'un veut rejoindre. <strong>Personne ne rejoint.</strong> Il relance une dernière fois le 17 août matin — le jour même de la capture Dofus.</div>
+              <div class="call-cit">
+                <div class="call-cit-text">"Bon bah je vais probablement lancer une game de factorio solo alors issou"</div>
+                <div class="call-cit-author">dosinge · 18 juillet 2020</div>
+              </div>
+            </div>
+            <div>
+              <div class="cb-label">Diagnostic</div>
+              <div class="cb-prose">Factorio est un jeu qui demande investissement et disponibilité simultanée. En été 2020, pishot et LoL absorbent l'énergie collective. Le call n'a jamais eu de fenêtre. Dosinge joue seul en mode résignation active — il informe le canal de sa progression solo sans vraiment espérer une réponse.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PATH OF EXILE -->
+      <div class="call-card" id="card-poe">
+        <div class="call-header" onclick="toggle('card-poe')">
+          <div class="call-accent accent-mitige"></div>
+          <div class="call-rank">08</div>
+          <div class="call-info">
+            <div class="call-name">Path of Exile</div>
+            <div class="call-meta">2022–2023 · <span style="color:var(--esp)">espy</span> · 11 mentions</div>
+          </div>
+          <div class="call-bar-wrap">
+            <div class="call-verdict v-mitige">Mitigé</div>
+            <div class="call-sessions">solo · call jamais formalisé</div>
+          </div>
+          <div class="call-toggle">▾</div>
+        </div>
+        <div class="call-body">
+          <div class="call-body-inner">
+            <div>
+              <div class="cb-label">Ce qui s'est passé</div>
+              <div class="cb-prose">PoE est une présence récurrente dans les messages d'espy entre 2022 et 2023, coïncidant avec les débuts de ligue. Le jeu est mentionné, comparé à Dofus sur Google Trends par dosinge en octobre 2022, mais le call collectif n'a jamais été formalisé. Espy semble y jouer seul, par phases.</div>
+            </div>
+            <div>
+              <div class="cb-label">Diagnostic</div>
+              <div class="cb-prose">PoE est trop complexe pour une intégration spontanée du groupe. La courbe d'apprentissage décourage les non-initiés. Dosinge compare sa popularité à Dofus — probablement pour argumenter pour Dofus plutôt que contre PoE. Cas de jeu solo habillé en call qui ne l'est jamais vraiment.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DOFUS ZOMBIE -->
+      <div class="call-card" id="card-dofus">
+        <div class="call-header" onclick="toggle('card-dofus')">
+          <div class="call-accent accent-zombie"></div>
+          <div class="call-rank">09</div>
+          <div class="call-info">
+            <div class="call-name">Dofus · Wakfu</div>
+            <div class="call-meta">2020–2024 · instigateur : <span style="color:var(--lay)">layvi</span> · 59 mentions · zombie perpétuel</div>
+          </div>
+          <div class="call-bar-wrap">
+            <div class="call-verdict v-zombie">Zombie</div>
+            <div class="call-sessions">call resurgi 4 ans de suite</div>
+          </div>
+          <div class="call-toggle">▾</div>
+        </div>
+        <div class="call-body">
+          <div class="call-body-inner">
+            <div>
+              <div class="cb-label">Ce qui s'est passé</div>
+              <div class="cb-prose">Le call Dofus est le cas clinique du Discordeum. Layvi relance depuis 2020. Dosinge résiste systématiquement — Wakfu est supérieur, le farming de kamas est insupportable, le serveur est mort. <strong>Espy joue Dofus en solo en 2021 et accumule des kamas.</strong> Les calls collectifs n'aboutissent jamais à des sessions communes documentées.</div>
+              <div class="call-cit">
+                <div class="call-cit-text">"Ce call m'a l'air bien plus pertinent que le call dofus"</div>
+                <div class="call-cit-author">dosinge · 17 août 2020 · en réponse à layvi · résumé de 4 ans de résistance</div>
+              </div>
+            </div>
+            <div>
+              <div class="cb-label">La dynamique</div>
+              <div class="cb-prose">Layvi relance. Dosinge résiste. Espy commente. Cryo est sur FFXIV. Baiedhiver envoie un GIF Dofus depuis sa tanière en 2024. Le call ressurgit à chaque saison Temporis depuis 2021 et meurt à chaque fois de la même façon. Il a atteint le statut de tradition.</div>
+              <div class="call-cit">
+                <div class="call-cit-text">"Je me rappelle même pas avoir vraiment joué à dofus avec vous"</div>
+                <div class="call-cit-author">dosinge · 21 mars 2021 · l'épitaphe qui ne tue pas le call</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PLANETSIDE 2 -->
+      <div class="call-card" id="card-ps2">
+        <div class="call-header" onclick="toggle('card-ps2')">
+          <div class="call-accent accent-echec"></div>
+          <div class="call-rank">10</div>
+          <div class="call-info">
+            <div class="call-name">PlanetSide 2</div>
+            <div class="call-meta">déc. 2018–juin 2019 · instigateurs : <span style="color:var(--esp)">espy</span> + <span style="color:var(--lay)">layvi</span> · 15 mentions</div>
+          </div>
+          <div class="call-bar-wrap">
+            <div class="call-verdict v-echec">Échec</div>
+            <div class="call-sessions">quelques sessions · mort en juin 2019</div>
+          </div>
+          <div class="call-toggle">▾</div>
+        </div>
+        <div class="call-body">
+          <div class="call-body-inner">
+            <div>
+              <div class="cb-label">Ce qui s'est passé</div>
+              <div class="cb-prose">PS2 est le jeu fondateur du Discordeum — présent dès décembre 2018, il précède presque tout. Espy et layvi jouent ensemble, dosinge et cryo gravitent autour. Mais en juin 2019, layvi constate le vide : <strong>"Planetside mort"</strong>. Espy confirme. FFXIV vient de sortir et absorbe tout.</div>
+              <div class="call-cit">
+                <div class="call-cit-text">"Planetside mort" / "et ps2 y'a personne là"</div>
+                <div class="call-cit-author">layvi puis espy · 13 juin 2019 · épitaphe simultanée</div>
+              </div>
+            </div>
+            <div>
+              <div class="cb-label">Cause de mort</div>
+              <div class="cb-prose">PS2 est mort de FFXIV. Cas unique : un call en tue un autre par simple remplacement. Espy avait les deux en parallèle depuis début juin. Le 28 juin, FFXIV gagne définitivement. PS2 ne réapparaîtra plus jamais dans le canal général.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WARFRAME -->
+      <div class="call-card" id="card-warframe">
+        <div class="call-header" onclick="toggle('card-warframe')">
+          <div class="call-accent accent-echec"></div>
+          <div class="call-rank">11</div>
+          <div class="call-info">
+            <div class="call-name">Warframe</div>
+            <div class="call-meta">mai 2020 · instigateur : <span style="color:var(--lay)">layvi</span> · 6 mentions</div>
+          </div>
+          <div class="call-bar-wrap">
+            <div class="call-verdict v-echec">Échec</div>
+            <div class="call-sessions">1 session · canal jamais créé</div>
+          </div>
+          <div class="call-toggle">▾</div>
+        </div>
+        <div class="call-body">
+          <div class="call-body-inner">
+            <div>
+              <div class="cb-label">Ce qui s'est passé</div>
+              <div class="cb-prose">Fin mai 2020, layvi replonge dans Warframe. Cryo le rejoint pour lui faire un "taxi". Layvi demande la création d'un canal Warframe dédié sur le Discord. <strong>La demande reste sans suite.</strong> Le jeu disparaît du canal en deux jours.</div>
+              <div class="call-cit">
+                <div class="call-cit-text">"Peut-être un canal Warframe ?"</div>
+                <div class="call-cit-author">layvi · 31 mai 2020 · la demande la plus optimiste du Discordeum</div>
+              </div>
+            </div>
+            <div>
+              <div class="cb-label">Cause de mort</div>
+              <div class="cb-prose">Mai 2020 est le mois le plus chargé de l'histoire du canal — 2 932 messages, pishot en plein démarrage, LoL et TFT en parallèle. Warframe n'avait aucune chance de percer dans ce bruit. Le call le plus mal-timé de toute la liste.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOL ZOMBIE -->
+      <div class="call-card" id="card-lol">
+        <div class="call-header" onclick="toggle('card-lol')">
+          <div class="call-accent accent-zombie"></div>
+          <div class="call-rank">12</div>
+          <div class="call-info">
+            <div class="call-name">League of Legends</div>
+            <div class="call-meta">2019–2026 · instigateurs : <span style="color:var(--dos)">dosinge</span> + <span style="color:var(--lay)">layvi</span> · 222 mentions</div>
+          </div>
+          <div class="call-bar-wrap">
+            <div class="call-verdict v-zombie">Zombie</div>
+            <div class="call-sessions">fil rouge · rarement vraiment collectif</div>
+          </div>
+          <div class="call-toggle">▾</div>
+        </div>
+        <div class="call-body">
+          <div class="call-body-inner">
+            <div>
+              <div class="cb-label">Cas particulier</div>
+              <div class="cb-prose">LoL est le jeu le plus mentionné du canal (222 messages) mais pas un "call gaming" au sens habituel. Le groupe ne joue jamais vraiment ensemble en dehors du contexte pishot — chacun joue de son côté et en parle au groupe. Classé zombie : le call "on joue à LoL ensemble ce soir" est lancé régulièrement et n'aboutit presque jamais à une session synchronisée.</div>
+            </div>
+            <div>
+              <div class="cb-label">Trajectoire</div>
+              <div class="cb-prose">LoL décroît régulièrement après 2020 : 54 mentions en 2019, 101 en 2020 (pishot), 28 en 2021, puis chute continue. Dosinge propose encore des ARAMs en 2022. En 2024, espy ne répond plus que "Plus jamais Gragas". Le jeu survit à toute tentative de le fédérer.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STARBOUND -->
+      <div class="call-card" id="card-starbound">
+        <div class="call-header" onclick="toggle('card-starbound')">
+          <div class="call-accent accent-echec"></div>
+          <div class="call-rank">13</div>
+          <div class="call-info">
+            <div class="call-name">Starbound</div>
+            <div class="call-meta">2018–2019 · instigateur : <span style="color:var(--esp)">espy</span> · 4 mentions</div>
+          </div>
+          <div class="call-bar-wrap">
+            <div class="call-verdict v-echec">Échec</div>
+            <div class="call-sessions">mort-né · aucune session documentée</div>
+          </div>
+          <div class="call-toggle">▾</div>
+        </div>
+        <div class="call-body">
+          <div class="call-body-inner">
+            <div>
+              <div class="cb-label">Ce qui s'est passé</div>
+              <div class="cb-prose">Starbound est mentionné comme alternative à PS2 et HotS dès début 2019. Il disparaît sans laisser de trace, remplacé par FFXIV avant même d'avoir eu une session documentée. Le cas le plus bref de toute la liste — disparu si vite qu'il n'a pas eu le temps d'échouer.</div>
+            </div>
+            <div>
+              <div class="cb-label">Postérité</div>
+              <div class="cb-prose">Aucune. Starbound n'est jamais réévoqué après juin 2019. C'est le seul jeu de la liste dont la mort est passée totalement inaperçue. Pas d'épitaphe, pas de "dead game". Juste le silence.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">03</div><div class="sh-title">Statistiques</div></div>
+
+    <div class="dashboard">
+      <div class="dash-card">
+        <div class="dash-v" style="color:var(--succes)">31%</div>
+        <div class="dash-l">taux de succès</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-v" style="color:var(--dos)">dosinge</div>
+        <div class="dash-l">instigateur n°1</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-v" style="color:var(--esp)">FFXIV</div>
+        <div class="dash-l">meilleur call all-time</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-v" style="color:var(--zombie)">Dofus</div>
+        <div class="dash-l">zombie le plus tenace</div>
+      </div>
+    </div>
+
+    <p class="prose">Dosinge est l'instigateur le plus actif — calls Terraria, MHW, Factorio, co-instigateur TFT. Espy est l'architecte des calls les mieux exécutés (FFXIV, Valheim), mais sa préférence pour les setups complexes explique aussi Minecraft moddé. Layvi est l'instigateur du call le plus répété sans succès — Dofus. Cryo ne lance aucun call significatif mais est indispensable pour que les sessions MHW et Valheim aient lieu. Baiedhiver est le seul membre à n'avoir lancé aucun call de toute l'histoire du Discordeum.</p>
+
+    <p class="prose"><strong>La loi fondamentale du call gaming du Discordeum :</strong> la probabilité de succès est inversement proportionnelle à la complexité d'installation. FFXIV (espy gère tout), TFT (client LoL déjà installé) et Valheim (mot de passe dans le canal) sont les trois seuls succès sans friction technique. Tous les calls nécessitant un modpack, un serveur custom ou une version spécifique ont connu des difficultés.</p>
+
+    <div style="margin-top:32px">
+      <div class="cb-label" style="margin-bottom:16px; font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:2px; color:var(--muted); text-transform:uppercase">Calls lancés par membre</div>
+      <div class="instig-bars">
+        <div class="ib-row">
+          <div class="ib-name" style="color:var(--dos)">dosinge</div>
+          <div class="ib-track"><div class="ib-fill" style="width:100%; background:var(--dos)"></div></div>
+          <div class="ib-count">5</div>
+        </div>
+        <div class="ib-row">
+          <div class="ib-name" style="color:var(--esp)">espy</div>
+          <div class="ib-track"><div class="ib-fill" style="width:80%; background:var(--esp)"></div></div>
+          <div class="ib-count">4</div>
+        </div>
+        <div class="ib-row">
+          <div class="ib-name" style="color:var(--lay)">layvi</div>
+          <div class="ib-track"><div class="ib-fill" style="width:40%; background:var(--lay)"></div></div>
+          <div class="ib-count">2</div>
+        </div>
+        <div class="ib-row">
+          <div class="ib-name" style="color:var(--cry)">cryo</div>
+          <div class="ib-track"><div class="ib-fill" style="width:20%; background:var(--cry)"></div></div>
+          <div class="ib-count">1</div>
+        </div>
+        <div class="ib-row">
+          <div class="ib-name" style="color:var(--bai)">baiedhiver</div>
+          <div class="ib-track"><div class="ib-fill" style="width:2%; background:var(--bai)"></div></div>
+          <div class="ib-count">0</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ANTHOLOGIE -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">04</div><div class="sh-title">Anthologie du call raté</div></div>
+    <p class="prose">Les plus beaux spécimens de résistance, d'abandon et de résignation gaming documentés dans le canal.</p>
+    <div class="citations">
+      <div class="cit" style="border-left-color:var(--dos)">
+        <div class="cit-text">"Bon bah je vais probablement lancer une game de factorio solo alors issou"</div>
+        <div class="cit-meta">dosinge · 18 juillet 2020 · la résignation comme mode de vie</div>
+      </div>
+      <div class="cit" style="border-left-color:var(--cry)">
+        <div class="cit-text">"le fameux call minecraft moddé pour au final ne pas y jouer"</div>
+        <div class="cit-meta">cryo · 15 septembre 2019 · diagnostic en temps réel à J+14</div>
+      </div>
+      <div class="cit" style="border-left-color:var(--dos)">
+        <div class="cit-text">"Je me rappelle même pas avoir vraiment joué à dofus avec vous"</div>
+        <div class="cit-meta">dosinge · 21 mars 2021 · après 12 mois de calls Dofus de layvi</div>
+      </div>
+      <div class="cit" style="border-left-color:var(--lay)">
+        <div class="cit-text">"DOFUS"</div>
+        <div class="cit-meta">layvi · 17 novembre 2020 · seul, sans contexte, sans réponse</div>
+      </div>
+      <div class="cit" style="border-left-color:var(--dos)">
+        <div class="cit-text">"soit on avance sur MHW ce soir, soit je fais une rupture conventionnelle de ton existence"</div>
+        <div class="cit-meta">dosinge à cryo · 26 octobre 2020 · la négociation gaming en mode RH</div>
+      </div>
+      <div class="cit" style="border-left-color:var(--lay)">
+        <div class="cit-text">"Peut-être un canal Warframe ?"</div>
+        <div class="cit-meta">layvi · 31 mai 2020 · le canal n'a jamais été créé</div>
+      </div>
+      <div class="cit" style="border-left-color:var(--esp)">
+        <div class="cit-text">"Planetside mort" / "et ps2 y'a personne là"</div>
+        <div class="cit-meta">layvi puis espy · 13 juin 2019 · épitaphe simultanée du jeu fondateur</div>
+      </div>
+      <div class="cit" style="border-left-color:var(--dos)">
+        <div class="cit-text">"terraria dead game"</div>
+        <div class="cit-meta">dosinge · 14 septembre 2019 · 17 jours après le premier call</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="footer-logo">Le Discordeum</div>
+  <nav class="footer-nav">
+    <a href="index.html" class="footer-link">← Sommaire</a>
+    <a href="records.html" class="footer-link">Records</a>
+    <a href="absences.html" class="footer-link">Absences</a>
+  </nav>
+</footer>
+
+<script>
+  function toggle(id) {
+    const card = document.getElementById(id);
+    card.classList.toggle('open');
+  }
+</script>
+</body>
+</html>
