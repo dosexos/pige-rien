@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discordeum — Leadership & Insights</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --li-bg: #f3f2ef;
+    --li-card: #ffffff;
+    --li-border: #e0e0e0;
+    --li-text: #191919;
+    --li-muted: #666666;
+    --li-blue: #0a66c2;
+    --li-light: #f8f8f8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--li-bg);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 14px;
+    color: var(--li-text);
+    min-height: 100vh;
+    padding: 24px 16px 64px;
+  }
+
+  /* ── HEADER PARODIQUE ── */
+  .page-header {
+    max-width: 900px;
+    margin: 0 auto 24px;
+    background: #fff;
+    border: 1px solid var(--li-border);
+    border-radius: 8px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .header-logo {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--li-blue);
+    letter-spacing: -0.5px;
+  }
+  .header-logo span { color: var(--li-text); }
+  .header-sub {
+    font-size: 12px;
+    color: var(--li-muted);
+    font-style: italic;
+  }
+  .header-back {
+    font-size: 12px;
+    color: var(--li-blue);
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.2s;
+  }
+  .header-back:hover { opacity: 0.7; }
+
+  /* ── FEED ── */
+  .feed {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* ── POST ── */
+  .post {
+    background: var(--li-card);
+    border: 1px solid var(--li-border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    position: relative;
+  }
+  .post:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+
+  /* Header du post */
+  .post-header {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 14px;
+  }
+  .post-avatar {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .post-avatar .badge {
+    position: absolute;
+    bottom: -2px; right: -2px;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+  }
+  .post-author { flex: 1; }
+  .post-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--li-text);
+    line-height: 1.3;
+  }
+  .post-title {
+    font-size: 12px;
+    color: var(--li-muted);
+    line-height: 1.4;
+    margin-top: 1px;
+  }
+  .post-meta {
+    font-size: 11px;
+    color: #999;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .post-meta::before {
+    content: '🌐';
+    font-size: 9px;
+  }
+
+  /* Corps du post */
+  .post-body {
+    font-size: 14px;
+    color: var(--li-text);
+    line-height: 1.6;
+    white-space: pre-line;
+  }
+  .post-body strong {
+    font-weight: 600;
+  }
+  .post-body .hashtags {
+    color: var(--li-blue);
+    font-size: 13px;
+    margin-top: 12px;
+    display: block;
+    line-height: 1.8;
+  }
+
+  /* Voir plus */
+  .see-more {
+    color: var(--li-muted);
+    font-size: 13px;
+    cursor: pointer;
+    font-weight: 500;
+  }
+
+  /* Réactions */
+  .post-reactions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px solid var(--li-border);
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  .reactions-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .reaction-emojis {
+    display: flex;
+    gap: -4px;
+  }
+  .reaction-emojis span {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    border: 1px solid var(--li-border);
+    margin-left: -4px;
+  }
+  .reaction-emojis span:first-child { margin-left: 0; }
+  .reaction-count {
+    font-size: 12px;
+    color: var(--li-muted);
+  }
+  .reactions-right {
+    display: flex;
+    gap: 16px;
+  }
+  .reaction-action {
+    font-size: 12px;
+    color: var(--li-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background 0.15s;
+    font-weight: 500;
+  }
+  .reaction-action:hover { background: var(--li-light); }
+
+  /* Commentaires */
+  .post-comments {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .comment {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .comment-av {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0;
+  }
+  .comment-body {
+    background: var(--li-light);
+    border-radius: 0 8px 8px 8px;
+    padding: 8px 12px;
+    flex: 1;
+  }
+  .comment-name {
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--li-text);
+    margin-bottom: 2px;
+  }
+  .comment-text {
+    font-size: 13px;
+    color: var(--li-text);
+    line-height: 1.5;
+  }
+
+  /* ── DIVIDER SPONSORISÉ ── */
+  .sponsored {
+    text-align: center;
+    font-size: 11px;
+    color: #999;
+    padding: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  @media (max-width: 600px) {
+    body { padding: 12px 8px 48px; }
+    .post { padding: 16px; }
+    .reactions-right { gap: 8px; }
+    .reaction-action span { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div>
+    <div class="header-logo">Discordeum<span>in</span></div>
+    <div class="header-sub">Le réseau professionnel du Discordeum · Insights & Leadership</div>
+  </div>
+  <a href="index.html" class="header-back">← Retour aux archives</a>
+</div>
+
+<div class="feed">
+
+  <!-- ══ POST 1 — LAYVI — RETOUR STRATÉGIQUE ══ -->
+  <div class="post">
+    <div class="post-header">
+      <div class="post-avatar" style="background: linear-gradient(135deg, #f59e0b, #d97706)">
+        L
+        <div class="badge">🔁</div>
+      </div>
+      <div class="post-author">
+        <div class="post-name">Layvi Benkeddad · <span style="color:#0a66c2; font-weight:400">1er</span></div>
+        <div class="post-title">Strategic Absence Specialist | Silence Architect | Ex-Pishot Team A | Retour imminent (depuis 2019)</div>
+        <div class="post-meta">116 jours · Modifié</div>
+      </div>
+    </div>
+    <div class="post-body">🎯🧠✨ Transformer l'absence en opportunité. Voici ce que 116 jours de silence stratégique m'ont appris sur le VRAI leadership.
+
+Pendant que certains <em>maintenaient une présence quotidienne</em> 😤📊, s'épuisaient à répondre aux pings 📲, s'astreignaient à une régularité sans vision — <strong>j'observais.</strong> 👁️🧘
+
+J'ai vu ce que d'autres n'ont pas vu.
+Une fenêtre. 🪟
+Une opportunité. 💎
+Un GIF de Shrek. 🟢
+
+Tandis que l'écosystème s'agitait dans la complainte collective 😩, je me suis mis en mouvement.
+⚡ Avec recul. 🔺 Avec perspective. 🚀 Avec une exécution différée de 116 jours.
+
+Résultat ? 📈🎯
+
+✅ 🟢 Shrek — envoyé
+✅ 📅 Bonne année le Discordeum — dit à minuit
+✅ 💬 "Je suis d'accord" — dernier message avant disparition
+✅ 🔄 Présence confirmée 33 jours sur 365
+✅ 🧠 Beaucoup appris
+
+<strong>5 livrables. 5 décisions. 5 victoires.</strong> 🥇🥇🥇
+
+Pendant que certains pleuraient mon absence 😢, j'ai construit quelque chose de plus rare : <strong>le silence stratégique.</strong> 🏗️💪✨
+
+Le canal est volatile ? 📉 Parfait. ✅
+C'est précisément là que les absents 🏃 se distinguent des présents. 🍿
+
+Ne me demandez pas où j'étais. 🤫
+Demandez-vous pourquoi vous n'étiez pas là non plus. 🗑️👇
+
+💡 L'absence n'était pas un manque. ❌🚧
+C'était ma fenêtre de tir. 🎯🌿
+
+Je ne suis pas fantôme. 🍀❌
+Je suis <strong>disponible en différé.</strong> 📬🧠⚡🔥🚀
+<span class="hashtags">#Leadership 🧢 #SilenceStratégique 🧠 #AbsenceMindset 💡 #RetourImminentDepuis2019 🔁 #GrowthHacking 📈 #Discordeum 🌍 #JeSuisLà 👋 #EnFaitNon 🤷 #BuildInPublic 🌐 #Shrek 🟢</span>
+    </div>
+    <div class="post-reactions">
+      <div class="reactions-left">
+        <div class="reaction-emojis">
+          <span>👍</span><span>🔥</span><span>🤝</span>
+        </div>
+        <div class="reaction-count">dosinge, cryoslinger et 214 autres</div>
+      </div>
+      <div class="reactions-right">
+        <div class="reaction-action">👍 <span>J'aime</span></div>
+        <div class="reaction-action">💬 <span>Commenter</span></div>
+        <div class="reaction-action">↗️ <span>Partager</span></div>
+      </div>
+    </div>
+    <div class="post-comments">
+      <div class="comment">
+        <div class="comment-av" style="background:#0d9488">E</div>
+        <div class="comment-body">
+          <div class="comment-name">espy · 2e</div>
+          <div class="comment-text">Souhil n'a jamais existé mec</div>
+        </div>
+      </div>
+      <div class="comment">
+        <div class="comment-av" style="background:#16a34a">B</div>
+        <div class="comment-body">
+          <div class="comment-name">baiedhiver · 3e</div>
+          <div class="comment-text">On est dans le mois de souhil</div>
+        </div>
+      </div>
+      <div class="comment">
+        <div class="comment-av" style="background:#ea580c">C</div>
+        <div class="comment-body">
+          <div class="comment-name">cryoslinger · 1er</div>
+          <div class="comment-text">9 Souss, 8 Tot, 4 Lul, 3 Dod. Je comptais.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPONSORED -->
+  <div class="sponsored">— Contenu sponsorisé par La Chancla™ — Solutions de Sanctions Symboliques depuis 2019 —</div>
+
+  <!-- ══ POST 2 — DOSINGE — PISHOT EXIT ══ -->
+  <div class="post">
+    <div class="post-header">
+      <div class="post-avatar" style="background: linear-gradient(135deg, #7c3aed, #5b21b6)">
+        D
+        <div class="badge">✍️</div>
+      </div>
+      <div class="post-author">
+        <div class="post-name">Dorian Issou · <span style="color:#0a66c2; font-weight:400">1er</span></div>
+        <div class="post-title">Top Lane Analyst | Corporate Exit Strategist | Fondateur 10 rue du Pipotronic | Ex-Coach Team A pishot (démissionné)</div>
+        <div class="post-meta">2 septembre 2020 · 22:35</div>
+      </div>
+    </div>
+    <div class="post-body">📄🔥💡 3 lettres de démission PDF. Simultanées. Non concertées. Voici ce que cette nuit m'a appris sur l'ALIGNEMENT DE VALEURS.
+
+Pendant que certains attendaient le vocal de validation à 5 🗣️📋, remplissaient des tableaux Excel de champions 📊😤, demandaient l'accord du manager, du coach (on en avait pas), de la player manager, de la community manager et du HM pishot — <strong>j'agissais.</strong> ⚡
+
+J'ai vu ce que d'autres n'ont pas vu.
+Un organigramme décisionnel. 🗂️
+Une absurdité. 💎
+Une imprimante. 🖨️
+
+Tandis que l'écosystème se noyait dans la corporate de merde habituelle 😩🏢, je me suis mis en mouvement.
+⚡ Avec méthode. 🔺 Avec vision. 🚀 Avec une adresse fictive soigneusement choisie.
+
+Résultat ? 📈🎯
+
+✅ 📄 Lettre de démission — rédigée
+✅ 🏠 "10 rue du pipotronic, 66 667 Rue de la zgegerie" — adresse validée
+✅ ✍️ Signature "Dorian Issou" — apposée
+✅ 📬 Attestation Pôle emploi — réclamée
+✅ 🎯 Préavis de 3 mois — décliné avec élégance
+
+<strong>3 PDF. 3 démissions. 1 nuit. Aucune concertation préalable. Alignement parfait.</strong> 🥇🥇🥇
+
+Pendant que certains pleuraient la perte de leurs joueurs 😢🏢, nous avons construit quelque chose de plus rare : <strong>une rupture propre dans les règles de l'art corporate qu'on était en train de quitter.</strong> 🏗️💪
+
+La structure est kafkaïenne ? 📉 Parfait. ✅
+C'est précisément là que les démissionnaires 🏃 se distinguent des coordinateurs. 🍿
+
+Ne me demandez pas comment j'ai fait. 🤫
+Demandez-vous pourquoi vous avez encore un préavis de 3 mois. 🗑️👇
+
+💡 Le coaching n'était pas inutile. ❌🚧
+C'était ma fenêtre de sortie. 🎯📄
+
+Je ne suis pas un ancien coach. 🍀❌
+Je suis <strong>un analyste en post-corporate recovery.</strong> 📬🧠⚡🔥🚀
+<span class="hashtags">#Leadership 🧢 #DémissionStratégique 📄 #AlignementDeValeurs 💡 #AntiCorporate 🏢❌ #PichotExit 🚪 #BuildInPublic 🌐 #Pipotronic 🏠 #DorianIssou ✍️ #PôleEmploi 📋 #JeNégosiePasAvecLesTermites 🐜</span>
+    </div>
+    <div class="post-reactions">
+      <div class="reactions-left">
+        <div class="reaction-emojis">
+          <span>🔥</span><span>👏</span><span>💡</span>
+        </div>
+        <div class="reaction-count">espy, layvi et 89 autres · dont Dadai68 a vu</div>
+      </div>
+      <div class="reactions-right">
+        <div class="reaction-action">👍 <span>J'aime</span></div>
+        <div class="reaction-action">💬 <span>Commenter</span></div>
+        <div class="reaction-action">↗️ <span>Partager</span></div>
+      </div>
+    </div>
+    <div class="post-comments">
+      <div class="comment">
+        <div class="comment-av" style="background:#0d9488">E</div>
+        <div class="comment-body">
+          <div class="comment-name">espy · Pantoufle · 41 allée du sabotage</div>
+          <div class="comment-text">Profite mec c'est un paiement différé pour tout le temps que pishot nous a dérobé 🐢</div>
+        </div>
+      </div>
+      <div class="comment">
+        <div class="comment-av" style="background:#d97706">L</div>
+        <div class="comment-body">
+          <div class="comment-name">layvi · DZ FR</div>
+          <div class="comment-text">ça fait quoi le premier jour sans pishot issou. On se sent plus trop esport ni corporate là</div>
+        </div>
+      </div>
+      <div class="comment">
+        <div class="comment-av" style="background:#dc2626">🏢</div>
+        <div class="comment-body">
+          <div class="comment-name">Dadai68 | Fonda πshot · Fondatrice · 66 666 CorporateCity</div>
+          <div class="comment-text">Non mais par contre on rigole on rigole mais vous êtes à l'heure ce soir hein. J'ai bloqué exprès et placé les rdv full autour de la flex pour pas gêner</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ POST 3 — CRYO — KOUFFARDOR HOSPITAL ══ -->
+  <div class="post">
+    <div class="post-header">
+      <div class="post-avatar" style="background: linear-gradient(135deg, #f97316, #c2410c)">
+        C
+        <div class="badge">🏆</div>
+      </div>
+      <div class="post-author">
+        <div class="post-name">Théo "Tot" Cryoslinger · <span style="color:#0a66c2; font-weight:400">1er</span></div>
+        <div class="post-title">Community Manager | Codenames Architect | Père de Thélio | Organisateur Kouffardor | Actuellement : hôpital</div>
+        <div class="post-meta">5 janvier 2026 · Depuis une chambre d'hôpital · 🌐</div>
+      </div>
+    </div>
+    <div class="post-body">🏆🧠✨ On m'a dit : repose-toi. J'ai dit : <strong>le vote Kouffardor n'attendra pas.</strong> Voici ce que 3 semaines de convalescence m'ont appris sur le VRAI leadership.
+
+Pendant que la majorité se lamentait 😢, se reposait 🛏️, profitait de son hospitalisation pour ne rien faire — <strong>j'organisais.</strong> 👁️🗳️
+
+J'ai vu ce que d'autres n'ont pas vu.
+Une fenêtre. 🪟
+Une opportunité. 💎
+Un vote par MP. 📬
+
+Tandis que l'écosystème hospitalier se paralysait dans la complainte collective 😩💉, je me suis mis en mouvement.
+⚡ Avec méthode. 🔺 Avec humilité. 🚀 Avec un ping @here que seuls les connectés ont reçu.
+
+Résultat ? 📈🎯
+
+✅ 🏆 Message de convocation — rédigé et posté
+✅ 📬 Système de vote par MP — déployé
+✅ 📊 Points de kouffardise — calculés
+✅ 🥇 Vainqueur désigné : layvi (22/30) — annoncé
+✅ ⚡ Tout ça depuis un lit médicalisé — accompli
+
+<strong>1 hôpital. 1 téléphone. 1 cérémonie. Loin de l'esthétique travaillée d'Enzolin — et alors ?</strong> 🥇🥇🥇
+
+Pendant que certains pensaient que j'allais passer ma convalescence à me reposer 😢, j'ai prouvé quelque chose de plus rare : <strong>la kouffardise ne prend pas de jours de repos.</strong> 🏗️💪✨
+
+Le groupe est inactif ? 📉 Parfait. ✅
+C'est précisément là que les organisateurs 🏃 se distinguent des votants. 🍿
+
+Ne me demandez pas comment j'ai trouvé l'énergie. 🤫
+Demandez-vous pourquoi vous n'avez toujours pas envoyé votre classement. 🗑️👇
+
+💡 L'hôpital n'était pas un obstacle. ❌🚧
+C'était ma fenêtre de tir. 🎯🏆
+
+Je ne suis pas un patient. 🍀❌
+Je suis <strong>un architecte de la kouffardise opérationnelle.</strong> 📬🧠⚡🔥🚀
+<span class="hashtags">#Leadership 🧢 #Kouffardor 🏆 #HospitalMindset 💉 #KouffardisePasDeVacances 📊 #Discordeum 🌍 #GrowthHacking 📈 #Resilience 💪 #Chromosome 🧬 #BuildInPublic 🌐 #JeSuisLaBourrasque 🌪️</span>
+    </div>
+    <div class="post-reactions">
+      <div class="reactions-left">
+        <div class="reaction-emojis">
+          <span>💪</span><span>❤️</span><span>👏</span>
+        </div>
+        <div class="reaction-count">dosinge, baiedhiver et 37 autres</div>
+      </div>
+      <div class="reactions-right">
+        <div class="reaction-action">👍 <span>J'aime</span></div>
+        <div class="reaction-action">💬 <span>Commenter</span></div>
+        <div class="reaction-action">↗️ <span>Partager</span></div>
+      </div>
+    </div>
+    <div class="post-comments">
+      <div class="comment">
+        <div class="comment-av" style="background:#0d9488">E</div>
+        <div class="comment-body">
+          <div class="comment-name">espy · 2e</div>
+          <div class="comment-text">Même dans son cauchemar glaireux il y a pensé 🔥</div>
+        </div>
+      </div>
+      <div class="comment">
+        <div class="comment-av" style="background:#7c3aed">D</div>
+        <div class="comment-body">
+          <div class="comment-name">dosinge · 1er</div>
+          <div class="comment-text">J'ai l'impression qu'on a sauté une année mais c'est sûrement qu'un sentiment de saut</div>
+        </div>
+      </div>
+      <div class="comment">
+        <div class="comment-av" style="background:#d97706">L</div>
+        <div class="comment-body">
+          <div class="comment-name">layvi · Kouffardor 2025 🏆</div>
+          <div class="comment-text">magnifique</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPONSORED -->
+  <div class="sponsored">— Contenu sponsorisé par Codenames™ — somebody ARENA ? @here —</div>
+
+  <!-- ══ POST 4 — BAIEDHIVER — 318 JOURS ══ -->
+  <div class="post">
+    <div class="post-header">
+      <div class="post-avatar" style="background: linear-gradient(135deg, #16a34a, #15803d)">
+        B
+        <div class="badge">🧠</div>
+      </div>
+      <div class="post-author">
+        <div class="post-name">Ahurin Baiedhiver · <span style="color:#0a66c2; font-weight:400">1er</span></div>
+        <div class="post-title">Philosophe Dimensionnel | Greffier du Tribunal | Auteur : "Journal de bord du Discordéum" | Disponible · sous certaines conditions</div>
+        <div class="post-meta">20 janvier 2022 · Retour de retraite · 🌐</div>
+      </div>
+    </div>
+    <div class="post-body">🌿🧠✨ J'ai pris 10 mois. Pour moi. Pour réfléchir. Pour considérer mon âme comme la forme de la matière première. Voici ce que cette retraite de développement personnel m'a appris sur le VRAI ROI de l'absence.
+
+Pendant que certains postaient quotidiennement 📲😤, se pingaient mutuellement 🔔, s'acharnaient à maintenir une activité sans profondeur — <strong>je changeais.</strong> 👁️🌊
+
+J'ai vu ce que d'autres n'ont pas vu.
+Une âme. 🪟
+Une forme. 💎
+La matière première. 🪨
+
+Tandis que l'écosystème s'agitait dans la superficialité du daily standup 😩📊, je me suis mis en mouvement intérieur.
+⚡ Avec lenteur. 🔺 Avec profondeur. 🚀 Avec un message de retour soigneusement formulé.
+
+Résultat ? 📈🎯
+
+✅ 🧠 Âme repositionnée par rapport à la matière première — effectué
+✅ 📖 Changement personnel profond — ressenti et assumé
+✅ 💬 "hihihihi" → réflexion aristotélicienne — évolution documentée
+✅ 🗓️ 318 jours — investis dans la croissance personnelle
+✅ 🔄 Retour — opéré avec la sérénité du sage
+
+<strong>318 jours. 1 transformation. 0 explication. ROI infini.</strong> 🥇🥇🥇
+
+Pendant que certains attendaient des nouvelles 😢📬, j'ai construit quelque chose de plus rare : <strong>une perspective radicalement nouvelle sur l'existence et son rapport à la présence dans un canal Discord.</strong> 🏗️💪✨
+
+Le groupe vous manque ? 📉 Parfait. ✅
+C'est précisément là que les absents éclairés 🏃 se distinguent des présents non-éveillés. 🍿
+
+Ne me demandez pas où j'étais. 🤫
+Demandez-vous si vous considérez votre âme comme la forme de votre matière première. 🗑️👇
+
+💡 Les 318 jours n'étaient pas une absence. ❌🚧
+C'était ma retraite de leadership. 🎯🌿
+
+Je ne suis pas un fantôme. 🍀❌
+Je suis <strong>une présence épisodique à haute valeur ajoutée.</strong> 📬🧠⚡🔥🚀
+<span class="hashtags">#Leadership 🧢 #RetraitePhilosophique 🧘 #ÂmeEtMatièrePremière 🪨 #318Jours 📅 #GrowthMindset 💡 #Aristote 📚 #Discordeum 🌍 #BuildInPublic 🌐 #hihihihi 😄 #JeNeSuisPasUnFantôme 👻❌</span>
+    </div>
+    <div class="post-reactions">
+      <div class="reactions-left">
+        <div class="reaction-emojis">
+          <span>🧠</span><span>💡</span><span>❓</span>
+        </div>
+        <div class="reaction-count">cryoslinger et 3 autres · dosinge n'a pas réagi</div>
+      </div>
+      <div class="reactions-right">
+        <div class="reaction-action">👍 <span>J'aime</span></div>
+        <div class="reaction-action">💬 <span>Commenter</span></div>
+        <div class="reaction-action">↗️ <span>Partager</span></div>
+      </div>
+    </div>
+    <div class="post-comments">
+      <div class="comment">
+        <div class="comment-av" style="background:#ea580c">C</div>
+        <div class="comment-body">
+          <div class="comment-name">cryoslinger · frère · 1er</div>
+          <div class="comment-text">Putain le changement de pseudo. Ça m'a plus flingué que ton covid de cuck</div>
+        </div>
+      </div>
+      <div class="comment">
+        <div class="comment-av" style="background:#7c3aed">D</div>
+        <div class="comment-body">
+          <div class="comment-name">dosinge · 1er</div>
+          <div class="comment-text">Oh oui je pratique la pensée oui oui</div>
+        </div>
+      </div>
+      <div class="comment">
+        <div class="comment-av" style="background:#0d9488">E</div>
+        <div class="comment-body">
+          <div class="comment-name">espy · 2e</div>
+          <div class="comment-text">Je me sens tel un employé qui force pour se faire virer tout en prenant les indemnités 🏆</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
