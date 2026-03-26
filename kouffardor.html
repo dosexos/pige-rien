@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les Kouffardor — Le Discordeum</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+  :root {
+    --bg:     #080810;
+    --bg2:    #0d0d18;
+    --bg3:    #121220;
+    --border: #1e1e30;
+    --text:   #b0b0cc;
+    --muted:  #484862;
+    --dim:    #242438;
+    --white:  #e8e8f8;
+    --gold:   #f0c040;
+    --gold2:  #d4a030;
+    --red:    #f07060;
+    --dos:    #a78bfa;
+    --esp:    #5eead4;
+    --cry:    #fb923c;
+    --lay:    #fbbf24;
+    --bai:    #4ade80;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    text-align: center; padding: 80px 8vw;
+    position: relative; overflow: hidden;
+    border-bottom: 1px solid var(--border);
+    background:
+      radial-gradient(ellipse at 50% 30%, rgba(240,192,64,0.06) 0%, transparent 55%),
+      radial-gradient(ellipse at 20% 80%, rgba(240,112,96,0.03) 0%, transparent 40%),
+      var(--bg);
+  }
+
+  /* Lignes dorées décoratives */
+  .hero::before, .hero::after {
+    content: '';
+    position: absolute; left: 6%; right: 6%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.25;
+  }
+  .hero::before { top: 56px; }
+  .hero::after  { bottom: 56px; }
+
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 5px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 20px;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.2s;
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(64px, 14vw, 160px);
+    font-weight: 400; line-height: 0.88;
+    color: var(--gold); letter-spacing: 4px;
+    text-shadow: 0 0 80px rgba(240,192,64,0.2);
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.4s;
+  }
+
+  .hero-sub {
+    font-family: 'Crimson Pro', serif;
+    font-size: clamp(16px, 2.5vw, 22px); font-style: italic;
+    color: var(--muted); margin-top: 20px; max-width: 480px;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.7s;
+  }
+
+  .hero-year {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(80px, 18vw, 200px);
+    color: var(--white); opacity: 0.04;
+    position: absolute; bottom: 40px; right: 6vw;
+    line-height: 1; pointer-events: none; user-select: none;
+  }
+
+  .hero-meta {
+    display: flex; gap: 40px; margin-top: 48px; flex-wrap: wrap; justify-content: center;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 1s;
+  }
+  .hm { display: flex; flex-direction: column; gap: 3px; align-items: center; }
+  .hm-v { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--gold); line-height: 1; }
+  .hm-l { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: 1px; }
+
+  .hero-back {
+    position: absolute; top: 32px; left: 8vw;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 3px; color: var(--muted);
+    text-transform: uppercase; text-decoration: none;
+    transition: color 0.2s;
+  }
+  .hero-back:hover { color: var(--white); }
+
+  /* ── CONTAINER ── */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 8vw; }
+
+  /* ── SECTIONS ── */
+  .section { padding: 72px 0; border-bottom: 1px solid var(--border); }
+  .section:last-of-type { border-bottom: none; }
+  .sh { display: flex; align-items: baseline; gap: 16px; margin-bottom: 40px; }
+  .sh-num { font-family: 'Bebas Neue', sans-serif; font-size: 40px; color: var(--dim); line-height: 1; }
+  .sh-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(22px, 4vw, 38px); color: var(--white); letter-spacing: 1px; }
+  .sh-gold { color: var(--gold); }
+
+  /* ── PROSE ── */
+  .prose { font-size: 15px; line-height: 1.9; color: var(--text); margin-bottom: 22px; max-width: 700px; }
+  .prose strong { color: var(--white); font-weight: 600; }
+  .prose em { color: var(--gold); font-style: italic; }
+
+  /* ── MESSAGE OFFICIEL DE CRYO ── */
+  .msg-officiel {
+    background: var(--bg2);
+    border: 1px solid rgba(240,192,64,0.2);
+    border-left: 3px solid var(--gold);
+    border-radius: 3px; padding: 24px 28px; margin: 24px 0;
+    position: relative;
+  }
+  .msg-officiel::before {
+    content: 'MESSAGE OFFICIEL · CRYOSLINGER · 5 JANVIER 2026';
+    position: absolute; top: -10px; left: 16px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 2px;
+    background: var(--bg2); padding: 0 8px; color: var(--gold);
+  }
+  .msg-officiel-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: #9090b8; line-height: 1.7;
+  }
+
+  /* ── TABLEAU DE SCORE ── */
+  .score-table {
+    width: 100%; border-collapse: collapse; margin: 28px 0;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  }
+  .score-table th {
+    text-align: center; padding: 8px 10px;
+    border-bottom: 2px solid var(--border);
+    color: var(--muted); letter-spacing: 1px; text-transform: uppercase;
+    font-size: 9px; font-weight: 400;
+  }
+  .score-table th:first-child { text-align: left; }
+  .score-table td {
+    text-align: center; padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .score-table td:first-child { text-align: left; }
+  .score-table tr:last-child td { border-bottom: none; }
+  .score-table tr.winner { background: rgba(240,192,64,0.06); }
+
+  .score-pip {
+    display: inline-flex; gap: 2px;
+  }
+  .pip {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--dim);
+  }
+  .pip.on { background: var(--gold); }
+  .pip.on.red { background: var(--red); }
+  .pip.on.teal { background: var(--esp); }
+
+  .total-score {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px; line-height: 1;
+  }
+
+  /* ── FICHES CANDIDATS ── */
+  .candidats { display: flex; flex-direction: column; gap: 16px; margin: 28px 0; }
+
+  .candidat {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 3px; padding: 22px 26px; position: relative;
+    overflow: hidden;
+  }
+  .candidat::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    background: var(--cc, var(--muted));
+  }
+  .candidat.winner {
+    border-color: rgba(240,192,64,0.3);
+    background: #0e0d08;
+  }
+  .candidat.winner::before { background: var(--gold); }
+  .candidat.winner::after {
+    content: '🏆 KOUFFARDOR 2025';
+    position: absolute; top: -1px; right: -1px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 2px;
+    background: var(--gold); color: #1a1200;
+    padding: 3px 12px; font-weight: 500;
+  }
+
+  .cand-header {
+    display: flex; align-items: center; gap: 14px; margin-bottom: 14px;
+  }
+  .cand-av {
+    width: 38px; height: 38px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif; font-size: 17px; flex-shrink: 0;
+  }
+  .cand-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px; letter-spacing: 1px; line-height: 1;
+  }
+  .cand-score-big {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px; line-height: 1;
+    margin-left: auto; flex-shrink: 0;
+  }
+  .cand-rank {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--muted); letter-spacing: 1px;
+    margin-top: 2px;
+  }
+
+  .cand-bars { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+  .cbar { display: flex; align-items: center; gap: 10px; }
+  .cbar-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: var(--muted); letter-spacing: 1px;
+    text-transform: uppercase; width: 120px; flex-shrink: 0;
+  }
+  .cbar-wrap { flex: 1; height: 6px; background: var(--dim); border-radius: 2px; overflow: hidden; }
+  .cbar-fill { height: 100%; border-radius: 2px; }
+  .cbar-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: var(--muted); width: 30px; text-align: right; flex-shrink: 0;
+  }
+
+  .cand-desc { font-size: 14px; color: var(--text); line-height: 1.75; margin-bottom: 10px; }
+  .cand-desc strong { color: var(--white); }
+  .cand-desc em { font-style: italic; }
+
+  .cand-quote {
+    background: var(--bg3); border-left: 2px solid var(--cc, var(--muted));
+    padding: 8px 12px; border-radius: 0 2px 2px 0;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: #808098; line-height: 1.55; font-style: italic;
+    margin-top: 8px;
+  }
+  .cand-quote .qmeta { font-size: 9px; color: var(--muted); margin-top: 4px; font-style: normal; }
+
+  /* ── PODIUM ── */
+  .podium {
+    display: flex; align-items: flex-end; justify-content: center;
+    gap: 8px; margin: 40px 0; height: 180px;
+  }
+  .podium-item {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    flex: 1; max-width: 160px;
+  }
+  .podium-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px; letter-spacing: 1px; text-align: center;
+  }
+  .podium-score {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--muted);
+  }
+  .podium-block {
+    width: 100%; border-radius: 3px 3px 0 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif; font-size: 32px;
+  }
+  .podium-block.p1 { background: rgba(240,192,64,0.15); border: 1px solid rgba(240,192,64,0.3); color: var(--gold); height: 120px; }
+  .podium-block.p2 { background: rgba(192,192,216,0.08); border: 1px solid rgba(192,192,216,0.2); color: #c0c0d8; height: 88px; }
+  .podium-block.p3 { background: rgba(200,128,64,0.08); border: 1px solid rgba(200,128,64,0.2); color: #c08040; height: 64px; }
+  .podium-block.p4 { background: var(--dim); border: 1px solid var(--border); color: var(--muted); height: 48px; font-size: 20px; }
+  .podium-block.p5 { background: var(--dim); border: 1px solid var(--border); color: var(--muted); height: 36px; font-size: 20px; }
+
+  /* ── VERDICT FINAL ── */
+  .verdict {
+    background: #0e0d08;
+    border: 1px solid rgba(240,192,64,0.25);
+    border-radius: 3px; padding: 32px 36px; margin: 32px 0;
+  }
+  .verdict-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 14px;
+  }
+  .verdict-text { font-size: 15px; color: var(--text); line-height: 1.85; }
+  .verdict-text strong { color: var(--white); }
+  .verdict-text em { color: var(--gold); font-style: italic; }
+
+  /* ── HISTORIQUE ── */
+  .historique { display: flex; flex-direction: column; gap: 12px; margin: 24px 0; }
+  .histo-item {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 3px; padding: 16px 20px;
+    display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  }
+  .histo-year {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px; color: var(--gold); line-height: 1; flex-shrink: 0; width: 60px;
+  }
+  .histo-org {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--muted); letter-spacing: 1px; flex-shrink: 0; width: 100px;
+  }
+  .histo-desc { font-size: 14px; color: var(--text); flex: 1; line-height: 1.6; }
+  .histo-winner {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .histo-item.unknown { opacity: 0.5; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 48px 8vw;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: var(--dim); letter-spacing: 2px; }
+  .footer-back { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; text-decoration: none; transition: color 0.2s; }
+  .footer-back:hover { color: var(--white); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 600px) {
+    .container { padding: 0 24px; }
+    .hero { padding: 80px 24px; }
+    footer { padding: 40px 24px; }
+    .podium { height: auto; flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <a href="index.html" class="hero-back">← Archives</a>
+  <div class="hero-year">2025</div>
+  <div class="hero-eyebrow">Discordeum · Institution Annuelle</div>
+  <h1>Les<br>Kouffardor</h1>
+  <p class="hero-sub">Cérémonie annuelle récompensant le membre le plus kouffard du Discordeum. Depuis 2023. Sans appel.</p>
+  <div class="hero-meta">
+    <div class="hm"><div class="hm-v">6</div><div class="hm-l">critères</div></div>
+    <div class="hm"><div class="hm-v">5</div><div class="hm-l">candidats</div></div>
+    <div class="hm"><div class="hm-v">30</div><div class="hm-l">points max</div></div>
+    <div class="hm"><div class="hm-v">2025</div><div class="hm-l">édition</div></div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ══ 01 · L'INSTITUTION ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">01</div><div class="sh-title">L'<span class="sh-gold">Institution</span></div></div>
+
+    <p class="prose">
+      Le KUFR — terme détourné du discours religieux pour désigner la trahison, la malveillance et l'infidélité aux valeurs du groupe — est entré dans le lexique du Discordeum progressivement, porté par espy puis institutionnalisé par baiedhiver et cryo. Les <strong>Kouffardor</strong> en sont la cérémonie annuelle : chaque Nouvel An, le groupe désigne formellement son membre le plus kouffard de l'année écoulée.
+    </p>
+
+    <p class="prose">
+      La <strong>Chancla</strong> est la punition symbolique associée — sanction rituelle, claquette virtuelle brandissable en cas de comportement indigne. Elle ne se donne pas à la légère. Elle se mérite.
+    </p>
+
+    <p class="prose">
+      Le message fondateur de la cérémonie 2026 (récompensant l'année 2025), rédigé par cryoslinger depuis un lit d'hôpital, pose le cadre officiel :
+    </p>
+
+    <div class="msg-officiel">
+      <div class="msg-officiel-text">
+        Wesh le Discordéum<br><br>
+        2026 est arrivé, il est donc temps de savoir qui a été le plus gros KUFR de 2025. Loin de la cérémonie à l'esthétique travaillé que nous avait proposée Enzolin, je vous propose cette année un sobre vote : envoyez-moi par MP votre classement des membres du discord du plus gros enculé à la plus sympathique des âmes. Chaque rang sera associé à des points de kouffardise, qui accumulés nous donneront le kouffardor 2026.
+      </div>
+    </div>
+
+    <p class="prose">
+      Le système est clair : classement par MP, points pondérés par rang, total révélé par l'organisateur. L'édition 2025 documentée ici utilise une méthodologie complémentaire — six critères mesurables sur données objectives, pour produire un résultat auditable et sans appel.
+    </p>
+  </section>
+
+  <!-- ══ 02 · MÉTHODOLOGIE ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">02</div><div class="sh-title">Méthodologie</div></div>
+
+    <p class="prose">
+      Six critères, chacun noté de 1 à 5 selon le rang du membre (5 = le plus kouffard). Total sur 30. Données extraites du canal général, année 2025 uniquement.
+    </p>
+
+    <table class="score-table">
+      <thead>
+        <tr>
+          <th style="text-align:left">Critère</th>
+          <th>Mesure</th>
+          <th>Principe</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong style="color:var(--white)">C1 · Malveillance brute</strong></td>
+          <td>% messages malveillants</td>
+          <td>Plus c'est élevé = plus kouffard</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--white)">C2 · Jours perdus</strong></td>
+          <td>Jours d'absence cumulés</td>
+          <td>Plus c'est élevé = plus kouffard</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--white)">C3 · Silence radio</strong></td>
+          <td>Jours actifs sur 365</td>
+          <td>Moins c'est élevé = plus kouffard</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--white)">C4 · Dodge quantifié</strong></td>
+          <td>Messages "pas dispo / flemme / dodo"</td>
+          <td>Plus c'est élevé = plus kouffard</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--white)">C5 · Ping ignoré</strong></td>
+          <td>Nombre de fois pingué par les autres</td>
+          <td>Moins c'est élevé = plus invisible = plus kouffard</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--white)">C6 · Chute d'activité</strong></td>
+          <td>% de baisse vs meilleure année</td>
+          <td>Plus la chute est grande = plus kouffard</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Tableau des scores -->
+    <table class="score-table" style="margin-top:32px">
+      <thead>
+        <tr>
+          <th style="text-align:left">Membre</th>
+          <th>C1</th><th>C2</th><th>C3</th><th>C4</th><th>C5</th><th>C6</th>
+          <th style="color:var(--gold)">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="winner">
+          <td><strong style="color:var(--lay)">layvi 🏆</strong></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></div></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip"></span></div></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span></div></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip"></span><span class="pip"></span></div></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip"></span></div></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span></div></td>
+          <td><div class="total-score" style="color:var(--gold)">22</div></td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--dos)">dosinge</strong></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span></div></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip on"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></div></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></div></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span></div></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip"></span><span class="pip"></span></div></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip"></span><span class="pip"></span></div></td>
+          <td><div class="total-score" style="color:var(--dos)">19</div></td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--bai)">baiedhiver</strong></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip on"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></div></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span></div></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip"></span></div></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip on"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></div></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span></div></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></div></td>
+          <td><div class="total-score" style="color:var(--bai)">19</div></td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--esp)">espy</strong></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip"></span><span class="pip"></span></div></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></div></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip on"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></div></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip"></span></div></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip"></span></div></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip"></span></div></td>
+          <td><div class="total-score" style="color:var(--esp)">16</div></td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--cry)">cryoslinger</strong></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip"></span></div></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip"></span><span class="pip"></span></div></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip"></span><span class="pip"></span></div></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></div></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></div></td>
+          <td><div class="score-pip"><span class="pip on"></span><span class="pip on"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></div></td>
+          <td><div class="total-score" style="color:var(--cry)">14</div></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ══ 03 · DOSSIERS CANDIDATS ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">03</div><div class="sh-title">Dossiers <span class="sh-gold">candidats</span></div></div>
+
+    <div class="candidats">
+
+      <!-- LAYVI — GAGNANT -->
+      <div class="candidat winner" style="--cc: var(--lay)">
+        <div class="cand-header">
+          <div class="cand-av" style="background:#1a1505; color:var(--lay)">L</div>
+          <div>
+            <div class="cand-name" style="color:var(--lay)">layvi</div>
+            <div class="cand-rank">Kouffardor 2025 · 22/30</div>
+          </div>
+          <div class="cand-score-big" style="color:var(--gold)">22<span style="font-size:0.5em; color:var(--muted)">/30</span></div>
+        </div>
+        <div class="cand-bars">
+          <div class="cbar">
+            <div class="cbar-label">Malveillance</div>
+            <div class="cbar-wrap"><div class="cbar-fill" style="width:20%; background:var(--lay)"></div></div>
+            <div class="cbar-val">0,0%</div>
+          </div>
+          <div class="cbar">
+            <div class="cbar-label">Jours perdus</div>
+            <div class="cbar-wrap"><div class="cbar-fill" style="width:93%; background:var(--lay)"></div></div>
+            <div class="cbar-val">289j</div>
+          </div>
+          <div class="cbar">
+            <div class="cbar-label">Jours actifs</div>
+            <div class="cbar-wrap"><div class="cbar-fill" style="width:9%; background:var(--lay)"></div></div>
+            <div class="cbar-val">33/365</div>
+          </div>
+          <div class="cbar">
+            <div class="cbar-label">Chute activité</div>
+            <div class="cbar-wrap"><div class="cbar-fill" style="width:100%; background:var(--gold)"></div></div>
+            <div class="cbar-val">-85,4%</div>
+          </div>
+        </div>
+        <p class="cand-desc">
+          La victoire de layvi au Kouffardor 2025 est à la fois surprenante et inévitable. <strong>Surprenante</strong> parce que son taux de malveillance active est de 0,0% — il n'a pas dit un mot hostile de toute l'année. <strong>Inévitable</strong> parce que sa chute d'activité de 85,4% (226 jours actifs en 2020 → 33 en 2025) est la plus violente du groupe, et que ses 289 jours d'absence représentent neuf mois et demi de silence. Il n'était là que 9% de l'année. Le reste du temps, le groupe existait sans lui. Sa victoire confirme ce que la tier list avait établi : <em>la malveillance la plus dévastatrice est celle qui ne se sait pas.</em>
+        </p>
+        <p class="cand-desc" style="margin-top:8px">
+          Détail aggravant : son premier message de l'année 2025 est un <strong>GIF de Shrek</strong>, envoyé le 17 avril après 116 jours d'absence consécutive. Son dernier message de l'année : <strong>"bonne année le discordeum"</strong>, le 31 décembre à minuit. L'arc narratif est parfait.
+        </p>
+        <div class="cand-quote">
+          "bonne année le discordeum"
+          <div class="qmeta">layvi · 31 décembre 2025 · après 9 mois d'absence cumulée</div>
+        </div>
+      </div>
+
+      <!-- DOSINGE -->
+      <div class="candidat" style="--cc: var(--dos)">
+        <div class="cand-header">
+          <div class="cand-av" style="background:#2a1a5a; color:var(--dos)">D</div>
+          <div>
+            <div class="cand-name" style="color:var(--dos)">dosinge</div>
+            <div class="cand-rank">2e ex-aequo · 19/30</div>
+          </div>
+          <div class="cand-score-big" style="color:var(--dos)">19<span style="font-size:0.5em; color:var(--muted)">/30</span></div>
+        </div>
+        <div class="cand-bars">
+          <div class="cbar">
+            <div class="cbar-label">Malveillance</div>
+            <div class="cbar-wrap"><div class="cbar-fill" style="width:100%; background:var(--dos)"></div></div>
+            <div class="cbar-val">5,7%</div>
+          </div>
+          <div class="cbar">
+            <div class="cbar-label">Dodge</div>
+            <div class="cbar-wrap"><div class="cbar-fill" style="width:100%; background:var(--dos)"></div></div>
+            <div class="cbar-val">5/5</div>
+          </div>
+          <div class="cbar">
+            <div class="cbar-label">Jours actifs</div>
+            <div class="cbar-wrap"><div class="cbar-fill" style="width:27%; background:var(--dos)"></div></div>
+            <div class="cbar-val">100/365</div>
+          </div>
+        </div>
+        <p class="cand-desc">
+          Dosinge remporte sans discussion les critères de <strong>malveillance brute</strong> (5,7%, premier du groupe) et de <strong>dodge quantifié</strong> (5/5). Il annonce des sessions, ne vient pas, annonce à nouveau. Sa présence sauve partiellement son score — 100 jours actifs restent loin derrière espy mais très au-dessus de layvi. Sa principale défense : le boulot. Sa principale charge : "NE PAS OUBLIER DE PING SI ARENA IL Y A" envoyé en août, suivi d'une absence de 32 jours.
+        </p>
+        <div class="cand-quote">
+          "NE PAS OUBLIER DE PING SI ARENA IL Y A"
+          <div class="qmeta">dosinge · 29 août 2025 · avant 32 jours d'absence</div>
+        </div>
+      </div>
+
+      <!-- BAIEDHIVER -->
+      <div class="candidat" style="--cc: var(--bai)">
+        <div class="cand-header">
+          <div class="cand-av" style="background:#0a2010; color:var(--bai)">B</div>
+          <div>
+            <div class="cand-name" style="color:var(--bai)">baiedhiver</div>
+            <div class="cand-rank">2e ex-aequo · 19/30</div>
+          </div>
+          <div class="cand-score-big" style="color:var(--bai)">19<span style="font-size:0.5em; color:var(--muted)">/30</span></div>
+        </div>
+        <div class="cand-bars">
+          <div class="cbar">
+            <div class="cbar-label">Jours perdus</div>
+            <div class="cbar-wrap"><div class="cbar-fill" style="width:100%; background:var(--bai)"></div></div>
+            <div class="cbar-val">309j</div>
+          </div>
+          <div class="cbar">
+            <div class="cbar-label">Ping ignoré</div>
+            <div class="cbar-wrap"><div class="cbar-fill" style="width:100%; background:var(--bai)"></div></div>
+            <div class="cbar-val">2 pings</div>
+          </div>
+          <div class="cbar">
+            <div class="cbar-label">Jours actifs</div>
+            <div class="cbar-wrap"><div class="cbar-fill" style="width:10%; background:var(--bai)"></div></div>
+            <div class="cbar-val">37/365</div>
+          </div>
+        </div>
+        <p class="cand-desc">
+          Baiedhiver aurait pu gagner. Il domine sur les <strong>jours perdus</strong> (309j, 5/5) et sur le critère <strong>ping ignoré</strong> (5/5 — seulement 2 pings reçus dans l'année entière, preuve que le groupe a arrêté de l'appeler). Ce qui le sauve : ses absences longues sont consécutives et prévisibles — le groupe sait qu'il ne sera pas là. Layvi, lui, laisse croire qu'il reviendra. C'est plus dévastateur.
+        </p>
+        <div class="cand-quote">
+          "À titre de personne je ne me souviens guère avoir quémandé tel renseignement"
+          <div class="qmeta">baiedhiver · 16 avril 2025 · message de retour après 46 jours</div>
+        </div>
+      </div>
+
+      <!-- ESPY -->
+      <div class="candidat" style="--cc: var(--esp)">
+        <div class="cand-header">
+          <div class="cand-av" style="background:#0a2030; color:var(--esp)">E</div>
+          <div>
+            <div class="cand-name" style="color:var(--esp)">espy</div>
+            <div class="cand-rank">4e · 16/30</div>
+          </div>
+          <div class="cand-score-big" style="color:var(--esp)">16<span style="font-size:0.5em; color:var(--muted)">/30</span></div>
+        </div>
+        <div class="cand-bars">
+          <div class="cbar">
+            <div class="cbar-label">Chute activité</div>
+            <div class="cbar-wrap"><div class="cbar-fill" style="width:80%; background:var(--esp)"></div></div>
+            <div class="cbar-val">-69,6%</div>
+          </div>
+          <div class="cbar">
+            <div class="cbar-label">Malveillance</div>
+            <div class="cbar-wrap"><div class="cbar-fill" style="width:14%; background:var(--esp)"></div></div>
+            <div class="cbar-val">0,8%</div>
+          </div>
+        </div>
+        <p class="cand-desc">
+          Espy sauve sa mise. Sa chute d'activité de 69,6% est notable (319 jours actifs en 2020 → 97 en 2025), mais ses 97 jours actifs restent les meilleurs du groupe avec dosinge. Sa malveillance est à 0,8% — quasi nulle. En 2025, espy est principalement une présence de qualité qui se raréfie. La Chancla ne peut rien lui reprocher de substantiel.
+        </p>
+        <div class="cand-quote">
+          "Pour ça que je te classe en fantôme"
+          <div class="qmeta">espy sur un autre membre · septembre 2025</div>
+        </div>
+      </div>
+
+      <!-- CRYO -->
+      <div class="candidat" style="--cc: var(--cry)">
+        <div class="cand-header">
+          <div class="cand-av" style="background:#201005; color:var(--cry)">C</div>
+          <div>
+            <div class="cand-name" style="color:var(--cry)">cryoslinger</div>
+            <div class="cand-rank">5e · 14/30 · Acquitté</div>
+          </div>
+          <div class="cand-score-big" style="color:var(--cry)">14<span style="font-size:0.5em; color:var(--muted)">/30</span></div>
+        </div>
+        <div class="cand-bars">
+          <div class="cbar">
+            <div class="cbar-label">Dodge</div>
+            <div class="cbar-wrap"><div class="cbar-fill" style="width:20%; background:var(--cry)"></div></div>
+            <div class="cbar-val">0×</div>
+          </div>
+          <div class="cbar">
+            <div class="cbar-label">Pings reçus</div>
+            <div class="cbar-wrap"><div class="cbar-fill" style="width:100%; background:var(--cry)"></div></div>
+            <div class="cbar-val">33×</div>
+          </div>
+        </div>
+        <p class="cand-desc">
+          Cryo termine dernier — et c'est mérité. <strong>Zéro dodge</strong> documenté en 2025. <strong>33 pings reçus</strong> — de loin le plus recherché du groupe, ce qui prouve que même absent, il reste la personne vers qui les autres se tournent. Il organise depuis l'hôpital, convoque depuis n'importe où, lance des Codenames à 5h du matin. La Chancla ne s'applique pas ici. C'est lui qui la brandit.
+        </p>
+        <div class="cand-quote">
+          "somebody ARENA ? @here"
+          <div class="qmeta">cryoslinger · 29 juin 2025 · organisation standard</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ 04 · PODIUM ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">04</div><div class="sh-title">Podium <span class="sh-gold">2025</span></div></div>
+
+    <div class="podium">
+      <div class="podium-item">
+        <div class="podium-name" style="color:var(--dos)">dosinge</div>
+        <div class="podium-score">19/30</div>
+        <div class="podium-block p2">2</div>
+      </div>
+      <div class="podium-item">
+        <div class="podium-name" style="color:var(--gold)">layvi 🏆</div>
+        <div class="podium-score" style="color:var(--gold)">22/30</div>
+        <div class="podium-block p1">1</div>
+      </div>
+      <div class="podium-item">
+        <div class="podium-name" style="color:var(--bai)">baiedhiver</div>
+        <div class="podium-score">19/30</div>
+        <div class="podium-block p3">3</div>
+      </div>
+      <div class="podium-item">
+        <div class="podium-name" style="color:var(--esp)">espy</div>
+        <div class="podium-score">16/30</div>
+        <div class="podium-block p4">4</div>
+      </div>
+      <div class="podium-item">
+        <div class="podium-name" style="color:var(--cry)">cryo</div>
+        <div class="podium-score">14/30</div>
+        <div class="podium-block p5">5</div>
+      </div>
+    </div>
+
+    <div class="verdict">
+      <div class="verdict-label">// Verdict officiel — Kouffardor 2025</div>
+      <p class="verdict-text">
+        <strong>layvi est désigné Kouffardor 2025 avec 22 points sur 30.</strong> Sa victoire repose sur un paradoxe documenté : taux de malveillance active de 0,0% — il n'a rien dit de hostile en douze mois — mais <em>chute d'activité de 85,4%</em> et seulement 33 jours de présence sur 365. Il a été là 9% de l'année. La question n'est pas ce qu'il a fait. La question est ce qu'il n'a pas fait. Le groupe a existé sans lui pendant neuf mois. Il est revenu le 17 avril avec un GIF de Shrek. Il a dit bonne année le 31 décembre. Entre les deux : rien. La Chancla est décernée.
+      </p>
+    </div>
+  </section>
+
+  <!-- ══ 05 · HISTORIQUE ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">05</div><div class="sh-title">Historique</div></div>
+
+    <div class="historique">
+      <div class="histo-item unknown">
+        <div class="histo-year">2022</div>
+        <div class="histo-org">baiedhiver<br>+ cryo</div>
+        <div class="histo-desc">Première mention institutionnelle — "Joyeux noël le saint Discordeum Malveillum." Les bases sont posées. Format non documenté.</div>
+        <div class="histo-winner" style="color:var(--muted)">— inconnu</div>
+      </div>
+      <div class="histo-item unknown">
+        <div class="histo-year">2023</div>
+        <div class="histo-org">baiedhiver<br>+ Enzolin</div>
+        <div class="histo-desc">Cérémonie officielle organisée par baiedhiver le 1er janvier 2024 à 14h15. "Cérémonie à l'esthétique travaillée" selon cryo. Format Enzolin. Dosinge : "Qu'est-ce que c'est encore ces bêtises."</div>
+        <div class="histo-winner" style="color:var(--muted)">— vote par MP</div>
+      </div>
+      <div class="histo-item">
+        <div class="histo-year">2025</div>
+        <div class="histo-org">cryoslinger</div>
+        <div class="histo-desc">Vote par MP organisé par cryo depuis l'hôpital le 5 janvier 2026. Système de points par rang. "Loin de la cérémonie à l'esthétique travaillé" — format sobre assumé. Résultats reconstitués par analyse objective des données.</div>
+        <div class="histo-winner" style="color:var(--lay)">layvi 🏆</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="footer-logo">Le Discordeum</div>
+  <a href="index.html" class="footer-back">← Retour aux archives</a>
+</footer>
+
+</body>
+</html>
