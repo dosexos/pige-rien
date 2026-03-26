@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le Procès de Layvi — Tribunal du Discordeum</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+
+  :root {
+    --bg:     #08080c;
+    --bg2:    #0e0e14;
+    --bg3:    #131318;
+    --border: #22222e;
+    --text:   #b8b8cc;
+    --muted:  #505060;
+    --white:  #eeeef8;
+    --accent: #e8c87a;
+    --red:    #e05555;
+    --lay:    #fbbf24;
+    --esp:    #5eead4;
+    --dos:    #a78bfa;
+    --cry:    #fb923c;
+    --bai:    #4ade80;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── OUVERTURE ── */
+  .cold-open {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    text-align: center; padding: 80px 8vw;
+    position: relative; overflow: hidden;
+    border-bottom: 1px solid var(--border);
+    background:
+      radial-gradient(ellipse at 50% 40%, rgba(232,200,122,0.04) 0%, transparent 55%),
+      var(--bg);
+  }
+  .cold-open::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.003) 2px, rgba(255,255,255,0.003) 4px);
+    pointer-events: none;
+  }
+
+  .tribunal-seal {
+    font-size: clamp(40px, 8vw, 72px);
+    margin-bottom: 24px;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.1s;
+  }
+  .cold-open .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 5px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 16px;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.3s;
+  }
+  .cold-open h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(40px, 8vw, 88px);
+    font-weight: 900; color: var(--white); line-height: 1;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.5s;
+  }
+  .cold-open h1 em { font-style: italic; color: var(--lay); }
+  .cold-open .subtitle {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(14px, 2vw, 18px); font-style: italic;
+    color: var(--muted); margin-top: 16px; max-width: 540px;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.8s;
+  }
+  .cold-open .dossier {
+    margin-top: 48px;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 4px; padding: 20px 32px;
+    display: flex; gap: 32px; flex-wrap: wrap; justify-content: center;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 1.1s;
+  }
+  .dossier-item { display: flex; flex-direction: column; gap: 3px; align-items: center; }
+  .di-val { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--accent); line-height: 1; }
+  .di-lab { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+
+  .exergue {
+    margin-top: 40px; max-width: 560px;
+    font-family: 'Playfair Display', serif; font-style: italic;
+    font-size: clamp(14px, 2vw, 17px); color: var(--muted);
+    padding: 16px 20px; border-left: 2px solid var(--border);
+    text-align: left;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 1.4s;
+  }
+  .exergue .attr { font-size: 11px; font-family: 'DM Mono', monospace; font-style: normal; color: var(--muted); margin-top: 6px; display: block; letter-spacing: 1px; }
+
+  /* ── CONTAINER ── */
+  .container { max-width: 860px; margin: 0 auto; padding: 0 32px; }
+
+  /* ── ACTES ── */
+  .act { padding: 80px 0 0; }
+  .act-header {
+    display: flex; align-items: baseline; gap: 20px;
+    margin-bottom: 48px; padding-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .act-number {
+    font-family: 'Playfair Display', serif; font-size: 11px;
+    font-style: italic; color: var(--muted); letter-spacing: 2px;
+    text-transform: uppercase; flex-shrink: 0;
+  }
+  .act-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 4vw, 34px); font-weight: 700;
+    color: var(--white); line-height: 1.2;
+  }
+  .act-sub {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    color: var(--accent); letter-spacing: 2px; margin-left: auto; flex-shrink: 0;
+  }
+
+  /* ── PROSE ── */
+  .prose { font-size: 15px; line-height: 1.88; color: var(--text); margin-bottom: 28px; }
+  .prose strong { color: var(--white); font-weight: 500; }
+  .prose em { color: var(--accent); font-style: italic; }
+
+  /* ── DOCUMENT OFFICIEL ── */
+  .doc-officiel {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 4px; padding: 28px 32px; margin: 28px 0;
+    position: relative;
+  }
+  .doc-officiel::before {
+    content: attr(data-label);
+    position: absolute; top: -10px; left: 18px;
+    font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 2px;
+    text-transform: uppercase; background: var(--bg2); padding: 0 8px;
+    color: var(--accent);
+  }
+  .doc-title {
+    font-family: 'Playfair Display', serif; font-size: 15px;
+    font-weight: 700; color: var(--white); margin-bottom: 12px;
+    text-align: center;
+  }
+  .doc-text { font-size: 13px; color: var(--text); line-height: 1.75; }
+  .doc-text strong { color: var(--white); }
+
+  /* ── PIÈCE À CONVICTION ── */
+  .piece {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-left: 3px solid var(--pc, var(--accent));
+    border-radius: 0 4px 4px 0;
+    padding: 14px 18px; margin: 14px 0;
+    position: relative;
+  }
+  .piece::before {
+    content: attr(data-piece);
+    position: absolute; top: -9px; left: 12px;
+    font-family: 'DM Mono', monospace; font-size: 8px; letter-spacing: 2px;
+    text-transform: uppercase; background: var(--bg3); padding: 0 6px;
+    color: var(--pc, var(--accent));
+  }
+  .piece-quote {
+    font-family: 'DM Mono', monospace; font-size: 11.5px;
+    color: #8888a8; line-height: 1.55; font-style: italic;
+  }
+  .piece-meta { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); margin-top: 5px; }
+  .piece-note { font-size: 12px; color: var(--text); margin-top: 8px; }
+  .piece-note strong { color: var(--white); }
+
+  /* ── PLAIDOIRIE ── */
+  .plaidoirie {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 4px; padding: 24px 28px; margin: 24px 0;
+    position: relative;
+  }
+  .plaidoirie::before {
+    content: attr(data-role);
+    position: absolute; top: -10px; left: 18px;
+    font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 2px;
+    text-transform: uppercase; background: var(--bg2); padding: 0 8px;
+    color: var(--pc2, var(--muted));
+  }
+  .plaid-header {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
+  }
+  .plaid-av {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0;
+  }
+  .plaid-name { font-size: 12px; font-weight: 700; }
+  .plaid-fonction { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: 1px; }
+  .plaid-text { font-size: 14px; color: var(--text); line-height: 1.8; }
+  .plaid-text strong { color: var(--white); }
+  .plaid-text em { color: var(--pc2, var(--accent)); font-style: italic; }
+
+  /* ── MESSAGES ── */
+  .msg-thread { display: flex; flex-direction: column; gap: 7px; margin: 12px 0; }
+  .msg { display: flex; gap: 10px; align-items: flex-start; }
+  .msg-av {
+    width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; flex-shrink: 0; margin-top: 2px;
+  }
+  .msg-body { flex: 1; }
+  .msg-author { font-size: 11px; font-weight: 700; margin-bottom: 2px; }
+  .msg-text {
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    color: #8888a8; line-height: 1.5;
+    background: #0c0c14; border-radius: 3px; padding: 6px 10px;
+    border-left: 2px solid var(--border);
+  }
+  .msg-time { font-size: 9px; color: var(--muted); margin-top: 2px; font-family: 'DM Mono', monospace; }
+
+  .av-lay { background: #2a1f05; color: var(--lay); }
+  .av-esp { background: #0a2030; color: var(--esp); }
+  .av-dos { background: #2a1a5a; color: var(--dos); }
+  .av-cry { background: #2a1205; color: var(--cry); }
+  .av-bai { background: #0a2010; color: var(--bai); }
+
+  .col-lay { color: var(--lay); }
+  .col-esp { color: var(--esp); }
+  .col-dos { color: var(--dos); }
+  .col-cry { color: var(--cry); }
+  .col-bai { color: var(--bai); }
+
+  /* ── PULL QUOTE ── */
+  .pull-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(17px, 2.8vw, 22px); font-style: italic;
+    color: var(--accent); border-left: 3px solid var(--accent);
+    padding: 14px 0 14px 22px; margin: 32px 0; line-height: 1.45;
+  }
+  .pull-quote .attr { display: block; font-family: 'DM Mono', monospace; font-size: 10px; font-style: normal; color: var(--muted); margin-top: 8px; letter-spacing: 1px; }
+
+  /* ── VERDICT ── */
+  .verdict-block {
+    background: #0c0a08; border: 1px solid rgba(232,200,122,0.3);
+    border-radius: 4px; padding: 32px 36px; margin: 32px 0;
+    text-align: center; position: relative;
+  }
+  .verdict-block::before {
+    content: '⚖ VERDICT FINAL ⚖';
+    position: absolute; top: -11px; left: 50%; transform: translateX(-50%);
+    font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 3px;
+    background: #0c0a08; padding: 0 12px; color: var(--accent);
+  }
+  .verdict-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(24px, 4vw, 36px); font-weight: 900;
+    color: var(--accent); margin-bottom: 16px; line-height: 1.2;
+  }
+  .verdict-text { font-size: 14px; color: var(--text); line-height: 1.8; max-width: 580px; margin: 0 auto; }
+  .verdict-text strong { color: var(--white); }
+  .peine {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 4px; padding: 12px 16px; margin-top: 20px; text-align: left;
+    flex-wrap: wrap;
+  }
+  .peine-label { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; flex-shrink: 0; margin-top: 2px; }
+  .peine-val { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--lay); }
+
+  /* ── DIVIDER ── */
+  .divider { display: flex; align-items: center; gap: 14px; margin: 48px 0; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 3px; color: var(--muted); }
+  .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* ── FOOTER ── */
+  footer { padding: 48px 8vw; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; border-top: 1px solid var(--border); }
+  .footer-logo { font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; color: var(--muted); }
+  .footer-back { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; text-decoration: none; transition: color 0.2s; }
+  .footer-back:hover { color: var(--white); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 600px) {
+    .container { padding: 0 20px; }
+    .cold-open { padding: 80px 20px; }
+    footer { padding: 40px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- OUVERTURE -->
+<div class="cold-open">
+  <div class="tribunal-seal">⚖️</div>
+  <div class="eyebrow">Tribunal du Discordeum · Session extraordinaire · Depuis 2018</div>
+  <h1>Le Procès<br>de <em>Layvi</em></h1>
+  <p class="subtitle">Attendu que l'accusé était absent lors de l'ouverture de l'audience.</p>
+  <div class="dossier">
+    <div class="dossier-item"><div class="di-val">219</div><div class="di-lab">fugues documentées</div></div>
+    <div class="dossier-item"><div class="di-val">69,9%</div><div class="di-lab">taux d'absence</div></div>
+    <div class="dossier-item"><div class="di-val">116j</div><div class="di-lab">absence record 2024–25</div></div>
+    <div class="dossier-item"><div class="di-val">GIF Shrek</div><div class="di-lab">seule explication fournie</div></div>
+  </div>
+  <div class="exergue">
+    "Un procès est déjà bien généreux."
+    <span class="attr">baiedhiver · 2024 · position de la défense résumée en huit mots</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ══ COMPOSITION DU TRIBUNAL ══ -->
+  <div class="act">
+    <div class="act-header">
+      <div class="act-number">Préambule</div>
+      <div class="act-title">Composition du tribunal</div>
+    </div>
+
+    <div class="doc-officiel" data-label="Ordonnance de constitution">
+      <div class="doc-title">TRIBUNAL DU DISCORDEUM<br>Chambre des Absences Répétées et Manquements Structurels<br><br>Dossier nº 2018-2026 — LAYVI dit "Semoule" dit "Souhil" dit "Orange"</div>
+      <div class="doc-text">
+        <br>
+        <strong>Présidente :</strong> La Chancla — institution symbolique du Discordeum, autorité morale suprême.<br><br>
+        <strong>Ministère public :</strong> espy — taux de malveillance institutionnelle S-tier, inventeur de l'invocation latine pour faire apparaître l'accusé.<br><br>
+        <strong>Assesseur aux statistiques :</strong> cryoslinger — a tenu pendant des mois un comptage rigoureux des pings ignorés par l'accusé. Auteur de "il n'était pas obligatoire d'insulter l'ascendance complète de souhil pour qu'il réponde à un tag".<br><br>
+        <strong>Greffier :</strong> baiedhiver — a rédigé un journal de bord officiel sur l'absence de l'accusé. A émis l'avis que "un procès est déjà bien généreux".<br><br>
+        <strong>Témoin expert :</strong> dosinge — a consacré une part significative de son existence à pinger l'accusé sans réponse.<br><br>
+        <strong>Accusé :</strong> layvi — absent à l'ouverture de l'audience. Absent à la deuxième convocation. Présent à la troisième, brièvement, avant de repartir.
+      </div>
+    </div>
+  </div>
+
+  <div class="divider">· · ·</div>
+
+  <!-- ══ ACTE I — RÉQUISITOIRE ══ -->
+  <div class="act">
+    <div class="act-header">
+      <div class="act-number">Acte I</div>
+      <div class="act-title">Le réquisitoire</div>
+      <div class="act-sub">MINISTÈRE PUBLIC · ESPY</div>
+    </div>
+
+    <div class="plaidoirie" data-role="Réquisitoire — espy pour le Ministère Public" style="--pc2: var(--esp)">
+      <div class="plaid-header">
+        <div class="plaid-av av-esp">E</div>
+        <div>
+          <div class="plaid-name col-esp">espy</div>
+          <div class="plaid-fonction">Procureur de la République du Discordeum</div>
+        </div>
+      </div>
+      <div class="plaid-text">
+        <p>Mesdames et Messieurs, la Chancla est saisie ce jour d'un cas qui, à première vue, pourrait sembler banal. Un membre qui s'absente. Qui ne répond pas. Qui disparaît. <em>Souhil, entitas dimensionis</em> — comme je me suis vu contraint de le formuler dans une invocation latine le 23 septembre 2023, faute d'autre recours.</p><br>
+        <p>Mais banal, ce n'est précisément pas. <strong>219 absences supérieures à trois jours</strong> sur sept ans. Un taux d'absence de 69,9%. Une présence de 33 jours sur 365 en 2025. Et pour couronner le tout : un retour après 116 jours soldé par un GIF de Shrek, sans explication, sans transition, sans même l'apparence d'une conscience que quelque chose s'était passé.</p><br>
+        <p>La défense plaidera l'absence d'intention. C'est précisément ce qui aggrave les faits. <em>L'absence d'intention n'atténue pas le préjudice — elle le rend irréparable.</em> On ne peut pas tenir responsable ce qui ne se reconnaît pas. On ne peut pas se réconcilier avec quelque chose qui n'a pas conscience d'avoir manqué. C'est un cauchemar dont on ne sort pas.</p><br>
+        <p>Les pièces à conviction parleront d'elles-mêmes.</p>
+      </div>
+    </div>
+
+    <div class="piece" data-piece="Pièce A-1 · Invocation désespérée" style="--pc: var(--esp)">
+      <div class="piece-quote">"In nominis potentiae et dimensionis, ego, Discordeum, hanc invocationem facio ut Souhil, entitas dimensionis, alligetur et vincitur."</div>
+      <div class="piece-meta">espy · 23 septembre 2023 · traduction : "Au nom du pouvoir et de la dimension, moi, Discordeum, je fais cette invocation pour que Souhil, l'entité dimensionnelle, soit lié et scellé."</div>
+      <div class="piece-note">Niveau de désespoir requis pour rédiger une invocation latine pour faire apparaître un ami sur Discord : <strong>incalculable.</strong></div>
+    </div>
+
+    <div class="piece" data-piece="Pièce A-2 · Constat de non-existence" style="--pc: var(--esp)">
+      <div class="piece-quote">"Souhil n'a jamais existé mec"</div>
+      <div class="piece-meta">espy · 12 août 2019 · déclaration de non-existence après une absence prolongée</div>
+    </div>
+
+    <div class="piece" data-piece="Pièce A-3 · Faiblesses du Discordeum · Document espy" style="--pc: var(--esp)">
+      <div class="piece-quote">"Liste des faiblesses du Discordeum, ou 'Comment hameçonner n'importe qui' — [...] Souhil : Islamologie"</div>
+      <div class="piece-meta">espy · 7 janvier 2024 · liste complète des vulnérabilités membres, classifiée</div>
+      <div class="piece-note">Note du procureur : l'accusé est le seul membre dont la faiblesse est un domaine théologique.</div>
+    </div>
+
+    <div class="piece" data-piece="Pièce A-4 · Rappel journalier officiel" style="--pc: var(--esp)">
+      <div class="piece-quote">"Petit rappel journalier pour que les gens n'oublient pas que semoule est une sacrée pute"</div>
+      <div class="piece-meta">espy · 15 septembre 2019 · message matinal quotidien</div>
+      <div class="piece-note">Le Ministère Public souligne que ce rappel a été jugé nécessaire sur base <strong>quotidienne</strong>.</div>
+    </div>
+
+    <div class="piece" data-piece="Pièce A-5 · Le fantôme de l'escalier" style="--pc: var(--esp)">
+      <div class="piece-quote">"Harry, Souhil ça n'existe pas"</div>
+      <div class="piece-meta">espy · 25 juin 2019 · réponse à une question sur l'accusé</div>
+    </div>
+  </div>
+
+  <div class="divider">· · ·</div>
+
+  <!-- ══ ACTE II — TÉMOIGNAGES ══ -->
+  <div class="act">
+    <div class="act-header">
+      <div class="act-number">Acte II</div>
+      <div class="act-title">Les témoignages à charge</div>
+      <div class="act-sub">COUR PLÉNIÈRE</div>
+    </div>
+
+    <p class="prose">
+      Trois témoins se sont présentés. Un quatrième a envoyé un document écrit. L'accusé, prévenu de la date d'audience, était occupé ailleurs.
+    </p>
+
+    <!-- CRYO -->
+    <div class="plaidoirie" data-role="Témoin 1 — cryoslinger · Assesseur aux statistiques" style="--pc2: var(--cry)">
+      <div class="plaid-header">
+        <div class="plaid-av av-cry">C</div>
+        <div>
+          <div class="plaid-name col-cry">cryoslinger</div>
+          <div class="plaid-fonction">Assesseur aux statistiques · époux · organisateur</div>
+        </div>
+      </div>
+      <div class="plaid-text">
+        J'ai tenu un comptage. Pendant des semaines, en octobre 2020, j'ai enregistré chaque ping ignoré par l'accusé. <strong>9 Souss, 7 Tot, 4 Lul, 3 Dod</strong>. Puis le lendemain : <strong>9 Souss, 8 Tot, 4 Lul, 3 Dod</strong>. Et ainsi de suite. Ce n'est pas de la malveillance — c'est pire. C'est de l'<em>indifférence structurelle</em>. Et je le cite : il n'était "pas obligatoire d'insulter l'ascendance complète de souhil pour que ce dernier réponde à un tag." Et pourtant c'était nécessaire.
+      </div>
+    </div>
+
+    <div class="piece" data-piece="Pièce B-1 · Comptage officiel cryo · Octobre 2020" style="--pc: var(--cry)">
+      <div class="msg-thread">
+        <div class="msg">
+          <div class="msg-av av-cry">C</div>
+          <div class="msg-body">
+            <div class="msg-author col-cry">cryoslinger</div>
+            <div class="msg-text">4 Tot, 3 Dod, 2 Souss, 1 Lul</div>
+            <div class="msg-time">24 oct 2020</div>
+          </div>
+        </div>
+        <div class="msg">
+          <div class="msg-av av-cry">C</div>
+          <div class="msg-body">
+            <div class="msg-author col-cry">cryoslinger</div>
+            <div class="msg-text">5 Tot, 3 Dod, 2 Souss, 2 Lul</div>
+            <div class="msg-time">25 oct 2020</div>
+          </div>
+        </div>
+        <div class="msg">
+          <div class="msg-av av-cry">C</div>
+          <div class="msg-body">
+            <div class="msg-author col-cry">cryoslinger</div>
+            <div class="msg-text">9 Souss, 7 Tot, 3 Dod, 3 Lul</div>
+            <div class="msg-time">29 oct 2020</div>
+          </div>
+        </div>
+        <div class="msg">
+          <div class="msg-av av-cry">C</div>
+          <div class="msg-body">
+            <div class="msg-author col-cry">cryoslinger</div>
+            <div class="msg-text">9 Souss, 9 Tot, 4 Lul, 3 Dod</div>
+            <div class="msg-time">30 oct 2020</div>
+          </div>
+        </div>
+      </div>
+      <div class="piece-note" style="margin-top:8px">Le comptage dura plusieurs semaines. "Souss" désigne le nombre de fois où l'accusé a ignoré un ping. Ces chiffres sont réels.</div>
+    </div>
+
+    <!-- DOSINGE -->
+    <div class="plaidoirie" data-role="Témoin 2 — dosinge · Victime collatérale" style="--pc2: var(--dos)">
+      <div class="plaid-header">
+        <div class="plaid-av av-dos">D</div>
+        <div>
+          <div class="plaid-name col-dos">dosinge</div>
+          <div class="plaid-fonction">Victime collatérale · analyste · convocateur infatigable</div>
+        </div>
+      </div>
+      <div class="plaid-text">
+        J'ai passé sept ans à essayer de faire venir l'accusé. "Semoule ESSAIE D'ETRE LA VERS 17H 17H15." "IL DISPARAIT ENCORE." "Souhil perdu dans le néant." "Je l'ai dodge c'est giga dead." J'ai abandonné le comptage parce que le comptage n'avait pas de fin. Ce qui m'a le plus marqué : le 28 octobre 2020, je l'ai pingé avec <em>"T lo sous, petit anjanath ? Il fait si froid dans ma chambre faut faire chauffer la carte graphique."</em> Aucune réponse. Il était sur LoL.
+      </div>
+    </div>
+
+    <div class="piece" data-piece="Pièce B-2 · Tentative de contact · Dosinge · 2019" style="--pc: var(--dos)">
+      <div class="piece-quote">"IL DISPARAIT ENCORE"</div>
+      <div class="piece-meta">dosinge · 5 juin 2019 · troisième message consécutif sans réponse de l'accusé</div>
+    </div>
+
+    <div class="piece" data-piece="Pièce B-3 · Réactif limitant" style="--pc: var(--dos)">
+      <div class="piece-quote">"Je me doute qu'avec souhil comme réactif limitant ça risque d'être de l'ordre de 1% de chance que ça soit possible"</div>
+      <div class="piece-meta">dosinge · 16 novembre 2021 · analyse chimique de la disponibilité de l'accusé</div>
+      <div class="piece-note">Le tribunal note l'utilisation du vocabulaire de la chimie des solutions pour décrire l'absence d'un ami.</div>
+    </div>
+
+    <!-- BAIEDHIVER -->
+    <div class="plaidoirie" data-role="Témoin 3 — baiedhiver · Greffier · Auteur du Journal de Bord" style="--pc2: var(--bai)">
+      <div class="plaid-header">
+        <div class="plaid-av av-bai">B</div>
+        <div>
+          <div class="plaid-name col-bai">baiedhiver</div>
+          <div class="plaid-fonction">Greffier du tribunal · frère de cryoslinger · philosophe</div>
+        </div>
+      </div>
+      <div class="plaid-text">
+        J'ai rédigé un document. <em>"Journal de bord du Discordéum, entrée du 02/11/2023. Nous semblons au complet, l'équipe est composée de cinq membres, mais l'un d'entre nous, frappé..."</em> — je n'achèverai pas la phrase, le tribunal comprend. J'avais aussi noté, en avril 2023 : <strong>"On est dans le mois de souhil"</strong>. Ce mois-là, il n'était pas là. C'est ce qu'on appelle un mois de souhil : l'absence d'un présent.
+      </div>
+    </div>
+
+    <div class="piece" data-piece="Pièce B-4 · Journal de Bord officiel · baiedhiver" style="--pc: var(--bai)">
+      <div class="piece-quote">"Journal de bord du discordéum, entrée du 02/11/2023 — Nous semblons au complet, l'équipe est composée de cinq membres, mais l'un d'entre nous, frappé par une malédiction dimensionnelle, semble avoir des difficultés à maintenir une présence physique dans notre espace commun..."</div>
+      <div class="piece-meta">baiedhiver · 2 novembre 2023 · document officiel consigné au greffe</div>
+    </div>
+
+    <div class="piece" data-piece="Pièce B-5 · Classification temporelle" style="--pc: var(--bai)">
+      <div class="piece-quote">"On est dans le mois de souhil"</div>
+      <div class="piece-meta">baiedhiver · 2 avril 2023 · diagnostic calendaire</div>
+      <div class="piece-note">Le "mois de souhil" est entré dans le lexique du Discordeum pour désigner une période d'absence prolongée de l'accusé. Il existe plusieurs mois de souhil par an.</div>
+    </div>
+
+    <div class="piece" data-piece="Pièce B-6 · Compte rendu d'une conversation nocturne" style="--pc: var(--bai)">
+      <div class="piece-quote">"Compte-rendu d'un échange audiovisuel auquel j'ai assisté ce treize mai deux mille vingt trois à une heure cinquante du matin : 'Souhil — Tu es au même niveau...'"</div>
+      <div class="piece-meta">baiedhiver · 12 mai 2023 · procès-verbal rédigé spontanément à 1h50 du matin</div>
+      <div class="piece-note">Le greffier souligne que la rédaction de procès-verbaux nocturnes non sollicités témoigne du niveau de documentation que l'accusé inspire malgré lui.</div>
+    </div>
+  </div>
+
+  <div class="divider">· · ·</div>
+
+  <!-- ══ ACTE III — PIÈCES MAÎTRESSES ══ -->
+  <div class="act">
+    <div class="act-header">
+      <div class="act-number">Acte III</div>
+      <div class="act-title">Les pièces maîtresses</div>
+      <div class="act-sub">PREUVES MATÉRIELLES</div>
+    </div>
+
+    <p class="prose">
+      Le Ministère Public présente ici les pièces les plus accablantes — non pour leur violence, mais pour leur banalité absolue. C'est la banalité du dodge.
+    </p>
+
+    <div class="piece" data-piece="Pièce C-1 · Le GIF de Shrek · 17 avril 2025" style="--pc: var(--lay)">
+      <div class="piece-quote">[GIF de Shrek]</div>
+      <div class="piece-meta">layvi · 17 avril 2025 · premier message après 116 jours d'absence consécutive</div>
+      <div class="piece-note"><strong>Contexte :</strong> L'accusé a disparu le 21 décembre 2024 avec le message "Je suis d'accord." Il est revenu 116 jours plus tard avec un GIF animé de Shrek. Aucune explication. Aucune mention de l'absence. Le groupe a repris la conversation dans la minute.</div>
+    </div>
+
+    <div class="piece" data-piece="Pièce C-2 · La bonne année · 31 décembre 2025" style="--pc: var(--lay)">
+      <div class="piece-quote">"bonne année le discordeum"</div>
+      <div class="piece-meta">layvi · 31 décembre 2025, minuit · après 9 mois d'absence cumulée sur l'année 2025</div>
+      <div class="piece-note"><strong>Contexte :</strong> 33 jours de présence sur 365 en 2025. L'accusé était là 9% de l'année. Il a dit bonne année à minuit. C'est son seul message de décembre, hors une brève réapparition le 3.</div>
+    </div>
+
+    <div class="piece" data-piece="Pièce C-3 · La disparition motivée · Janvier 2021" style="--pc: var(--cry)">
+      <div class="piece-quote">"c'est pas pire que souss qui nous a dit 'je suis chaud' avant de disparaitre dans les limbes"</div>
+      <div class="piece-meta">cryoslinger · 11 janvier 2021 · référence à un incident type</div>
+      <div class="piece-note">Le Ministère Public note que la phrase <strong>"je suis chaud"</strong> suivie d'une disparition est un <em>pattern documenté</em>, pas un incident isolé.</div>
+    </div>
+
+    <div class="piece" data-piece="Pièce C-4 · Le sous-marin de longue date" style="--pc: var(--esp)">
+      <div class="piece-quote">"Souhil a-t-il vraiment existé un jour ?"</div>
+      <div class="piece-meta">espy · 7 juin 2019 · question philosophique posée en canal général</div>
+    </div>
+
+    <div class="pull-quote">
+      "Absence d'argument IRM pour un conflit scapulo thoracique. Discrète bursite sous-acromio deltoïdienne droite."
+      <span class="attr">dosinge · 16 juin 2022 · lisant son IRM en public. Le tribunal note que même dans ses propres documents médicaux, dosinge est absent de lui-même. Aucun rapport avec l'accusé mais le tribunal a trouvé ça profond.</span>
+    </div>
+  </div>
+
+  <div class="divider">· · ·</div>
+
+  <!-- ══ ACTE IV — PLAIDOIRIE DE LA DÉFENSE ══ -->
+  <div class="act">
+    <div class="act-header">
+      <div class="act-number">Acte IV</div>
+      <div class="act-title">La plaidoirie de la défense</div>
+      <div class="act-sub">L'ACCUSÉ PREND LA PAROLE</div>
+    </div>
+
+    <p class="prose">
+      L'accusé, informé de la date d'audience avec trois semaines d'avance, a finalement fait acte de présence — en retard de quarante minutes, en ayant raté l'ouverture des débats. Il a pris la parole.
+    </p>
+
+    <div class="plaidoirie" data-role="Plaidoirie de la défense — layvi (accusé, se représente lui-même)" style="--pc2: var(--lay)">
+      <div class="plaid-header">
+        <div class="plaid-av av-lay">L</div>
+        <div>
+          <div class="plaid-name col-lay">layvi</div>
+          <div class="plaid-fonction">Accusé · se représente lui-même · présent pour l'occasion</div>
+        </div>
+      </div>
+      <div class="plaid-text">
+        <p>Je suis là. C'est déjà ça. Le procureur parle d'absence d'intention comme si c'était une circonstance aggravante. Moi je dis que l'absence d'intention <em>c'est la preuve que je suis innocent</em>. Je n'ai pas comploté. Je n'ai pas planifié. J'étais simplement ailleurs.</p><br>
+        <p>Et concernant le GIF de Shrek — <strong>Shrek est là pour tout le monde.</strong> C'est universel. C'est un message de paix. Vous n'avez peut-être pas tous la sensibilité nécessaire pour l'apprécier à sa juste valeur.</p><br>
+        <p>Quant aux 116 jours — j'avais des trucs. La vie c'est compliqué. Les 33 jours de présence en 2025 — chacun de ces jours était de qualité. La quantité c'est surfait. Je vous aimais tous les 33 jours.</p><br>
+        <p>En conclusion : je demande l'acquittement. Ou à défaut, une peine suspendue. Je dois partir à 16h de toute façon.</p>
+      </div>
+    </div>
+
+    <p class="prose">
+      La Présidente — La Chancla — prend note. Elle prend également note que l'accusé a regardé son téléphone à deux reprises pendant sa propre plaidoirie.
+    </p>
+  </div>
+
+  <div class="divider">· · ·</div>
+
+  <!-- ══ VERDICT ══ -->
+  <div class="act">
+    <div class="act-header">
+      <div class="act-number">Verdict</div>
+      <div class="act-title">Le jugement</div>
+      <div class="act-sub">LA CHANCLA STATUE</div>
+    </div>
+
+    <div class="verdict-block">
+      <div class="verdict-title">COUPABLE<br><span style="font-size:0.6em; color:var(--muted)">avec circonstances atténuantes de charme</span></div>
+      <div class="verdict-text">
+        Le Tribunal du Discordeum, après délibération, déclare layvi dit "Semoule" dit "Souhil" coupable de <strong>fugue à répétition</strong>, <strong>dodge structurel non assumé</strong>, <strong>utilisation de GIF comme seule explication valable</strong>, et <strong>bonne année de minuit après neuf mois d'absence cumulée</strong>. La défense de l'absence d'intention est rejetée — c'est précisément ce qui aggrave les faits. La Chancla est décernée.
+      </div>
+      <div class="peine">
+        <div class="peine-label">Peine prononcée</div>
+        <div class="peine-val">Kouffardor 2025 · obligation de se manifester sous 72h après tout GIF de Shrek envoyé · interdiction de dire "je suis chaud" sans y donner suite sous 6h · astreinte symbolique à domicile virtuel · lecture publique du journal de bord de baiedhiver · La Chancla est appliquée. L'audience est levée.</div>
+      </div>
+    </div>
+
+    <p class="prose" style="text-align:center; color:var(--muted); font-style:italic;">
+      L'accusé était parti avant la lecture du verdict.<br>Il avait dit qu'il reviendrait. C'était il y a 43 jours.
+    </p>
+
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-logo">Tribunal du Discordeum</div>
+  <a href="index.html" class="footer-back">← Retour aux archives</a>
+</footer>
+
+</body>
+</html>
