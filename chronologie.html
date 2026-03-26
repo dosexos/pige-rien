@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chronologie — Le Discordeum 2018–2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+  :root {
+    --bg:     #07070f;
+    --bg2:    #0c0c18;
+    --bg3:    #111120;
+    --border: #1a1a2c;
+    --text:   #b0b0cc;
+    --muted:  #424258;
+    --dim:    #1e1e30;
+    --white:  #e8e8f8;
+    --gold:   #e8c87a;
+
+    /* types d'événements */
+    --col-arrive:  #a78bfa; /* violet — arrivée membre */
+    --col-game:    #5eead4; /* teal   — gaming */
+    --col-arc:     #f87171; /* red    — arc narratif */
+    --col-vie:     #fb923c; /* orange — vie réelle */
+    --col-declin:  #60a5fa; /* blue   — déclin/absence */
+    --col-instit:  #e8c87a; /* gold   — institution */
+
+    --dos: #a78bfa;
+    --esp: #5eead4;
+    --cry: #fb923c;
+    --lay: #fbbf24;
+    --bai: #4ade80;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 100px 8vw 80px;
+    border-bottom: 1px solid var(--border);
+    position: relative; overflow: hidden;
+  }
+  .hero-bg-text {
+    position: absolute; top: 0; right: 4vw;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(120px, 22vw, 260px);
+    color: var(--white); opacity: 0.025;
+    line-height: 1; pointer-events: none; user-select: none; letter-spacing: -4px;
+  }
+  .hero-back {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 3px; color: var(--muted);
+    text-transform: uppercase; margin-bottom: 20px;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    transition: color 0.2s;
+  }
+  .hero-back:hover { color: var(--white); }
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(56px, 10vw, 120px);
+    color: var(--white); line-height: 0.9; letter-spacing: 2px;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.3s;
+  }
+  .hero h1 em { color: var(--gold); font-style: normal; }
+  .hero-sub {
+    font-size: clamp(14px, 2vw, 18px); font-style: italic;
+    color: var(--muted); margin-top: 18px; max-width: 520px;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.6s;
+  }
+  .hero-stats {
+    display: flex; gap: 36px; margin-top: 40px; flex-wrap: wrap;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.9s;
+  }
+  .hs { display: flex; flex-direction: column; gap: 2px; }
+  .hs-v { font-family: 'Bebas Neue', sans-serif; font-size: 26px; color: var(--gold); line-height: 1; }
+  .hs-l { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: 1px; }
+
+  /* ── NAV ANNÉES (sticky) ── */
+  .year-nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(7,7,15,0.96);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    height: 44px; display: flex; align-items: center;
+    padding: 0 8vw; gap: 0; overflow-x: auto;
+  }
+  .year-nav a {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px; letter-spacing: 2px; color: var(--muted);
+    text-decoration: none; padding: 0 16px; height: 44px;
+    display: flex; align-items: center; white-space: nowrap;
+    border-right: 1px solid var(--border);
+    transition: color 0.2s, background 0.2s;
+  }
+  .year-nav a:first-child { border-left: 1px solid var(--border); }
+  .year-nav a:hover { color: var(--gold); background: rgba(232,200,122,0.04); }
+  .year-nav a.active { color: var(--gold); }
+
+  /* ── LÉGENDE ── */
+  .legend {
+    display: flex; gap: 20px; flex-wrap: wrap;
+    padding: 20px 8vw; border-bottom: 1px solid var(--border);
+    background: var(--bg2);
+  }
+  .leg-item { display: flex; align-items: center; gap: 6px; }
+  .leg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .leg-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+
+  /* ── MINI GRAPHIQUE D'ACTIVITÉ ── */
+  .activity-bar {
+    padding: 16px 8vw 0;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+  }
+  .activity-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: var(--muted); letter-spacing: 2px;
+    text-transform: uppercase; margin-bottom: 8px;
+  }
+  .bar-chart {
+    display: flex; align-items: flex-end;
+    gap: 1px; height: 48px; overflow: hidden;
+  }
+  .bar-col {
+    flex: 1; min-width: 3px;
+    background: var(--dim);
+    border-radius: 1px 1px 0 0;
+    position: relative; cursor: pointer;
+    transition: background 0.15s;
+  }
+  .bar-col:hover { background: rgba(232,200,122,0.4); }
+  .bar-col.peak { background: rgba(232,200,122,0.5); }
+
+  /* ── CONTAINER TIMELINE ── */
+  .tl-container {
+    max-width: 900px; margin: 0 auto; padding: 0 8vw;
+  }
+
+  /* ── ANNÉES ── */
+  .year-section { padding-top: 56px; }
+  .year-header {
+    display: flex; align-items: center; gap: 20px;
+    margin-bottom: 40px; position: relative;
+  }
+  .year-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(64px, 12vw, 100px);
+    color: var(--white); line-height: 1; letter-spacing: 2px;
+    opacity: 0.12; flex-shrink: 0;
+  }
+  .year-summary {
+    flex: 1;
+  }
+  .year-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(16px, 2.5vw, 22px);
+    color: var(--white); letter-spacing: 1px; margin-bottom: 4px;
+  }
+  .year-desc {
+    font-size: 13px; color: var(--muted); font-style: italic; line-height: 1.5;
+  }
+  .year-msgs {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--muted);
+    display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0;
+  }
+  .year-msgs .n { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--dim); line-height: 1; }
+
+  /* ── TIMELINE VERTICALE ── */
+  .timeline {
+    position: relative; padding-left: 36px; margin-bottom: 24px;
+  }
+  .timeline::before {
+    content: ''; position: absolute;
+    left: 7px; top: 0; bottom: 0;
+    width: 1px; background: var(--border);
+  }
+
+  /* ── EVENTS ── */
+  .event {
+    position: relative; margin-bottom: 20px;
+    opacity: 0; animation: fadeIn 0.4s ease forwards;
+  }
+  .event::before {
+    content: ''; position: absolute;
+    left: -31px; top: 8px;
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--ec, var(--muted));
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 0 1px var(--ec, var(--muted));
+    z-index: 1;
+  }
+  .event.big::before {
+    width: 13px; height: 13px;
+    left: -33px; top: 6px;
+    box-shadow: 0 0 8px var(--ec, var(--muted));
+  }
+
+  .event-inner {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-left: 2px solid var(--ec, var(--muted));
+    border-radius: 0 3px 3px 0;
+    padding: 12px 16px;
+    transition: background 0.15s;
+  }
+  .event-inner:hover { background: var(--bg3); }
+
+  .event-header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; flex-wrap: wrap; }
+  .event-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: var(--ec, var(--muted));
+    letter-spacing: 2px; text-transform: uppercase; flex-shrink: 0;
+  }
+  .event-type {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: var(--muted);
+    letter-spacing: 1px; text-transform: uppercase; flex-shrink: 0;
+  }
+  .event-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(15px, 2.2vw, 19px);
+    color: var(--white); letter-spacing: 0.5px; line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  .event-desc { font-size: 13px; color: var(--text); line-height: 1.65; }
+  .event-desc strong { color: var(--white); }
+  .event-desc em { color: var(--ec, var(--gold)); font-style: italic; }
+  .event-quote {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px; color: #8080a0; font-style: italic;
+    margin-top: 8px; padding: 6px 10px;
+    background: var(--bg3); border-left: 2px solid var(--border);
+    line-height: 1.5;
+  }
+  .event-quote .qmeta { font-size: 9px; color: var(--muted); margin-top: 3px; font-style: normal; }
+
+  /* membres pills */
+  .member-tags { display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap; }
+  .mtag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; padding: 2px 7px; border-radius: 20px;
+    border: 1px solid; opacity: 0.8;
+  }
+
+  /* ── SÉPARATEUR ENTRE ANNÉES ── */
+  .year-sep {
+    height: 1px; background: var(--border);
+    margin: 48px 0;
+  }
+
+  /* ── FIN DE CANAL ── */
+  .fin-canal {
+    text-align: center; padding: 48px 0 80px;
+    border-top: 1px solid var(--border);
+    margin-top: 48px;
+  }
+  .fin-canal .fin-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 4px; color: var(--muted);
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+  .fin-canal .fin-msg {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(16px, 3vw, 24px);
+    color: var(--muted); letter-spacing: 1px;
+  }
+  .fin-canal .fin-quote {
+    font-style: italic; color: var(--muted); font-size: 14px; margin-top: 16px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 40px 8vw;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: var(--dim); letter-spacing: 2px; }
+  .footer-back { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; text-decoration: none; transition: color 0.2s; }
+  .footer-back:hover { color: var(--white); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; transform: translateX(-4px); } to { opacity: 1; transform: translateX(0); } }
+
+  /* Délais d'animation par ordre */
+  .event:nth-child(1) { animation-delay: 0.05s; }
+  .event:nth-child(2) { animation-delay: 0.10s; }
+  .event:nth-child(3) { animation-delay: 0.15s; }
+  .event:nth-child(4) { animation-delay: 0.20s; }
+  .event:nth-child(5) { animation-delay: 0.25s; }
+  .event:nth-child(6) { animation-delay: 0.30s; }
+  .event:nth-child(7) { animation-delay: 0.35s; }
+  .event:nth-child(8) { animation-delay: 0.40s; }
+
+  @media (max-width: 600px) {
+    .tl-container { padding: 0 20px; }
+    .hero { padding: 70px 20px 56px; }
+    .legend { padding: 16px 20px; }
+    .activity-bar { padding: 14px 20px 0; }
+    .year-nav { padding: 0 20px; }
+    footer { padding: 36px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg-text">2018<br>2026</div>
+  <a href="index.html" class="hero-back">← Retour aux archives</a>
+  <h1>Chrono<br>logie <em>2018–2026</em></h1>
+  <p class="hero-sub">L'histoire du Discordeum vue d'en haut. Arrivées, arcs, jeux, absences, institutions. En ordre.</p>
+  <div class="hero-stats">
+    <div class="hs"><div class="hs-v">52 752</div><div class="hs-l">messages</div></div>
+    <div class="hs"><div class="hs-v">7 ans</div><div class="hs-l">d'archive</div></div>
+    <div class="hs"><div class="hs-v">5</div><div class="hs-l">membres</div></div>
+    <div class="hs"><div class="hs-v">14 jeux</div><div class="hs-l">testés ensemble</div></div>
+  </div>
+</div>
+
+<!-- NAV ANNÉES -->
+<nav class="year-nav">
+  <a href="#y2018">2018</a>
+  <a href="#y2019">2019</a>
+  <a href="#y2020">2020</a>
+  <a href="#y2021">2021</a>
+  <a href="#y2022">2022</a>
+  <a href="#y2023">2023</a>
+  <a href="#y2024">2024</a>
+  <a href="#y2025">2025</a>
+  <a href="#y2026">2026</a>
+</nav>
+
+<!-- LÉGENDE -->
+<div class="legend">
+  <div class="leg-item"><div class="leg-dot" style="background:var(--col-arrive)"></div><div class="leg-label">Arrivée membre</div></div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--col-game)"></div><div class="leg-label">Gaming</div></div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--col-arc)"></div><div class="leg-label">Arc narratif</div></div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--col-vie)"></div><div class="leg-label">Vie réelle</div></div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--col-declin)"></div><div class="leg-label">Absence / déclin</div></div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--col-instit)"></div><div class="leg-label">Institution</div></div>
+</div>
+
+<!-- GRAPHIQUE D'ACTIVITÉ -->
+<div class="activity-bar">
+  <div class="activity-label">Activité mensuelle · messages par mois · 2018–2026</div>
+  <div class="bar-chart" id="barChart"></div>
+  <div style="height:16px"></div>
+</div>
+
+<div class="tl-container">
+
+  <!-- ══ 2018 ══ -->
+  <div class="year-section" id="y2018">
+    <div class="year-header">
+      <div class="year-number">2018</div>
+      <div class="year-summary">
+        <div class="year-title">La création</div>
+        <div class="year-desc">Un canal vide. Deux membres. 47 messages en décembre.</div>
+      </div>
+      <div class="year-msgs"><div class="n">47</div><div>messages</div></div>
+    </div>
+    <div class="timeline">
+
+      <div class="event big" style="--ec: var(--col-arrive)">
+        <div class="event-inner">
+          <div class="event-header">
+            <div class="event-date">14 DÉC 2018</div>
+            <div class="event-type">Fondation</div>
+          </div>
+          <div class="event-title">Création du Discordeum</div>
+          <div class="event-desc">Le canal est créé. Layvi arrive en premier, suivi quelques heures plus tard d'espy. Les deux premiers messages posent le ton pour les sept années à venir.</div>
+          <div class="event-quote">
+            "Oh je suis où ?"
+            <div class="qmeta">layvi · premier message · 14 déc 2018, 12:03</div>
+          </div>
+          <div class="event-quote">
+            "Non, c'est encore un LIVE ACTION de mort ?"
+            <div class="qmeta">espy · deuxième message · 14 déc 2018</div>
+          </div>
+          <div class="member-tags">
+            <span class="mtag" style="color:var(--lay); border-color:var(--lay)">layvi</span>
+            <span class="mtag" style="color:var(--esp); border-color:var(--esp)">espy</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="year-sep"></div>
+
+  <!-- ══ 2019 ══ -->
+  <div class="year-section" id="y2019">
+    <div class="year-header">
+      <div class="year-number">2019</div>
+      <div class="year-summary">
+        <div class="year-title">La grande année</div>
+        <div class="year-desc">Arrivée des membres fondateurs. Pic historique de juin. FFXIV, LoL, Terraria.</div>
+      </div>
+      <div class="year-msgs"><div class="n">7 218</div><div>messages</div></div>
+    </div>
+    <div class="timeline">
+
+      <div class="event big" style="--ec: var(--col-arrive)">
+        <div class="event-inner">
+          <div class="event-header">
+            <div class="event-date">30 MARS 2019</div>
+            <div class="event-type">Arrivée membre</div>
+          </div>
+          <div class="event-title">Cryoslinger rejoint le canal</div>
+          <div class="event-desc">Premier message : <strong>"w8"</strong>. Puis 49 jours d'absence. Sa seule vraie disparition longue — un incident de jeunesse qu'il ne reproduira jamais.</div>
+          <div class="event-quote">
+            "w8"
+            <div class="qmeta">cryoslinger · premier message · 30 mars 2019</div>
+          </div>
+          <div class="member-tags">
+            <span class="mtag" style="color:var(--cry); border-color:var(--cry)">cryoslinger</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="event" style="--ec: var(--col-declin)">
+        <div class="event-inner">
+          <div class="event-header">
+            <div class="event-date">30 MARS — 18 MAI 2019</div>
+            <div class="event-type">Absence</div>
+          </div>
+          <div class="event-title">Cryo disparaît 49 jours après son premier message</div>
+          <div class="event-desc">Record personnel de cryo, jamais battu. Il revient avec un lien 9gag, sans préambule. Ça ne se reproduira plus.</div>
+        </div>
+      </div>
+
+      <div class="event big" style="--ec: var(--col-arrive)">
+        <div class="event-inner">
+          <div class="event-header">
+            <div class="event-date">3 JUIN 2019</div>
+            <div class="event-type">Arrivée membre</div>
+          </div>
+          <div class="event-title">Dosinge rejoint le canal</div>
+          <div class="event-desc">Quatrième et dernier membre fondateur à arriver. Premier message : <em>"Ah ouaaaaai stylaaaayy"</em>. Le groupe est complet — cinq membres sur cinq présents d'ici 2021.</div>
+          <div class="event-quote">
+            "Ah ouaaaaai stylaaaayy"
+            <div class="qmeta">dosinge · premier message · 3 juin 2019</div>
+          </div>
+          <div class="member-tags">
+            <span class="mtag" style="color:var(--dos); border-color:var(--dos)">dosinge</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="event big" style="--ec: var(--col-game)">
+        <div class="event-inner">
+          <div class="event-header">
+            <div class="event-date">JUIN 2019</div>
+            <div class="event-type">Gaming · Pic d'activité</div>
+          </div>
+          <div class="event-title">FFXIV Shadowbringers — record historique de juin</div>
+          <div class="event-desc">Sortie de l'extension Shadowbringers de Final Fantasy XIV. Le canal explose : <strong>2 482 messages en juin 2019</strong>, record mensuel pendant un an. La journée du 28 juin reste le record absolu de toute l'histoire du Discordeum avec <strong>333 messages en une journée</strong>.</div>
+          <div class="event-quote">
+            "FFXIV et le RSA"
+            <div class="qmeta">espy · juin 2019 · résumé de la situation en quatre mots</div>
+          </div>
+          <div class="member-tags">
+            <span class="mtag" style="color:var(--esp); border-color:var(--esp)">espy</span>
+            <span class="mtag" style="color:var(--dos); border-color:var(--dos)">dosinge</span>
+            <span class="mtag" style="color:var(--lay); border-color:var(--lay)">layvi</span>
+            <span class="mtag" style="color:var(--cry); border-color:var(--cry)">cryo</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="event" style="--ec: var(--col-instit)">
+        <div class="event-inner">
+          <div class="event-header">
+            <div class="event-date">12 JUIL 2019</div>
+            <div class="event-type">Lexique</div>
+          </div>
+          <div class="event-title">Naissance du "chromosome"</div>
+          <div class="event-desc">Cryoslinger invente l'expression dans un contexte d'insulte légère. Dosinge l'adopte immédiatement. Le mot sera utilisé <strong>457 fois</strong> sur sept ans, devenant l'émote signature de dosinge et un marqueur culturel du groupe.</div>
+          <div class="event-quote">
+            "comme ton troisième chromosome 21 btw"
+            <div class="qmeta">cryoslinger · 12 juillet 2019 · premier usage documenté</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="event" style="--ec: var(--col-vie)">
+        <div class="event-inner">
+          <div class="event-header">
+            <div class="event-date">SEPT 2019</div>
+            <div class="event-type">Vie réelle</div>
+          </div>
+          <div class="event-title">Kimyaku identifiée</div>
+          <div class="event-desc">Première apparition documentée de Kimberley — future femme de cryo — dans les conversations du groupe. Le running gag "juste la femme de cryo" naîtra bien plus tard, mais la présence est déjà là.</div>
+          <div class="member-tags">
+            <span class="mtag" style="color:var(--cry); border-color:var(--cry)">cryoslinger</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="year-sep"></div>
+
+  <!-- ══ 2020 ══ -->
+  <div class="year-section" id="y2020">
+    <div class="year-header">
+      <div class="year-number">2020</div>
+      <div class="year-summary">
+        <div class="year-title">L'année de tous les arcs</div>
+        <div class="year-desc">Confinement, pishot, mariage, covid. 18 863 messages. L'âge d'or.</div>
+      </div>
+      <div class="year-msgs"><div class="n">18 863</div><div>messages</div></div>
+    </div>
+    <div class="timeline">
+
+      <div class="event big" style="--ec: var(--col-arc)">
+        <div class="event-inner">
+          <div class="event-header">
+            <div class="event-date">20 MARS 2020 · 13:23</div>
+            <div class="event-type">Événement mondial · Confinement</div>
+          </div>
+          <div class="event-title">Confinement — "CONFINÉS ! RASSEMBLEMENT !"</div>
+          <div class="event-desc">Le premier confinement français. Cryo lance le rassemblement officiel. Le groupe, déjà habitué à exister en ligne, devient encore plus dense. Les mois suivants seront les plus actifs de l'histoire du canal.</div>
+          <div class="event-quote">
+            "CONFINÉS ! RASSEMBLEMENT !"
+            <div class="qmeta">cryoslinger · 20 mars 2020, 13:23 · premier message du confinement</div>
+          </div>
+          <div class="member-tags">
+            <span class="mtag" style="color:var(--cry); border-color:var(--cry)">cryo</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="event" style="--ec: var(--col-arc)">
+        <div class="event-inner">
+          <div class="event-header">
+            <div class="event-date">AVRIL 2020</div>
+            <div class="event-type">Arc narratif</div>
+          </div>
+          <div class="event-title">Début de l'arc pishot</div>
+          <div class="event-desc">Layvi joue pour la structure esport pishot. Dosinge est recruté comme analyste/coach par Dadai, co-fondatrice corporate. Le début d'un arc de cinq mois autour de la bureaucratie, des pavés ignorés et de la démission collective.</div>
+          <div class="member-tags">
+            <span class="mtag" style="color:var(--lay); border-color:var(--lay)">layvi</span>
+            <span class="mtag" style="color:var(--dos); border-color:var(--dos)">dosinge</span>
+            <span class="mtag" style="color:var(--esp); border-color:var(--esp)">espy</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="event big" style="--ec: var(--col-game)">
+        <div class="event-inner">
+          <div class="event-header">
+            <div class="event-date">MAI 2020</div>
+            <div class="event-type">Gaming · Record absolu</div>
+          </div>
+          <div class="event-title">Pic historique — 2 932 messages en mai</div>
+          <div class="event-desc">Le mois le plus actif de l'histoire du Discordeum. Confinement toujours en cours, pishot en plein développement, LoL et TFT en session quasi-quotidienne. Ce record n'a jamais été battu.</div>
+        </div>
+      </div>
+
+      <div class="event big" style="--ec: var(--col-vie)">
+        <div class="event-inner">
+          <div class="event-header">
+            <div class="event-date">13 AOÛT 2020</div>
+            <div class="event-type">Vie réelle</div>
+          </div>
+          <div class="event-title">Mariage de cryoslinger — lune de miel sur Discord</div>
+          <div class="event-desc">Cryo se marie avec Kimberley. La lune de miel commence le 13 août. Cryo y passe une partie du temps connecté au Discordeum. Layvi résume : <em>"Best lune de miel ever."</em></div>
+          <div class="event-quote">
+            "Best lune de miel ever"
+            <div class="qmeta">layvi · 13 août 2020 · commentaire depuis le canapé</div>
+          </div>
+          <div class="member-tags">
+            <span class="mtag" style="color:var(--cry); border-color:var(--cry)">cryoslinger</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="event big" style="--ec: var(--col-arc)">
+        <div class="event-inner">
+          <div class="event-header">
+            <div class="event-date">2 SEPT 2020 · NUIT</div>
+            <div class="event-type">Arc narratif · Climax</div>
+          </div>
+          <div class="event-title">Démissions pishot — trois PDF simultanés</div>
+          <div class="event-desc">Cinq mois après le début de l'arc, layvi, dosinge et espy envoient chacun une lettre de démission formelle en PDF à la structure pishot. Dosinge signe "Dorian Issou" depuis "10 rue du pipotronic". Espy signe "Pantoufle" depuis "41 allée du sabotage". Cryo découvre les lettres à 22h10.</div>
+          <div class="event-quote">
+            "Bordel ces lettres de démission. God tier."
+            <div class="qmeta">cryoslinger · 2 septembre 2020, 22:10 · première réaction</div>
+          </div>
+          <div class="member-tags">
+            <span class="mtag" style="color:var(--lay); border-color:var(--lay)">layvi</span>
+            <span class="mtag" style="color:var(--dos); border-color:var(--dos)">dosinge</span>
+            <span class="mtag" style="color:var(--esp); border-color:var(--esp)">espy</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="event" style="--ec: var(--col-vie)">
+        <div class="event-inner">
+          <div class="event-header">
+            <div class="event-date">7 SEPT 2020 · 03:07</div>
+            <div class="event-type">Vie réelle</div>
+          </div>
+          <div class="event-title">Covid de dosinge — 38°c à 3h du matin</div>
+          <div class="event-desc">Dosinge se réveille avec 38°c, courbatures et maux de tête. Il le poste à 3h07 du matin. Cryo commence immédiatement à compter les délais d'incubation. Espy propose le coton tige. Le test reviendra négatif.</div>
+          <div class="event-quote">
+            "38°c courbatures maux de tête arrive pas a dormir, du coup j'ai surement le covid de mon père"
+            <div class="qmeta">dosinge · 7 septembre 2020, 03:07 · insomnie diagnostique</div>
+          </div>
+          <div class="member-tags">
+            <span class="mtag" style="color:var(--dos); border-color:var(--dos)">dosinge</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="year-sep"></div>
+
+  <!-- ══ 2021 ══ -->
+  <div class="year-section" id="y2021">
+    <div class="year-header">
+      <div class="year-number">2021</div>
+      <div class="year-summary">
+        <div class="year-title">Le dernier souffle</div>
+        <div class="year-desc">Baiedhiver arrive. Valheim. Naissance de Thélio probable. 5 760 messages.</div>
+      </div>
+      <div class="year-msgs"><div class="n">5 760</div><div>messages</div></div>
+    </div>
+    <div class="timeline">
+
+      <div class="event big" style="--ec: var(--col-arrive)">
+        <div class="event-inner">
+          <div class="event-header">
+            <div class="event-date">6 MARS 2021</div>
+            <div class="event-type">Arrivée membre</div>
+          </div>
+          <div class="event-title">Baiedhiver arrive — "j'suis up perso"</div>
+          <div class="event-desc">Frère de cryoslinger. Cinq membres sur cinq désormais présents. Son premier message est sobre : <strong>"j'suis up perso"</strong>. Son impact immédiat contribue au pic de mars 2021 (1 017 messages), troisième mois le plus actif de l'histoire.</div>
+          <div class="event-quote">
+            "j'suis up perso"
+            <div class="qmeta">baiedhiver · premier message · 6 mars 2021</div>
+          </div>
+          <div class="member-tags">
+            <span class="mtag" style="color:var(--bai); border-color:var(--bai)">baiedhiver</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="event" style="--ec: var(--col-game)">
+        <div class="event-inner">
+          <div class="event-header">
+            <div class="event-date">MARS 2021</div>
+            <div class="event-type">Gaming</div>
+          </div>
+          <div class="event-title">Valheim — les vikings arrivent</div>
+          <div class="event-desc">Valheim sort en early access et mobilise tout le groupe. C'est l'un des derniers jeux à fédérer l'ensemble des membres simultanément. Layvi poste le mdp de la partie dans le canal général.</div>
+          <div class="event-quote">
+            "new mdp valheim : 12365p @here"
+            <div class="qmeta">layvi · mars 2021 · convocation officielle</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="event" style="--ec: var(--col-vie)">
+        <div class="event-inner">
+          <div class="event-header">
+            <div class="event-date">FIN 2021</div>
+            <div class="event-type">Vie réelle</div>
+          </div>
+          <div class="event-title">Naissance probable de Thélio</div>
+          <div class="event-desc">Fils de cryoslinger. La première mention explicite de "Thélio" par son prénom date de décembre 2022. En novembre 2021, cryo mentionne une éventuelle naissance dans la nuit. Le "gomin" — surnom affectueux de cryo pour son fils — apparaît dans les conversations à partir de 2024.</div>
+          <div class="member-tags">
+            <span class="mtag" style="color:var(--cry); border-color:var(--cry)">cryoslinger</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="year-sep"></div>
+
+  <!-- ══ 2022 ══ -->
+  <div class="year-section" id="y2022">
+    <div class="year-header">
+      <div class="year-number">2022</div>
+      <div class="year-summary">
+        <div class="year-title">Le retour et la descente</div>
+        <div class="year-desc">Baiedhiver revient après 318 jours. La malveillance s'institutionnalise. 3 929 messages.</div>
+      </div>
+      <div class="year-msgs"><div class="n">3 929</div><div>messages</div></div>
+    </div>
+    <div class="timeline">
+
+      <div class="event big" style="--ec: var(--col-declin)">
+        <div class="event-inner">
+          <div class="event-header">
+            <div class="event-date">20 JANV 2022</div>
+            <div class="event-type">Absence record</div>
+          </div>
+          <div class="event-title">Baiedhiver revient après 318 jours</div>
+          <div class="event-desc">Il avait disparu le 7 mars 2021 avec <em>"hihihihi"</em>. Il revient dix mois et demi plus tard avec une réflexion sur son âme et la matière première. <strong>318 jours</strong> — record absolu du Discordeum, jamais battu.</div>
+          <div class="event-quote">
+            "Je crois avoir beaucoup changé, depuis que je considère mon âme comme la forme de la matière première, évidemment aussi..."
+            <div class="qmeta">baiedhiver · 20 janvier 2022 · message de retour après 318 jours</div>
+          </div>
+          <div class="member-tags">
+            <span class="mtag" style="color:var(--bai); border-color:var(--bai)">baiedhiver</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="event" style="--ec: var(--col-instit)">
+        <div class="event-inner">
+          <div class="event-header">
+            <div class="event-date">JUIN 2022</div>
+            <div class="event-type">Institution · Lexique</div>
+          </div>
+          <div class="event-title">La malveillance entre dans le lexique</div>
+          <div class="event-desc">Juin 2022 est le premier mois où le mot "malveillance" est utilisé de façon récurrente comme concept — pas comme insulte mais comme <strong>catégorie d'analyse</strong> des comportements du groupe. C'est le terreau du futur Kouffardor.</div>
+          <div class="event-quote">
+            "Il a mis de la ponctuation, c'est dire à quel point t'es malveillant dodent"
+            <div class="qmeta">layvi à dosinge · juin 2022</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="year-sep"></div>
+
+  <!-- ══ 2023 ══ -->
+  <div class="year-section" id="y2023">
+    <div class="year-header">
+      <div class="year-number">2023</div>
+      <div class="year-summary">
+        <div class="year-title">La stabilisation basse</div>
+        <div class="year-desc">Activité divisée par dix vs 2020. Les absences s'installent. 2 113 messages.</div>
+      </div>
+      <div class="year-msgs"><div class="n">2 113</div><div>messages</div></div>
+    </div>
+    <div class="timeline">
+
+      <div class="event" style="--ec: var(--col-game)">
+        <div class="event-inner">
+          <div class="event-header">
+            <div class="event-date">JUIL 2023</div>
+            <div class="event-type">Gaming · Résurgence</div>
+          </div>
+          <div class="event-title">Dernier pic notable — 407 messages en juillet</div>
+          <div class="event-desc">Juillet 2023 est le dernier mois à dépasser 400 messages. ZZN (7 Days to Die) réunit brièvement le groupe. Dosinge redécouvre ce même mois qu'il ne connaît plus le vrai nom du jeu — il faudra que cryo le lui rappelle.</div>
+        </div>
+      </div>
+
+      <div class="event" style="--ec: var(--col-declin)">
+        <div class="event-inner">
+          <div class="event-header">
+            <div class="event-date">NOV 2023 — DÉC 2023</div>
+            <div class="event-type">Absence</div>
+          </div>
+          <div class="event-title">Layvi disparaît 33 jours</div>
+          <div class="event-desc">Une des premières grandes absences de layvi sur cette période. Il revient avec une référence à Doctor Strange et 14 millions de timelines sondées — aucune où il donne des cacahuètes.</div>
+          <div class="event-quote">
+            "J'ai sondé 14,000,605 timelines il n'y en a aucune où je donne des cacahuetes malheureusement"
+            <div class="qmeta">layvi · 5 septembre 2023 · message de retour après 31 jours</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="year-sep"></div>
+
+  <!-- ══ 2024 ══ -->
+  <div class="year-section" id="y2024">
+    <div class="year-header">
+      <div class="year-number">2024</div>
+      <div class="year-summary">
+        <div class="year-title">Le décrochage</div>
+        <div class="year-desc">Octobre atteint un creux historique de 10 messages. Premier Kouffardor officiel. 1 473 messages.</div>
+      </div>
+      <div class="year-msgs"><div class="n">1 473</div><div>messages</div></div>
+    </div>
+    <div class="timeline">
+
+      <div class="event big" style="--ec: var(--col-instit)">
+        <div class="event-inner">
+          <div class="event-header">
+            <div class="event-date">1er JANV 2024</div>
+            <div class="event-type">Institution</div>
+          </div>
+          <div class="event-title">Premier Kouffardor officiel — cérémonie 2023</div>
+          <div class="event-desc">Baiedhiver convoque le groupe à 14h15 pour la première cérémonie des Kouffardor. Organisée avec Enzolin — une cérémonie "à l'esthétique travaillée" selon cryo deux ans plus tard. Résultat non documenté — les votes étaient par MP.</div>
+          <div class="event-quote">
+            "cérémonie des kouffardor 2023 aujourd'hui à 14h15 hophophop"
+            <div class="qmeta">baiedhiver · 1er janvier 2024, 12:35</div>
+          </div>
+          <div class="member-tags">
+            <span class="mtag" style="color:var(--bai); border-color:var(--bai)">baiedhiver</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="event" style="--ec: var(--col-declin)">
+        <div class="event-inner">
+          <div class="event-header">
+            <div class="event-date">OCTOBRE 2024</div>
+            <div class="event-type">Déclin · Creux historique</div>
+          </div>
+          <div class="event-title">Octobre 2024 — 10 messages</div>
+          <div class="event-desc">Le mois le plus silencieux de l'histoire du canal. <strong>10 messages en 31 jours</strong>. Le groupe existe encore — il est juste en pause prolongée. Ce n'est pas la fin, mais ça y ressemble.</div>
+        </div>
+      </div>
+
+      <div class="event big" style="--ec: var(--col-declin)">
+        <div class="event-inner">
+          <div class="event-header">
+            <div class="event-date">21 DÉC 2024</div>
+            <div class="event-type">Absence · Précipice</div>
+          </div>
+          <div class="event-title">Layvi dit "Je suis d'accord" — puis disparaît 116 jours</div>
+          <div class="event-desc">Dernier message de layvi avant la plus longue absence de sa vie hors de celle de baiedhiver en 2021. <strong>"Je suis d'accord"</strong> — d'accord avec quoi ? Peu importe. Il ne reviendra que le 17 avril 2025.</div>
+          <div class="event-quote">
+            "Je suis d'accord"
+            <div class="qmeta">layvi · 21 décembre 2024 · dernier message avant 116 jours</div>
+          </div>
+          <div class="member-tags">
+            <span class="mtag" style="color:var(--lay); border-color:var(--lay)">layvi</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="year-sep"></div>
+
+  <!-- ══ 2025 ══ -->
+  <div class="year-section" id="y2025">
+    <div class="year-header">
+      <div class="year-number">2025</div>
+      <div class="year-summary">
+        <div class="year-title">Le GIF de Shrek et les cendres</div>
+        <div class="year-desc">Layvi revient avec un GIF de Shrek. Cryo organise le Kouffardor depuis l'hôpital. 1 037 messages.</div>
+      </div>
+      <div class="year-msgs"><div class="n">1 037</div><div>messages</div></div>
+    </div>
+    <div class="timeline">
+
+      <div class="event big" style="--ec: var(--col-declin)">
+        <div class="event-inner">
+          <div class="event-header">
+            <div class="event-date">17 AVRIL 2025</div>
+            <div class="event-type">Retour · Absence record</div>
+          </div>
+          <div class="event-title">Layvi revient — [GIF Shrek]</div>
+          <div class="event-desc">116 jours après son dernier message. Pas un mot d'explication. Premier message de l'année 2025 : un GIF de Shrek. Le groupe reprend la conversation dans la minute, comme si de rien n'était. C'est exactement ça qui est dévastateur.</div>
+          <div class="member-tags">
+            <span class="mtag" style="color:var(--lay); border-color:var(--lay)">layvi</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="event" style="--ec: var(--col-game)">
+        <div class="event-inner">
+          <div class="event-header">
+            <div class="event-date">JUIL — DÉCO 2025</div>
+            <div class="event-type">Gaming · Derniers feux</div>
+          </div>
+          <div class="event-title">Résurgence de décembre — 204 messages</div>
+          <div class="event-desc">Décembre 2025 est le meilleur mois de l'année avec 204 messages — porté notamment par cryo qui organise une sortie concert. Dosinge et cryo sont les plus actifs de l'année, espy tient la barre.</div>
+        </div>
+      </div>
+
+      <div class="event" style="--ec: var(--col-declin)">
+        <div class="event-inner">
+          <div class="event-header">
+            <div class="event-date">31 DÉC 2025</div>
+            <div class="event-type">Clôture d'année</div>
+          </div>
+          <div class="event-title">Layvi dit "bonne année le discordeum"</div>
+          <div class="event-desc">Dernier message de layvi pour l'année 2025. 33 jours actifs sur 365. Il a été là 9% de l'année. Il dit bonne année à minuit. C'est suffisant pour lui. C'est son Kouffardor 2025.</div>
+          <div class="event-quote">
+            "bonne année le discordeum"
+            <div class="qmeta">layvi · 31 décembre 2025 · après 9 mois d'absence cumulée sur l'année</div>
+          </div>
+          <div class="member-tags">
+            <span class="mtag" style="color:var(--lay); border-color:var(--lay)">layvi</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="year-sep"></div>
+
+  <!-- ══ 2026 ══ -->
+  <div class="year-section" id="y2026">
+    <div class="year-header">
+      <div class="year-number">2026</div>
+      <div class="year-summary">
+        <div class="year-title">L'archive ouverte</div>
+        <div class="year-desc">Kouffardor depuis l'hôpital. Les archives s'arrêtent en mars. 229 messages.</div>
+      </div>
+      <div class="year-msgs"><div class="n">229</div><div>messages · jusqu'au 21 mars</div></div>
+    </div>
+    <div class="timeline">
+
+      <div class="event big" style="--ec: var(--col-instit)">
+        <div class="event-inner">
+          <div class="event-header">
+            <div class="event-date">5 JANV 2026</div>
+            <div class="event-type">Institution</div>
+          </div>
+          <div class="event-title">Kouffardor 2025 — cryo organise depuis l'hôpital</div>
+          <div class="event-desc">Cryo poste le message officiel depuis un lit d'hôpital. <em>"Loin de la cérémonie à l'esthétique travaillé que nous avait proposée Enzolin, je vous propose cette année un sobre vote."</em> Résultat calculé par analyse objective des données : <strong>layvi remporte le Kouffardor 2025 avec 22/30</strong>.</div>
+          <div class="event-quote">
+            "Même dans son cauchemar glaireux il y a pensé"
+            <div class="qmeta">espy · 5 janvier 2026 · en apprenant que cryo organisait depuis l'hôpital</div>
+          </div>
+          <div class="member-tags">
+            <span class="mtag" style="color:var(--cry); border-color:var(--cry)">cryoslinger</span>
+            <span class="mtag" style="color:var(--lay); border-color:var(--lay)">layvi 🏆</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="event big" style="--ec: var(--col-arc)">
+        <div class="event-inner">
+          <div class="event-header">
+            <div class="event-date">21 MARS 2026</div>
+            <div class="event-type">Fin d'archive</div>
+          </div>
+          <div class="event-title">Dernier message archivé</div>
+          <div class="event-desc">Dosinge clôt les archives avec une opinion ferme et non sollicitée. Le groupe continue — mais au-delà de cette date, les données s'arrêtent.</div>
+          <div class="event-quote">
+            "J'ai une préférence pour les GROS GLANDS perso"
+            <div class="qmeta">dosinge · 21 mars 2026, 22:35 · dernier message archivé</div>
+          </div>
+          <div class="member-tags">
+            <span class="mtag" style="color:var(--dos); border-color:var(--dos)">dosinge</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FIN -->
+  <div class="fin-canal">
+    <div class="fin-label">Fin des archives · 21 mars 2026</div>
+    <div class="fin-msg">52 752 messages · 7 ans · 5 membres · Le groupe continue.</div>
+    <div class="fin-quote">"Oh je suis où ?" — layvi, 14 décembre 2018</div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-logo">Le Discordeum</div>
+  <a href="index.html" class="footer-back">← Retour aux archives</a>
+</footer>
+
+<script>
+// Données d'activité mensuelle
+const data = [
+  {m:'2018-12',n:47},{m:'2019-01',n:130},{m:'2019-02',n:4},{m:'2019-03',n:76},
+  {m:'2019-04',n:2},{m:'2019-05',n:32},{m:'2019-06',n:2482},{m:'2019-07',n:703},
+  {m:'2019-08',n:584},{m:'2019-09',n:1226},{m:'2019-10',n:564},{m:'2019-11',n:395},
+  {m:'2019-12',n:342},{m:'2020-01',n:439},{m:'2020-02',n:400},{m:'2020-03',n:1269},
+  {m:'2020-04',n:871},{m:'2020-05',n:2932},{m:'2020-06',n:1406},{m:'2020-07',n:1735},
+  {m:'2020-08',n:1257},{m:'2020-09',n:1418},{m:'2020-10',n:922},{m:'2020-11',n:1047},
+  {m:'2020-12',n:863},{m:'2021-01',n:439},{m:'2021-02',n:566},{m:'2021-03',n:1017},
+  {m:'2021-04',n:547},{m:'2021-05',n:261},{m:'2021-06',n:490},{m:'2021-07',n:276},
+  {m:'2021-08',n:264},{m:'2021-09',n:393},{m:'2021-10',n:456},{m:'2021-11',n:472},
+  {m:'2021-12',n:587},{m:'2022-01',n:596},{m:'2022-02',n:362},{m:'2022-03',n:267},
+  {m:'2022-04',n:176},{m:'2022-05',n:169},{m:'2022-06',n:921},{m:'2022-07',n:278},
+  {m:'2022-08',n:138},{m:'2022-09',n:127},{m:'2022-10',n:184},{m:'2022-11',n:278},
+  {m:'2022-12',n:398},{m:'2023-01',n:153},{m:'2023-02',n:159},{m:'2023-03',n:150},
+  {m:'2023-04',n:172},{m:'2023-05',n:143},{m:'2023-06',n:157},{m:'2023-07',n:407},
+  {m:'2023-08',n:97},{m:'2023-09',n:324},{m:'2023-10',n:287},{m:'2023-11',n:168},
+  {m:'2023-12',n:95},{m:'2024-01',n:195},{m:'2024-02',n:142},{m:'2024-03',n:163},
+  {m:'2024-04',n:112},{m:'2024-05',n:196},{m:'2024-06',n:192},{m:'2024-07',n:174},
+  {m:'2024-08',n:54},{m:'2024-09',n:153},{m:'2024-10',n:10},{m:'2024-11',n:92},
+  {m:'2024-12',n:36},{m:'2025-01',n:61},{m:'2025-02',n:54},{m:'2025-03',n:58},
+  {m:'2025-04',n:129},{m:'2025-05',n:68},{m:'2025-06',n:51},{m:'2025-07',n:130},
+  {m:'2025-08',n:47},{m:'2025-09',n:88},{m:'2025-10',n:99},{m:'2025-11',n:48},
+  {m:'2025-12',n:204},{m:'2026-01',n:51},{m:'2026-02',n:136},{m:'2026-03',n:42}
+];
+
+const peaks = ['2019-06','2020-05','2020-07','2020-09'];
+const maxVal = Math.max(...data.map(d => d.n));
+const chart = document.getElementById('barChart');
+
+data.forEach(d => {
+  const col = document.createElement('div');
+  col.className = 'bar-col' + (peaks.includes(d.m) ? ' peak' : '');
+  const h = Math.max(2, Math.round((d.n / maxVal) * 48));
+  col.style.height = h + 'px';
+  col.title = d.m + ' · ' + d.n + ' msgs';
+  chart.appendChild(col);
+});
+
+// Highlight année active dans la nav
+const yearSections = document.querySelectorAll('.year-section');
+const navLinks = document.querySelectorAll('.year-nav a');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const id = e.target.id;
+      navLinks.forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { rootMargin: '-40% 0px -55% 0px' });
+
+yearSections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
