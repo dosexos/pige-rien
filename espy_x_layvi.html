@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>espy × layvi — Analyse relationnelle · Le Discordeum</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+  :root {
+    --bg:     #080810;
+    --bg2:    #0d0d18;
+    --bg3:    #121220;
+    --border: #1e1e2e;
+    --text:   #b0b0cc;
+    --muted:  #484860;
+    --dim:    #242438;
+    --white:  #e8e8f8;
+
+    --esp:    #5eead4;
+    --lay:    #fbbf24;
+    --esp2:   #0d9488;
+    --lay2:   #d97706;
+    --blend:  #a0c878; /* couleur de confluence */
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: flex-end;
+    padding: 100px 8vw 80px;
+    position: relative; overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Fond — les deux initiales qui se chevauchent */
+  .hero::before {
+    content: 'E';
+    position: absolute; left: 6vw; top: 10%;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(200px, 35vw, 420px);
+    color: var(--esp); opacity: 0.05; line-height: 1;
+    pointer-events: none; user-select: none;
+  }
+  .hero::after {
+    content: 'L';
+    position: absolute; right: 6vw; top: 10%;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(200px, 35vw, 420px);
+    color: var(--lay); opacity: 0.05; line-height: 1;
+    pointer-events: none; user-select: none;
+  }
+
+  .hero-back {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 3px; color: var(--muted);
+    text-transform: uppercase; margin-bottom: 40px;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    transition: color 0.2s; align-self: flex-start; position: relative; z-index: 1;
+  }
+  .hero-back:hover { color: var(--white); }
+  .hero-back::before { content: '←'; }
+
+  .hero-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 16px; position: relative; z-index: 1;
+    opacity: 0; animation: rise 0.7s ease forwards 0.1s;
+  }
+
+  .hero-title {
+    display: flex; align-items: center; gap: 20px;
+    position: relative; z-index: 1;
+    opacity: 0; animation: rise 0.7s ease forwards 0.3s;
+    flex-wrap: wrap;
+  }
+  .hero-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(56px, 10vw, 120px);
+    line-height: 0.9; letter-spacing: 3px;
+  }
+  .hero-sep {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 7vw, 80px);
+    color: var(--muted); line-height: 1;
+  }
+
+  .hero-sub {
+    font-family: 'Crimson Pro', serif;
+    font-size: clamp(15px, 2vw, 19px); font-style: italic;
+    color: var(--muted); margin-top: 20px; max-width: 520px;
+    position: relative; z-index: 1;
+    opacity: 0; animation: rise 0.7s ease forwards 0.6s;
+  }
+
+  .hero-stats {
+    display: flex; gap: 40px; margin-top: 48px; flex-wrap: wrap;
+    position: relative; z-index: 1;
+    opacity: 0; animation: rise 0.7s ease forwards 0.9s;
+  }
+  .hs { display: flex; flex-direction: column; gap: 3px; }
+  .hs-v { font-family: 'Bebas Neue', sans-serif; font-size: 30px; line-height: 1; }
+  .hs-l { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: 1px; }
+
+  /* ── CONTAINER ── */
+  .container { max-width: 920px; margin: 0 auto; padding: 0 8vw; }
+
+  /* ── SECTIONS ── */
+  .section { padding: 72px 0; border-bottom: 1px solid var(--border); }
+  .section:last-of-type { border-bottom: none; }
+  .sh { display: flex; align-items: baseline; gap: 16px; margin-bottom: 40px; }
+  .sh-num { font-family: 'Bebas Neue', sans-serif; font-size: 40px; color: var(--dim); line-height: 1; }
+  .sh-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(22px, 4vw, 36px); color: var(--white); letter-spacing: 1px; }
+
+  /* ── PROSE ── */
+  .prose { font-size: 15px; line-height: 1.9; color: var(--text); margin-bottom: 22px; max-width: 700px; }
+  .prose strong { color: var(--white); font-weight: 600; }
+  .prose em { color: var(--blend); font-style: italic; }
+  .prose .e { color: var(--esp); font-style: normal; }
+  .prose .l { color: var(--lay); font-style: normal; }
+
+  /* ── ASYMÉTRIE VISUELLE ── */
+  .asym-block {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1px; background: var(--border); border-radius: 4px;
+    overflow: hidden; margin: 28px 0;
+  }
+  @media (max-width: 640px) { .asym-block { grid-template-columns: 1fr; } }
+  .asym-side {
+    background: var(--bg2); padding: 24px 28px;
+  }
+  .asym-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .asym-big {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 6vw, 72px); line-height: 1;
+    margin-bottom: 6px;
+  }
+  .asym-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .asym-pills { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+  .pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; padding: 2px 10px; border-radius: 20px;
+    border: 1px solid; letter-spacing: 0.5px;
+  }
+
+  /* ── GRAPHIQUE CO-PRÉSENCE ── */
+  .copres-chart {
+    display: flex; align-items: flex-end; gap: 5px;
+    height: 100px; margin: 28px 0;
+  }
+  .cp-col { display: flex; flex-direction: column; align-items: center; gap: 5px; flex: 1; }
+  .cp-bar-wrap { width: 100%; display: flex; flex-direction: column; gap: 1px; justify-content: flex-end; }
+  .cp-bar {
+    width: 100%; border-radius: 1px;
+    min-height: 2px;
+  }
+  .cp-year { font-family: 'JetBrains Mono', monospace; font-size: 8px; color: var(--muted); }
+
+  /* ── ÉCHANGES DIRECTS ── */
+  .exchange {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 4px; padding: 16px 20px; margin: 14px 0;
+    position: relative;
+  }
+  .exchange::before {
+    content: attr(data-label);
+    position: absolute; top: -9px; left: 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 2px;
+    background: var(--bg2); padding: 0 6px; color: var(--muted);
+    text-transform: uppercase;
+  }
+  .ex-msg { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 7px; }
+  .ex-msg:last-child { margin-bottom: 0; }
+  .ex-av {
+    width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+  }
+  .ex-body { flex: 1; }
+  .ex-author { font-size: 11px; font-weight: 700; margin-bottom: 2px; }
+  .ex-text {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: #8888b0; line-height: 1.5;
+    background: var(--bg3); border-radius: 3px; padding: 6px 10px;
+    border-left: 2px solid var(--border);
+  }
+  .ex-time { font-size: 9px; color: var(--muted); margin-top: 2px; font-family: 'JetBrains Mono', monospace; }
+
+  /* ── PULL QUOTE ── */
+  .pull-quote {
+    font-family: 'Crimson Pro', serif;
+    font-size: clamp(17px, 2.8vw, 22px); font-style: italic;
+    border-left: 3px solid var(--blend);
+    padding: 14px 0 14px 22px; margin: 32px 0; line-height: 1.45;
+    color: var(--blend);
+  }
+  .pull-quote .attr {
+    display: block; font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-style: normal; color: var(--muted);
+    margin-top: 8px; letter-spacing: 1px;
+  }
+
+  /* ── VERDICT ── */
+  .verdict-box {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 4px; padding: 28px 32px; margin: 32px 0;
+    position: relative;
+  }
+  .verdict-box::before {
+    content: 'Verdict';
+    position: absolute; top: -10px; left: 18px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 3px;
+    background: var(--bg2); padding: 0 8px; color: var(--blend);
+    text-transform: uppercase;
+  }
+  .verdict-text { font-size: 15px; color: var(--text); line-height: 1.85; }
+  .verdict-text strong { color: var(--white); }
+  .verdict-text em { color: var(--blend); font-style: italic; }
+
+  /* ── TIMELINE RELATION ── */
+  .rel-timeline { position: relative; padding-left: 28px; margin: 24px 0; }
+  .rel-timeline::before {
+    content: ''; position: absolute; left: 6px; top: 0; bottom: 0;
+    width: 1px; background: var(--border);
+  }
+  .rt-item { position: relative; margin-bottom: 22px; }
+  .rt-item::before {
+    content: ''; position: absolute; left: -24px; top: 7px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--blend); border: 2px solid var(--bg); opacity: 0.6;
+  }
+  .rt-item.key::before { opacity: 1; box-shadow: 0 0 6px var(--blend); }
+  .rt-date { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--blend); letter-spacing: 1px; margin-bottom: 3px; }
+  .rt-content { font-size: 14px; color: var(--text); line-height: 1.65; }
+  .rt-content strong { color: var(--white); }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 48px 8vw;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .footer-logo { font-family: 'Crimson Pro', serif; font-size: 18px; font-style: italic; color: var(--muted); }
+  .footer-nav { display: flex; gap: 24px; flex-wrap: wrap; }
+  .footer-link {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--muted); letter-spacing: 2px; text-transform: uppercase;
+    text-decoration: none; transition: color 0.2s;
+  }
+  .footer-link:hover { color: var(--white); }
+
+  @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 600px) {
+    .container { padding: 0 20px; }
+    .hero { padding: 60px 20px 48px; }
+    footer { padding: 40px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <a href="index.html" class="hero-back">Retour aux archives</a>
+  <div class="hero-tag">Analyse relationnelle · Discordeum · 2018–2026</div>
+  <div class="hero-title">
+    <span class="hero-name" style="color:var(--esp)">espy</span>
+    <span class="hero-sep">×</span>
+    <span class="hero-name" style="color:var(--lay)">layvi</span>
+  </div>
+  <p class="hero-sub">
+    Le duo le plus asymétrique du groupe. L'un cherche. L'autre disparaît. L'un a 5 surnoms pour l'autre. L'autre en a 2. Ils se voient IRL quasi quotidiennement et ne l'écrivent presque jamais.
+  </p>
+  <div class="hero-stats">
+    <div class="hs">
+      <div class="hs-v" style="color:var(--esp)">385</div>
+      <div class="hs-l">pings espy → layvi</div>
+    </div>
+    <div class="hs">
+      <div class="hs-v" style="color:var(--lay)">111</div>
+      <div class="hs-l">pings layvi → espy</div>
+    </div>
+    <div class="hs">
+      <div class="hs-v" style="color:var(--blend)">1 065</div>
+      <div class="hs-l">échanges directs</div>
+    </div>
+    <div class="hs">
+      <div class="hs-v" style="color:var(--muted)">84</div>
+      <div class="hs-l">mois de co-présence</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ══ 01 · VUE D'ENSEMBLE ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">01</div><div class="sh-title">Vue d'ensemble</div></div>
+
+    <p class="prose">
+      <span class="e">Espy</span> et <span class="l">layvi</span> sont les deux membres fondateurs du Discordeum — présents tous les deux dès le 14 décembre 2018. Ils se connaissent depuis le lycée. Ils se voient IRL presque quotidiennement selon leurs propres messages. Et pourtant leur relation dans le canal est la plus asymétrique du groupe : espy cherche layvi, layvi est absent.
+    </p>
+
+    <p class="prose">
+      Sur sept ans, espy a pingé layvi <strong>385 fois</strong> directement. Layvi a pingé espy <strong>111 fois</strong>. Espy utilise cinq surnoms différents pour layvi — semoule, souhil, souss, sauce, sous — avec une fréquence totale de <strong>256 mentions</strong>. Layvi utilise deux surnoms pour espy — luco, luca — avec une fréquence totale de <strong>14 mentions</strong>. Le ratio est de 18 contre 1.
+    </p>
+
+    <p class="prose">
+      Cela ne signifie pas que la relation est unilatérale. Cela signifie qu'elle est <em>structuralement différente</em> pour chacun. Espy parle de layvi dans le canal parce que layvi n'est pas là. Layvi parle à espy en dehors du canal. Leur espace commun n'est pas le Discordeum.
+    </p>
+
+    <!-- Bloc asymétrie -->
+    <div class="asym-block">
+      <div class="asym-side">
+        <div class="asym-label" style="color:var(--esp)">espy → layvi</div>
+        <div class="asym-big" style="color:var(--esp)">385</div>
+        <div class="asym-desc">pings directs en 7 ans</div>
+        <div class="asym-pills">
+          <span class="pill" style="color:var(--esp); border-color:rgba(94,234,212,0.3)">semoule ×63</span>
+          <span class="pill" style="color:var(--esp); border-color:rgba(94,234,212,0.3)">sauce ×78</span>
+          <span class="pill" style="color:var(--esp); border-color:rgba(94,234,212,0.3)">souss ×50</span>
+          <span class="pill" style="color:var(--esp); border-color:rgba(94,234,212,0.3)">souhil ×42</span>
+          <span class="pill" style="color:var(--esp); border-color:rgba(94,234,212,0.3)">sous ×23</span>
+        </div>
+      </div>
+      <div class="asym-side">
+        <div class="asym-label" style="color:var(--lay)">layvi → espy</div>
+        <div class="asym-big" style="color:var(--lay)">111</div>
+        <div class="asym-desc">pings directs en 7 ans</div>
+        <div class="asym-pills">
+          <span class="pill" style="color:var(--lay); border-color:rgba(251,191,36,0.3)">luca ×9</span>
+          <span class="pill" style="color:var(--lay); border-color:rgba(251,191,36,0.3)">luco ×5</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 02 · LA CO-PRÉSENCE ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">02</div><div class="sh-title">La co-présence</div></div>
+
+    <p class="prose">
+      Sur 84 mois couverts par les archives, les deux sont actifs le même mois dans <strong>84 cas</strong> — soit presque toujours. Mais <em>actifs le même jour</em> : c'est là que les chiffres divergent. 2020 est l'apogée avec 212 jours de co-présence dans l'année — ils sont ensemble la plupart des jours du confinement. Depuis, la courbe chute avec les absences croissantes de layvi.
+    </p>
+
+    <!-- Graphique co-présence -->
+    <div class="copres-chart" id="copresChart"></div>
+
+    <p class="prose">
+      En 2025 : <strong>23 jours de co-présence sur 365</strong>. Espy est actif 97 jours dans l'année. Layvi 33 jours. Leurs jours actifs se croisent 23 fois. La relation existe encore — elle a juste besoin d'un espace différent pour exister.
+    </p>
+
+    <div class="pull-quote">
+      "Luca et toi vous êtes comme batman est bruce wayne, jamais dans la même pièce."
+      <span class="attr">Enzo, cité par layvi — 26 mai 2023 · observation d'un tiers sur la relation</span>
+    </div>
+
+    <p class="prose">
+      La citation est d'Enzo — un ami extérieur au groupe qui observe. Il a mis en mots ce que les données confirment : espy et layvi n'apparaissent jamais ensemble dans le canal. L'un est là quand l'autre est absent. Ce n'est pas un hasard — c'est parce qu'ils communiquent ailleurs quand ils sont ensemble.
+    </p>
+  </section>
+
+  <!-- ══ 03 · LES REGISTRES D'ESPY ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">03</div><div class="sh-title">Les registres d'espy pour layvi</div></div>
+
+    <p class="prose">
+      Espy parle de layvi dans au moins trois registres distincts — et le passage de l'un à l'autre est souvent brutal, dans le même message ou la même journée.
+    </p>
+
+    <!-- Registre 1 — l'insulte affective -->
+    <div class="exchange" data-label="Registre 1 — L'insulte affective">
+      <div class="ex-msg">
+        <div class="ex-av" style="background:#0a2030; color:var(--esp)">E</div>
+        <div class="ex-body">
+          <div class="ex-author" style="color:var(--esp)">espy</div>
+          <div class="ex-text">MAIS NIQUE TOI SEMOULE</div>
+          <div class="ex-time">8 juin 2019 · après une absence de layvi</div>
+        </div>
+      </div>
+      <div class="ex-msg">
+        <div class="ex-av" style="background:#0a2030; color:var(--esp)">E</div>
+        <div class="ex-body">
+          <div class="ex-author" style="color:var(--esp)">espy</div>
+          <div class="ex-text">Petit rappel journalier pour que les gens n'oublient pas que semoule est une sacrée pute</div>
+          <div class="ex-time">15 septembre 2019 · rappel matinal quotidien</div>
+        </div>
+      </div>
+      <div class="ex-msg">
+        <div class="ex-av" style="background:#0a2030; color:var(--esp)">E</div>
+        <div class="ex-body">
+          <div class="ex-author" style="color:var(--esp)">espy</div>
+          <div class="ex-text">Et Souhil que ton serveur ferme ou pas tu resteras un colossal fdp jusqu'à la fin t'inquiètes pas</div>
+          <div class="ex-time">11 janvier 2020 · affection maximale</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Registre 2 — l'invocation -->
+    <div class="exchange" data-label="Registre 2 — L'invocation désespérée">
+      <div class="ex-msg">
+        <div class="ex-av" style="background:#0a2030; color:var(--esp)">E</div>
+        <div class="ex-body">
+          <div class="ex-author" style="color:var(--esp)">espy</div>
+          <div class="ex-text">Harry, Souhil ça n'existe pas</div>
+          <div class="ex-time">25 juin 2019 · constat de non-existence</div>
+        </div>
+      </div>
+      <div class="ex-msg">
+        <div class="ex-av" style="background:#0a2030; color:var(--esp)">E</div>
+        <div class="ex-body">
+          <div class="ex-author" style="color:var(--esp)">espy</div>
+          <div class="ex-text">In nominis potentiae et dimensionis, ego, Discordeum, hanc invocationem facio ut Souhil, entitas dimensionis, alligetur et vincitur. Per viam mysticam et verbum sacrum, constringo animam tuam, Souhil, ad terminum dimensionis tuæ...</div>
+          <div class="ex-time">23 septembre 2023 · après une longue absence · invocation latine</div>
+        </div>
+      </div>
+      <div class="ex-msg">
+        <div class="ex-av" style="background:#0a2030; color:var(--esp)">E</div>
+        <div class="ex-body">
+          <div class="ex-author" style="color:var(--esp)">espy</div>
+          <div class="ex-text">In nominis potentiae et dimensionis...</div>
+          <div class="ex-time">30 septembre 2023 · reposté 7 jours plus tard · toujours absent</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Registre 3 — le stream -->
+    <div class="exchange" data-label="Registre 3 — Le spectateur du stream">
+      <div class="ex-msg">
+        <div class="ex-av" style="background:#0a2030; color:var(--esp)">E</div>
+        <div class="ex-body">
+          <div class="ex-author" style="color:var(--esp)">espy</div>
+          <div class="ex-text">starfoulah semoule qui fait un live twitch</div>
+          <div class="ex-time">17 janvier 2020 · découverte du stream</div>
+        </div>
+      </div>
+      <div class="ex-msg">
+        <div class="ex-av" style="background:#0a2030; color:var(--esp)">E</div>
+        <div class="ex-body">
+          <div class="ex-author" style="color:var(--esp)">espy</div>
+          <div class="ex-text">MAIS NIQUE TES MORTS Y'A SEMOULE QUI STREAM FAUT L'INSULTER AVANT DE PENSER A AUTRE CHOSE</div>
+          <div class="ex-time">17 janvier 2020 · priorité absolue</div>
+        </div>
+      </div>
+      <div class="ex-msg">
+        <div class="ex-av" style="background:#0a2030; color:var(--esp)">E</div>
+        <div class="ex-body">
+          <div class="ex-author" style="color:var(--esp)">espy</div>
+          <div class="ex-text">https://www.twitch.tv/layvii &lt;@cryo&gt;</div>
+          <div class="ex-time">12 novembre 2021 · signal pour le groupe · "venez voir"</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="prose">
+      Ce troisième registre est le plus révélateur : quand layvi stream, espy l'annonce dans le canal, il envoie les liens, il prévient cryo. Il est le promoteur du stream de layvi dans son propre groupe d'amis. C'est une forme d'attention soutenue que les insultes affectives masquent mais ne remplacent pas.
+    </p>
+  </section>
+
+  <!-- ══ 04 · LA RELATION IRL ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">04</div><div class="sh-title">La relation IRL</div></div>
+
+    <p class="prose">
+      Ce qui rend cette relation difficile à analyser depuis le CSV : une grande partie d'elle n'est pas dans le canal. Layvi mentionne être avec espy à la piscine, chez lui, dans des sorties communes. Ils se voient quasi quotidiennement selon leurs propres termes. La citation de layvi sur la piscine du 7 septembre 2020 est éclairante — il l'annonce dans le canal comme une information logistique liée au covid de dosinge, pas comme quelque chose qui mérite d'être dit normalement. C'est la norme.
+    </p>
+
+    <div class="exchange" data-label="La piscine — 7 septembre 2020">
+      <div class="ex-msg">
+        <div class="ex-av" style="background:#1a1505; color:var(--lay)">L</div>
+        <div class="ex-body">
+          <div class="ex-author" style="color:var(--lay)">layvi</div>
+          <div class="ex-text">J'ai été à la piscine avec luco</div>
+          <div class="ex-time">7 septembre 2020 · context : covid de dosinge, possible contamination</div>
+        </div>
+      </div>
+      <div class="ex-msg">
+        <div class="ex-av" style="background:#1a1505; color:var(--lay)">L</div>
+        <div class="ex-body">
+          <div class="ex-author" style="color:var(--lay)">layvi</div>
+          <div class="ex-text">Mec hier avec luco on est tombé deux fois avec un gars qui a juste pété les plombs</div>
+          <div class="ex-time">9 septembre 2020 · continuation de la soirée</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="prose">
+      Le canal voit ces fragments — "j'étais avec luco", "avec luca à la piscine" — mais pas les heures passées ensemble avant et après. Le Discordeum n'est pas leur espace principal. C'est un canal secondaire pour une relation qui existe ailleurs.
+    </p>
+
+    <div class="pull-quote">
+      "C'est le moment où trop de souvenirs de config MC me reviennent en mémoire et j'imagine Luca là tout de suite en vocole"
+      <span class="attr">layvi — 20 mars 2020 · pendant le confinement · pensée spontanée à espy</span>
+    </div>
+  </section>
+
+  <!-- ══ 05 · L'ARC TEMPOREL ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">05</div><div class="sh-title">L'arc temporel</div></div>
+
+    <p class="prose">
+      La relation évolue sur sept ans — et les données permettent de la découper en phases distinctes.
+    </p>
+
+    <div class="rel-timeline">
+      <div class="rt-item key">
+        <div class="rt-date">DÉC 2018 · FONDATION</div>
+        <div class="rt-content">Les deux arrivent ensemble le même jour. Layvi : <strong>"Oh je suis où ?"</strong> Espy : <strong>"Non, c'est encore un LIVE ACTION de mort ?"</strong> Le Discordeum commence avec eux deux.</div>
+      </div>
+      <div class="rt-item key">
+        <div class="rt-date">2019 · L'ÂGE D'OR DE LA CO-PRÉSENCE</div>
+        <div class="rt-content">321 échanges directs dans l'année. FFXIV, Terraria, LoL — ils jouent souvent ensemble. Espy développe son lexique d'insultes affectives pour layvi. 87 jours de co-présence dans le canal.</div>
+      </div>
+      <div class="rt-item key">
+        <div class="rt-date">2020 · LE SOMMET · 437 ÉCHANGES</div>
+        <div class="rt-content">Confinement, pishot, 212 jours de co-présence. C'est leur année de présence maximale commune. Espy promeut le stream de layvi, layvi cite espy dans les réunions pishot. Le canal est leur espace commun le plus dense.</div>
+      </div>
+      <div class="rt-item">
+        <div class="rt-date">2021–2022 · LA CONTRACTION</div>
+        <div class="rt-content">139 puis 76 échanges. Layvi commence à se déconnecter progressivement. Espy maintient sa présence. La relation continue — mais moins dans le canal.</div>
+      </div>
+      <div class="rt-item">
+        <div class="rt-date">SEPT 2023 · L'INVOCATION LATINE</div>
+        <div class="rt-content">Espy rédige et poste une invocation latine complète pour faire apparaître layvi. Il la reposte 7 jours plus tard. Layvi ne répond pas. C'est le moment le plus éloquent sur l'asymétrie de la relation dans le canal.</div>
+      </div>
+      <div class="rt-item">
+        <div class="rt-date">2024–2025 · LA RÉSIDUELLE</div>
+        <div class="rt-content">44 puis 8 échanges dans le canal. Mais ils continuent à se voir IRL. Le canal n'est plus leur espace — il est le reflet de leurs absences respectives, pas de leur présence commune.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 06 · VERDICT ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">06</div><div class="sh-title">Verdict</div></div>
+
+    <div class="verdict-box">
+      <div class="verdict-text">
+        <p>Espy et layvi sont la relation la plus mal représentée par le CSV. Les données montrent une asymétrie massive — 385 pings contre 111, 256 surnoms contre 14 — qui, hors contexte, ressemblerait à une relation déséquilibrée voire unilatérale. Ce serait une erreur d'interprétation.</p><br>
+        <p>L'asymétrie dans le canal reflète une <em>division des espaces</em>, pas un déséquilibre affectif. Espy cherche layvi dans le canal parce que c'est là qu'il le cherche quand il n'est pas là en vrai. Quand ils sont ensemble IRL — quasi quotidiennement selon leurs propres termes — il n'a pas besoin de le pinger. Le canal ne voit que les absences de layvi, pas les présences.</p><br>
+        <p>Ce que la citation d'Enzo résume parfaitement : <strong>"Luca et toi vous êtes comme batman est bruce wayne, jamais dans la même pièce."</strong> Pas parce qu'ils ne s'entendent pas — parce qu'ils existent dans deux espaces différents dont le Discordeum n'est que l'un d'eux.</p><br>
+        <p>En 2025 : 8 échanges directs dans le canal sur toute l'année. Et pourtant, probablement des centaines d'heures passées ensemble hors du canal. <em>Le CSV ne sait pas tout.</em></p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="footer-logo">Le Discordeum</div>
+  <nav class="footer-nav">
+    <a href="index.html" class="footer-link">← Sommaire</a>
+    <a href="profil_espy.html" class="footer-link">Profil espy</a>
+    <a href="profil_layvi.html" class="footer-link">Profil layvi</a>
+    <a href="proces_layvi.html" class="footer-link">Le Procès</a>
+  </nav>
+</footer>
+
+<script>
+// Co-présence par année
+const copresData = [
+  {y:'2019', esp:201, lay:98, both:87},
+  {y:'2020', esp:322, lay:226, both:212},
+  {y:'2021', esp:312, lay:161, both:153},
+  {y:'2022', esp:208, lay:108, both:86},
+  {y:'2023', esp:178, lay:75, both:55},
+  {y:'2024', esp:172, lay:79, both:62},
+  {y:'2025', esp:97, lay:33, both:23},
+];
+
+const maxVal = Math.max(...copresData.map(d => d.esp));
+const chartEl = document.getElementById('copresChart');
+
+copresData.forEach(d => {
+  const col = document.createElement('div');
+  col.className = 'cp-col';
+  const scaleH = (n) => Math.max(2, Math.round((n / maxVal) * 88));
+
+  col.innerHTML = `
+    <div class="cp-bar-wrap" style="height:${scaleH(d.esp)}px">
+      <div class="cp-bar" style="height:${scaleH(d.esp) - scaleH(d.both)}px; background:rgba(94,234,212,0.25)"></div>
+      <div class="cp-bar" style="height:${scaleH(d.both)}px; background:rgba(160,200,120,0.6); border-radius:2px 2px 0 0"></div>
+    </div>
+    <div class="cp-year">${d.y}</div>
+  `;
+  chartEl.appendChild(col);
+});
+</script>
+
+</body>
+</html>

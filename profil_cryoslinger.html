@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>cryoslinger — Profil · Le Discordeum</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+  :root {
+    --bg:      #0a0908;
+    --bg2:     #100e0c;
+    --bg3:     #171410;
+    --border:  #2a2218;
+    --text:    #c0b8b0;
+    --muted:   #504838;
+    --dim:     #28221a;
+    --white:   #f0e8e0;
+
+    --p:       #fb923c;
+    --p2:      #c2610c;
+    --p3:      #2a1205;
+    --teal:    #5eead4;
+    --purple:  #a78bfa;
+    --amber:   #fbbf24;
+    --green:   #4ade80;
+    --red:     #f87171;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--border);
+    position: relative; overflow: hidden;
+  }
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+  }
+
+  .hero-left {
+    padding: 100px 8vw 80px;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    position: relative; z-index: 1;
+    border-right: 1px solid var(--border);
+  }
+
+  .hero-right {
+    background: var(--bg2);
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    padding: 60px 40px; gap: 32px;
+    position: relative; overflow: hidden;
+  }
+  .hero-right::before {
+    content: 'C';
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 480px; color: var(--p);
+    opacity: 0.04; line-height: 1;
+    pointer-events: none; user-select: none;
+  }
+
+  .hero-back {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 3px; color: var(--muted);
+    text-transform: uppercase; margin-bottom: 32px;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    transition: color 0.2s; align-self: flex-start;
+  }
+  .hero-back:hover { color: var(--white); }
+  .hero-back::before { content: '←'; }
+
+  .hero-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--p); margin-bottom: 16px;
+    opacity: 0; animation: rise 0.7s ease forwards 0.1s;
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 9vw, 120px);
+    color: var(--white); line-height: 0.9; letter-spacing: 3px;
+    opacity: 0; animation: rise 0.7s ease forwards 0.3s;
+  }
+
+  .hero-role {
+    font-family: 'Crimson Pro', serif;
+    font-size: clamp(15px, 2vw, 19px); font-style: italic;
+    color: var(--muted); margin-top: 20px; line-height: 1.5;
+    max-width: 420px;
+    opacity: 0; animation: rise 0.7s ease forwards 0.6s;
+  }
+  .hero-role strong { color: var(--p); font-style: normal; font-weight: 600; }
+
+  .hero-stats-row {
+    display: flex; gap: 32px; margin-top: 48px; flex-wrap: wrap;
+    opacity: 0; animation: rise 0.7s ease forwards 0.9s;
+  }
+  .hs { display: flex; flex-direction: column; gap: 3px; }
+  .hs-v { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--p); line-height: 1; }
+  .hs-l { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: 1px; }
+
+  .stat-card {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 3px; padding: 18px 22px; width: 100%; max-width: 340px;
+    position: relative; z-index: 1;
+  }
+  .sc-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--p); margin-bottom: 8px;
+  }
+  .sc-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: #907060; line-height: 1.6;
+    font-style: italic;
+  }
+
+  /* ── CONTAINER ── */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 8vw; }
+
+  /* ── SECTIONS ── */
+  .section { padding: 72px 0; border-bottom: 1px solid var(--border); }
+  .section:last-of-type { border-bottom: none; }
+  .sh { display: flex; align-items: baseline; gap: 16px; margin-bottom: 40px; }
+  .sh-num { font-family: 'Bebas Neue', sans-serif; font-size: 40px; color: var(--dim); line-height: 1; }
+  .sh-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(24px, 4vw, 38px); color: var(--white); letter-spacing: 1px; }
+
+  /* ── PROSE ── */
+  .prose { font-size: 15px; line-height: 1.9; color: var(--text); margin-bottom: 22px; max-width: 680px; }
+  .prose strong { color: var(--white); font-weight: 600; }
+  .prose em { color: var(--p); font-style: italic; }
+
+  /* ── GRAPHIQUE ACTIVITÉ ── */
+  .year-chart { display: flex; align-items: flex-end; gap: 6px; height: 120px; margin: 32px 0; }
+  .yc-col { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; }
+  .yc-val { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--p); }
+  .yc-bar {
+    width: 100%; border-radius: 2px 2px 0 0;
+    background: var(--p); opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  .yc-bar:hover { opacity: 1; }
+  .yc-bar.peak { opacity: 1; }
+  .yc-bar.low { background: var(--dim); opacity: 1; }
+  .yc-year { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); }
+
+  /* ── HEATMAP HORAIRE ── */
+  .hour-map {
+    display: grid; grid-template-columns: repeat(24, 1fr);
+    gap: 3px; margin: 20px 0;
+  }
+  .hm-cell {
+    height: 28px; border-radius: 2px;
+    position: relative;
+  }
+  .hm-cell:hover::after {
+    content: attr(data-label);
+    position: absolute; bottom: 110%; left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg2); border: 1px solid var(--border);
+    padding: 3px 7px; border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    color: var(--white); white-space: nowrap; z-index: 10;
+  }
+  .hour-labels {
+    display: grid; grid-template-columns: repeat(24, 1fr);
+    gap: 3px; margin-top: 4px;
+  }
+  .hl { font-family: 'JetBrains Mono', monospace; font-size: 8px; color: var(--muted); text-align: center; }
+
+  /* ── SAISONS GAMING ── */
+  .gaming-timeline { display: flex; flex-direction: column; gap: 10px; margin: 24px 0; }
+  .gt-row { display: flex; align-items: center; gap: 12px; }
+  .gt-year { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); width: 36px; flex-shrink: 0; }
+  .gt-games { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; }
+  .gt-game {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; padding: 2px 10px; border-radius: 20px;
+    border: 1px solid; letter-spacing: 0.5px;
+  }
+  .g-lol    { color: #c89b3c; border-color: rgba(200,155,60,0.3); background: rgba(200,155,60,0.08); }
+  .g-tft    { color: #7dd6f0; border-color: rgba(125,214,240,0.3); background: rgba(125,214,240,0.08); }
+  .g-terra  { color: #7cdb82; border-color: rgba(124,219,130,0.3); background: rgba(124,219,130,0.08); }
+  .g-mhw    { color: #e06030; border-color: rgba(224,96,48,0.3); background: rgba(224,96,48,0.08); }
+  .g-valheim { color: #a0c8e0; border-color: rgba(160,200,224,0.3); background: rgba(160,200,224,0.08); }
+  .g-dofus  { color: #e0a830; border-color: rgba(224,168,48,0.3); background: rgba(224,168,48,0.08); }
+  .g-ffxiv  { color: #b0a0ff; border-color: rgba(176,160,255,0.3); background: rgba(176,160,255,0.08); }
+  .g-zzn    { color: #8ca870; border-color: rgba(140,168,112,0.3); background: rgba(140,168,112,0.08); }
+  .g-code   { color: var(--p); border-color: rgba(251,146,60,0.3); background: rgba(251,146,60,0.08); }
+  .g-mhrise { color: #d08040; border-color: rgba(208,128,64,0.3); background: rgba(208,128,64,0.08); }
+
+  /* ── SURNOMS / LEXIQUE ── */
+  .lexique { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 24px 0; }
+  @media (max-width: 600px) { .lexique { grid-template-columns: 1fr; } }
+  .lex-item {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 3px; padding: 14px 16px;
+  }
+  .lex-word {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px; color: var(--p); letter-spacing: 1px; margin-bottom: 4px;
+  }
+  .lex-def { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .lex-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: var(--dim); margin-top: 6px;
+  }
+
+  /* ── CITATIONS ── */
+  .citations { display: flex; flex-direction: column; gap: 16px; margin: 24px 0; }
+  .cit {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-left: 3px solid var(--p); border-radius: 0 3px 3px 0;
+    padding: 16px 20px;
+  }
+  .cit-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: #907060; line-height: 1.65;
+    margin-bottom: 8px;
+  }
+  .cit-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: var(--muted); letter-spacing: 1px;
+  }
+  .cit.faded { border-left-color: var(--dim); }
+  .cit.faded .cit-text { color: #504030; }
+
+  /* ── RELATIONS ── */
+  .relations { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 24px 0; }
+  @media (max-width: 600px) { .relations { grid-template-columns: 1fr; } }
+  .rel-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 3px; padding: 18px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .rel-av {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif; font-size: 16px;
+  }
+  .rel-name { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: var(--white); letter-spacing: 1px; }
+  .rel-surnom {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--p); letter-spacing: 1px;
+  }
+  .rel-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 48px 8vw;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .footer-logo { font-family: 'Crimson Pro', serif; font-size: 18px; font-style: italic; color: var(--muted); }
+  .footer-nav { display: flex; gap: 24px; }
+  .footer-link {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--muted); letter-spacing: 2px; text-transform: uppercase;
+    text-decoration: none; transition: color 0.2s;
+  }
+  .footer-link:hover { color: var(--white); }
+
+  @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 600px) {
+    .container { padding: 0 20px; }
+    .hero-left { padding: 60px 20px 48px; }
+    footer { padding: 40px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="hero-left">
+    <a href="index.html" class="hero-back">Retour au Discordeum</a>
+    <div class="hero-tag">Profil · Membre fondateur · Organisateur</div>
+    <h1>Cryo<br>slinger</h1>
+    <div class="hero-role">
+      <strong>L'architecte de la soirée.</strong> Époux de kimyaku. Père de Thélio. Frère de baiedhiver. Inventeur du chromosome. Seul membre à avoir 0 dodge documenté en 2025. Pose des Codenames à minuit depuis un hôpital.
+    </div>
+    <div class="hero-stats-row">
+      <div class="hs"><div class="hs-v">6 678</div><div class="hs-l">messages</div></div>
+      <div class="hs"><div class="hs-v">1 177</div><div class="hs-l">jours actifs</div></div>
+      <div class="hs"><div class="hs-v">53,8%</div><div class="hs-l">absence</div></div>
+      <div class="hs"><div class="hs-v">458</div><div class="hs-l">convocations</div></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="stat-card">
+      <div class="sc-label">Citation signature</div>
+      <div class="sc-text">"C'pas ma femme pour rien"</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Message de retour après 49 jours</div>
+      <div class="sc-text">[lien 9gag]</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Message le plus long du canal (1949 chars)</div>
+      <div class="sc-text">"CELA, ÇA, pron. dém. neutre. La chose, l'idée, les paroles que voilà. Abrév. fam. ça. I.− GRAMMAIRE..."</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">5h29 du matin · 29 mai 2020</div>
+      <div class="sc-text">"Aya, se réveiller, voir la descente psychologique de durion au fil des messages, découvrir le paroxysme de la folie..."</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ══ 01 · PRÉSENCE ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">01</div><div class="sh-title">Sa présence</div></div>
+
+    <p class="prose">
+      Arrivé le 30 mars 2019 avec <em>"w8"</em>, suivi de 49 jours d'absence — sa seule vraie disparition longue sur sept ans. Depuis, cryo n'a jamais manqué durablement : <strong>zéro absence supérieure à 30 jours après 2019</strong>. Il est absent plus d'un jour sur deux (53,8%) mais ne disparaît jamais vraiment. Il organise depuis l'hôpital. Il pose des Codenames à minuit. Il se réveille à 5h30 pour commenter la folie de dosinge avec satisfaction.
+    </p>
+
+    <p class="prose">
+      Son pic d'activité est 2020 — <strong>2 945 messages, 233 jours actifs</strong> — l'année du confinement, de pishot, du mariage. Depuis, la trajectoire descend régulièrement, mais la pente est moins abrupte que chez les autres. En 2025, 87 jours actifs et 0 dodge documenté. Il est le moins kouffard du groupe.
+    </p>
+
+    <!-- Bar chart -->
+    <div class="year-chart" id="yearChart"></div>
+
+    <p class="prose" style="margin-top:0">
+      Sa tranche horaire de prédilection : <strong>19h–22h</strong>, avec un pic à 20h (787 messages). Mais aussi une présence matinale notable — 9h à 13h, la pause déjeuner en direct. Et quelques incursions à 5h du matin, réservées aux situations d'urgence narrative.
+    </p>
+
+    <!-- Heatmap horaire -->
+    <div class="hour-map" id="hourMap"></div>
+    <div class="hour-labels" id="hourLabels"></div>
+  </section>
+
+  <!-- ══ 02 · PORTRAIT ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">02</div><div class="sh-title">Portrait</div></div>
+
+    <p class="prose">
+      Cryoslinger est l'organisateur du Discordeum — pas par titre mais par comportement. <strong>458 messages de convocation documentés</strong> sur sept ans : "ce soir ?", "ykk ?", "frotaj ?", "@here dragons (ou au moins une partie) ce soir ?". Là où dosinge analyse et espy commente, cryo convoque. Il est la force centripète du groupe — celui sans qui les soirées n'ont pas lieu.
+    </p>
+
+    <p class="prose">
+      Son profil est paradoxal : il est absent 53,8% du temps mais ne disparaît jamais. Ses absences sont courtes, logistiques, prévisibles. Il part, revient, reprend l'organisation là où il l'avait laissée. En 2024, il lance une soirée Arcane depuis son canapé en pingant @everyone. En 2025, il annonce une sortie concert depuis une chambre d'hôpital. En 2026, il organise le Kouffardor depuis le même lit.
+    </p>
+
+    <p class="prose">
+      Sa relation avec kimyaku est documentée dans ses messages avec une affection sèche et totale. <em>"C'pas ma femme pour rien"</em> — dit après qu'elle ait passé leur lune de miel à regarder Théo à travers l'écran de son smartphone. Son fils Thélio, le "gomin", apparaît dans ses messages à partir de 2023 comme contrainte logistique ("une fois le gomin à la sieste") et comme évidence structurante. Le groupe adapte ses soirées à l'heure de coucher de Thélio.
+    </p>
+
+    <p class="prose">
+      Il est aussi le seul membre à avoir posté le message le plus long du canal — <strong>1 949 caractères</strong> constitués d'une définition intégrale du mot "cela/ça" tirée d'un dictionnaire, en octobre 2019. La raison exacte n'est pas documentée. Il y avait probablement une bonne raison.
+    </p>
+  </section>
+
+  <!-- ══ 03 · GAMING ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">03</div><div class="sh-title">Ses saisons gaming</div></div>
+
+    <p class="prose">
+      La particularité de cryo dans le gaming du Discordeum : il est le seul à avoir un jeu qui lui est <em>totalement propre</em>. <strong>Codenames</strong> — jeu de société en ligne — apparaît 158 fois dans ses messages, avec un ratio de 63x par rapport aux autres membres. Il poste le lien, il relance le lien, il poste un nouveau lien quand l'ancien a expiré.
+    </p>
+
+    <div class="gaming-timeline">
+      <div class="gt-row">
+        <div class="gt-year">2019</div>
+        <div class="gt-games">
+          <span class="gt-game g-lol">LoL</span>
+          <span class="gt-game g-ffxiv">FFXIV</span>
+          <span class="gt-game g-terra">Terraria</span>
+          <span class="gt-game g-code">Codenames</span>
+        </div>
+      </div>
+      <div class="gt-row">
+        <div class="gt-year">2020</div>
+        <div class="gt-games">
+          <span class="gt-game g-lol">LoL</span>
+          <span class="gt-game g-mhw">MHW Iceborne</span>
+          <span class="gt-game g-terra">Terraria</span>
+          <span class="gt-game g-code">Codenames</span>
+        </div>
+      </div>
+      <div class="gt-row">
+        <div class="gt-year">2021</div>
+        <div class="gt-games">
+          <span class="gt-game g-valheim">Valheim</span>
+          <span class="gt-game g-lol">LoL</span>
+          <span class="gt-game g-code">Codenames</span>
+        </div>
+      </div>
+      <div class="gt-row">
+        <div class="gt-year">2022</div>
+        <div class="gt-games">
+          <span class="gt-game g-tft">TFT</span>
+          <span class="gt-game g-valheim">Valheim</span>
+          <span class="gt-game g-zzn">ZZN</span>
+          <span class="gt-game g-code">Codenames</span>
+        </div>
+      </div>
+      <div class="gt-row">
+        <div class="gt-year">2023</div>
+        <div class="gt-games">
+          <span class="gt-game g-zzn">ZZN</span>
+          <span class="gt-game g-mhrise">MH Rise</span>
+          <span class="gt-game g-code">Codenames</span>
+        </div>
+      </div>
+      <div class="gt-row">
+        <div class="gt-year">2024–26</div>
+        <div class="gt-games">
+          <span class="gt-game g-zzn">ZZN</span>
+          <span class="gt-game g-lol">LoL (résiduel)</span>
+          <span class="gt-game g-code">Codenames</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="prose" style="margin-top:16px">
+      Les jeux changent — Codenames reste. Sur sept ans, il est la seule constante absolue de son catalogue. Il poste les liens à 23h en semaine, le dimanche après-midi, et à minuit le 22 novembre 2020 pendant une soirée qui se prolongeait. La room Codenames est son unité de convocation.
+    </p>
+  </section>
+
+  <!-- ══ 04 · LEXIQUE ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">04</div><div class="sh-title">Son lexique</div></div>
+
+    <p class="prose">
+      Cryo a un style textuel précis : des fins de mots en "-ent" et "-ax" (héritage du groupe), un usage abondant de "lmao" (42×, ratio élevé), et une tendresse explicite pour ses proches qui contraste avec un fond de sécheresse ironique. Ses surnoms pour dosinge sont innombrables — "durion", "dodipied", "dod", "dodent" — chacun calibré selon le niveau d'affection ou d'exaspération du moment.
+    </p>
+
+    <div class="lexique">
+      <div class="lex-item">
+        <div class="lex-word">CODENAMES</div>
+        <div class="lex-def">Son jeu, son territoire, son mode de convocation. Ratio d'usage 63x supérieur aux autres membres. Il poste le lien. Il reposte le lien quand l'autre a expiré. Il pose un nouveau lien depuis l'hôpital.</div>
+        <div class="lex-count">158 occurrences · présent chaque année depuis 2019</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">AYAENT · AYA</div>
+        <div class="lex-def">Exclamation de surprise, de satisfaction, de résignation. Inventé dans le groupe, surreprésenté chez cryo — ratio 60x pour "ayaent", sa forme exclusive. Sert à tout.</div>
+        <div class="lex-count">53 "ayaaa" + 32 "ayaent" documentés</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">YKK · FROTAJ · SAJOU</div>
+        <div class="lex-def">Termes de convocation gaming. "Ykk" = y'a kek chose (quelque chose à jouer ce soir ?). "Frotaj" et "sajou" = noms de sessions de jeu codés, origine obscure, usage exclusif cryo.</div>
+        <div class="lex-count">frotaj : 23× · sajou : 7×</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">DURION · DODIPIED · DOD</div>
+        <div class="lex-def">Surnoms de dosinge. "Durion" = déformation de "Dorian", ratio 158x. "Dodipied" = affectueux et légèrement condescendant. "Dod" = neutre. Chacun a son registre.</div>
+        <div class="lex-count">durion : 28× · dod/dodent : 100+ occurrences</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">SOUSSOU · SAUCENT · SAUCE</div>
+        <div class="lex-def">Surnoms de layvi. Plus tendres que "semoule" (dosinge) ou "souhil" (espy). Cryo est le seul à utiliser "soussou" — diminutif affectueux qui dit quelque chose sur la relation.</div>
+        <div class="lex-count">soussou : 7× · sauce/saucent : 40+ occurrences</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">NONOBSTANT · NÉANMOINS</div>
+        <div class="lex-def">Connecteurs logiques détournés en ponctuations humoristiques. Ratio d'usage très élevé vs reste du groupe. "Chancla tier nonobstant." Cryo est le seul à utiliser des conjonctions de coordination comme blagues.</div>
+        <div class="lex-count">néanmoins : 5× · nonobstant : présent · usage distinctif</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 05 · CITATIONS ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">05</div><div class="sh-title">Citations</div></div>
+
+    <p class="prose">Une sélection qui capture l'éventail cryo — l'organisateur, le père, l'époux, le narrateur du groupe, le lecteur de dictionnaire.</p>
+
+    <div class="citations">
+
+      <div class="cit">
+        <div class="cit-text">"Aya, se réveiller, voir la descente psychologique de durion au fil des messages, découvrir le paroxysme de la folie qui s'exprime à travers une insulte. Sah quel plaisir."</div>
+        <div class="cit-meta">29 mai 2020 · 05:08 du matin · le meilleur début de journée possible</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"C'pas ma femme pour rien"</div>
+        <div class="cit-meta">18 août 2020 · lune de miel · commentaire sur kimyaku · citation signature</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"J'ai pris permaban pour la game avec le Warwick qui m'a int + insulté de french dog hier. C'est clairement un ban ciblé, un rioter NA essaie de voir ce qu'il peut faire."</div>
+        <div class="cit-meta">2 septembre 2019 · conviction inébranlable · dossier jamais clos</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"Bordel ces lettres de démission. God tier."</div>
+        <div class="cit-meta">2 septembre 2020 · 22:10 · première réaction à la démission collective pishot</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"J'ai quasi fini, et jusqu'ici il n'y a qu'un mot qui me vient : désespérant"</div>
+        <div class="cit-meta">2 septembre 2020 · 13:15 · après avoir lu les pavés pishot de bout en bout</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"Bon y'a Killing Floor une fois le gomin à la sieste ?"</div>
+        <div class="cit-meta">19 mai 2024 · le gomin comme contrainte de planification officielle</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"Chancla tier nonobstant 'Groupe de Dosinge : 1 membre'"</div>
+        <div class="cit-meta">13 septembre 2023 · 05:33 · encore debout à l'aube · commentaire sur la solitude de dosinge</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"Même dans son cauchemar glaireux il y a pensé"</div>
+        <div class="cit-meta">5 janvier 2026 · réaction d'espy quand cryo a organisé le Kouffardor depuis l'hôpital</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"Je suis la tempête qui approche"</div>
+        <div class="cit-meta">27 décembre 2025 · retour au canal après 8 jours · aucun contexte fourni</div>
+      </div>
+
+      <div class="cit faded">
+        <div class="cit-text">"CELA, ÇA, pron. dém. neutre. La chose, l'idée, les paroles que voilà. Abrév. fam. ça. I.− GRAMMAIRE..."</div>
+        <div class="cit-meta">27 octobre 2019 · 1 949 caractères · message le plus long du canal · raison : inconnue</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ 06 · RELATIONS ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">06</div><div class="sh-title">Ses relations</div></div>
+
+    <div class="relations">
+      <div class="rel-card">
+        <div class="rel-av" style="background:#2a1a5a; color:#a78bfa">D</div>
+        <div class="rel-name" style="color:#a78bfa">dosinge</div>
+        <div class="rel-surnom">durion · dodipied · dod · dodent</div>
+        <div class="rel-desc">Sa cible préférée. Il lui a inventé le plus de surnoms du groupe (4 variantes documentées). Il se lève à 5h pour le commenter. Il lui dit "je te branlerai sous l'eau mon dod" avec la même affection que "tu pues la merde".</div>
+      </div>
+      <div class="rel-card">
+        <div class="rel-av" style="background:#0a2030; color:#5eead4">E</div>
+        <div class="rel-name" style="color:#5eead4">espy</div>
+        <div class="rel-surnom">luco · citron</div>
+        <div class="rel-desc">174 pings directs — le plus pingué par cryo après layvi. Leur relation est celle de deux organisateurs différents : cryo convoque, espy commente. Ils se comprennent sans beaucoup de mots.</div>
+      </div>
+      <div class="rel-card">
+        <div class="rel-av" style="background:#1a1505; color:#fbbf24">L</div>
+        <div class="rel-name" style="color:#fbbf24">layvi</div>
+        <div class="rel-surnom">soussou · sauce · saucent · semoule</div>
+        <div class="rel-desc">192 pings directs + 187 mentions de surnoms — la relation la plus dense en volume. Cryo est le seul à utiliser "soussou" — une affection que les autres membres ne reproduisent pas. Il comptait ses pings ignorés.</div>
+      </div>
+      <div class="rel-card">
+        <div class="rel-av" style="background:#0a2010; color:#4ade80">B</div>
+        <div class="rel-name" style="color:#4ade80">baiedhiver</div>
+        <div class="rel-surnom">frère</div>
+        <div class="rel-desc">Son frère IRL. Le moins pingué directement (9 pings), probablement parce qu'ils communiquent autrement. Cryo a "créé un monstre" selon ses propres termes — sans plus de précision.</div>
+      </div>
+      <div class="rel-card">
+        <div class="rel-av" style="background:#1a1010; color:#f472b6">K</div>
+        <div class="rel-name" style="color:#f472b6">kimyaku</div>
+        <div class="rel-surnom">femme · kik</div>
+        <div class="rel-desc">Présente en filigrane dans ses messages depuis 2020. Elle endort le gomin — et les soirées peuvent commencer. "C'pas ma femme pour rien" reste la plus belle déclaration d'amour du canal.</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="footer-logo">Le Discordeum</div>
+  <nav class="footer-nav">
+    <a href="index.html" class="footer-link">← Sommaire</a>
+    <a href="records.html" class="footer-link">Records</a>
+    <a href="kouffardor.html" class="footer-link">Kouffardor</a>
+  </nav>
+</footer>
+
+<script>
+// Données activité par année
+const yearData = [
+  {y:'2019', n:511, peak:false},
+  {y:'2020', n:2945, peak:true},
+  {y:'2021', n:1062, peak:false},
+  {y:'2022', n:830, peak:false},
+  {y:'2023', n:575, peak:false},
+  {y:'2024', n:429, peak:false},
+  {y:'2025', n:268, peak:false},
+  {y:'2026', n:58, peak:false},
+];
+
+const maxY = Math.max(...yearData.map(d=>d.n));
+const chartEl = document.getElementById('yearChart');
+yearData.forEach(d => {
+  const col = document.createElement('div');
+  col.className = 'yc-col';
+  const h = Math.max(4, Math.round((d.n/maxY)*100));
+  col.innerHTML = `
+    <div class="yc-val">${d.n}</div>
+    <div class="yc-bar${d.peak?' peak':d.n<300?' low':''}" style="height:${h}px"></div>
+    <div class="yc-year">${d.y}</div>
+  `;
+  chartEl.appendChild(col);
+});
+
+// Heatmap horaire
+const hourData = [48,11,5,6,0,23,15,40,78,190,231,386,401,429,399,352,412,362,503,666,787,606,545,183];
+const maxH = Math.max(...hourData);
+const hmEl = document.getElementById('hourMap');
+const hlEl = document.getElementById('hourLabels');
+hourData.forEach((n, h) => {
+  const cell = document.createElement('div');
+  cell.className = 'hm-cell';
+  const intensity = n / maxH;
+  const alpha = 0.05 + intensity * 0.85;
+  cell.style.background = `rgba(251,146,60,${alpha})`;
+  cell.setAttribute('data-label', `${String(h).padStart(2,'0')}h · ${n} msgs`);
+  hmEl.appendChild(cell);
+
+  const lbl = document.createElement('div');
+  lbl.className = 'hl';
+  lbl.textContent = h % 3 === 0 ? String(h).padStart(2,'0') : '';
+  hlEl.appendChild(lbl);
+});
+</script>
+
+</body>
+</html>

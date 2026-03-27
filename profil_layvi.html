@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>layvi — Profil · Le Discordeum</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+  :root {
+    --bg:      #0a0900;
+    --bg2:     #100e00;
+    --bg3:     #171400;
+    --border:  #2a2600;
+    --text:    #c0bc90;
+    --muted:   #50480a;
+    --dim:     #282200;
+    --white:   #f0ece0;
+
+    --p:       #fbbf24;
+    --p2:      #d97706;
+    --p3:      #1a1600;
+    --teal:    #5eead4;
+    --purple:  #a78bfa;
+    --orange:  #fb923c;
+    --green:   #4ade80;
+    --red:     #f87171;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--border);
+    position: relative; overflow: hidden;
+  }
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+  }
+
+  .hero-left {
+    padding: 100px 8vw 80px;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    position: relative; z-index: 1;
+    border-right: 1px solid var(--border);
+  }
+
+  .hero-right {
+    background: var(--bg2);
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    padding: 60px 40px; gap: 32px;
+    position: relative; overflow: hidden;
+  }
+  .hero-right::before {
+    content: 'L';
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 480px; color: var(--p);
+    opacity: 0.04; line-height: 1;
+    pointer-events: none; user-select: none;
+  }
+
+  .hero-back {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 3px; color: var(--muted);
+    text-transform: uppercase; margin-bottom: 32px;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    transition: color 0.2s; align-self: flex-start;
+  }
+  .hero-back:hover { color: var(--white); }
+  .hero-back::before { content: '←'; }
+
+  .hero-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--p); margin-bottom: 16px;
+    opacity: 0; animation: rise 0.7s ease forwards 0.1s;
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 12vw, 140px);
+    color: var(--white); line-height: 0.9; letter-spacing: 3px;
+    opacity: 0; animation: rise 0.7s ease forwards 0.3s;
+  }
+
+  .hero-role {
+    font-family: 'Crimson Pro', serif;
+    font-size: clamp(15px, 2vw, 19px); font-style: italic;
+    color: var(--muted); margin-top: 20px; line-height: 1.5;
+    max-width: 420px;
+    opacity: 0; animation: rise 0.7s ease forwards 0.6s;
+  }
+  .hero-role strong { color: var(--p); font-style: normal; font-weight: 600; }
+
+  .hero-stats-row {
+    display: flex; gap: 32px; margin-top: 48px; flex-wrap: wrap;
+    opacity: 0; animation: rise 0.7s ease forwards 0.9s;
+  }
+  .hs { display: flex; flex-direction: column; gap: 3px; }
+  .hs-v { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--p); line-height: 1; }
+  .hs-l { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: 1px; }
+
+  .stat-card {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 3px; padding: 18px 22px; width: 100%; max-width: 340px;
+    position: relative; z-index: 1;
+  }
+  .sc-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--p); margin-bottom: 8px;
+  }
+  .sc-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: #908020; line-height: 1.6;
+    font-style: italic;
+  }
+
+  /* ── CONTAINER ── */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 8vw; }
+
+  /* ── SECTIONS ── */
+  .section { padding: 72px 0; border-bottom: 1px solid var(--border); }
+  .section:last-of-type { border-bottom: none; }
+  .sh { display: flex; align-items: baseline; gap: 16px; margin-bottom: 40px; }
+  .sh-num { font-family: 'Bebas Neue', sans-serif; font-size: 40px; color: var(--dim); line-height: 1; }
+  .sh-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(24px, 4vw, 38px); color: var(--white); letter-spacing: 1px; }
+
+  /* ── PROSE ── */
+  .prose { font-size: 15px; line-height: 1.9; color: var(--text); margin-bottom: 22px; max-width: 680px; }
+  .prose strong { color: var(--white); font-weight: 600; }
+  .prose em { color: var(--p); font-style: italic; }
+
+  /* ── GRAPHIQUE ACTIVITÉ ── */
+  .year-chart { display: flex; align-items: flex-end; gap: 6px; height: 120px; margin: 32px 0; }
+  .yc-col { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; }
+  .yc-val { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--p); }
+  .yc-bar {
+    width: 100%; border-radius: 2px 2px 0 0;
+    background: var(--p); opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  .yc-bar:hover { opacity: 1; }
+  .yc-bar.peak { opacity: 1; }
+  .yc-bar.low { background: var(--dim); opacity: 1; }
+  .yc-year { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); }
+
+  /* ── HEATMAP HORAIRE ── */
+  .hour-map {
+    display: grid; grid-template-columns: repeat(24, 1fr);
+    gap: 3px; margin: 20px 0;
+  }
+  .hm-cell {
+    height: 28px; border-radius: 2px;
+    position: relative;
+  }
+  .hm-cell:hover::after {
+    content: attr(data-label);
+    position: absolute; bottom: 110%; left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg2); border: 1px solid var(--border);
+    padding: 3px 7px; border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    color: var(--white); white-space: nowrap; z-index: 10;
+  }
+  .hour-labels {
+    display: grid; grid-template-columns: repeat(24, 1fr);
+    gap: 3px; margin-top: 4px;
+  }
+  .hl { font-family: 'JetBrains Mono', monospace; font-size: 8px; color: var(--muted); text-align: center; }
+
+  /* ── SAISONS GAMING ── */
+  .gaming-timeline { display: flex; flex-direction: column; gap: 10px; margin: 24px 0; }
+  .gt-row { display: flex; align-items: center; gap: 12px; }
+  .gt-year { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); width: 36px; flex-shrink: 0; }
+  .gt-games { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; }
+  .gt-game {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; padding: 2px 10px; border-radius: 20px;
+    border: 1px solid; letter-spacing: 0.5px;
+  }
+  .g-lol    { color: #c89b3c; border-color: rgba(200,155,60,0.3); background: rgba(200,155,60,0.08); }
+  .g-tft    { color: #7dd6f0; border-color: rgba(125,214,240,0.3); background: rgba(125,214,240,0.08); }
+  .g-terra  { color: #7cdb82; border-color: rgba(124,219,130,0.3); background: rgba(124,219,130,0.08); }
+  .g-ffxiv  { color: #b0a0ff; border-color: rgba(176,160,255,0.3); background: rgba(176,160,255,0.08); }
+  .g-dofus  { color: #e0a830; border-color: rgba(224,168,48,0.3); background: rgba(224,168,48,0.08); }
+  .g-genshin { color: #c0e870; border-color: rgba(192,232,112,0.3); background: rgba(192,232,112,0.08); }
+  .g-stream { color: var(--p); border-color: rgba(251,191,36,0.3); background: rgba(251,191,36,0.08); }
+  .g-zzn    { color: #8ca870; border-color: rgba(140,168,112,0.3); background: rgba(140,168,112,0.08); }
+  .g-pishot { color: #f87171; border-color: rgba(248,113,113,0.3); background: rgba(248,113,113,0.08); }
+
+  /* ── SURNOMS / LEXIQUE ── */
+  .lexique { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 24px 0; }
+  @media (max-width: 600px) { .lexique { grid-template-columns: 1fr; } }
+  .lex-item {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 3px; padding: 14px 16px;
+  }
+  .lex-word {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px; color: var(--p); letter-spacing: 1px; margin-bottom: 4px;
+  }
+  .lex-def { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .lex-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: var(--dim); margin-top: 6px;
+  }
+
+  /* ── ABSENCES DOSSIER ── */
+  .absence-list { display: flex; flex-direction: column; gap: 8px; margin: 20px 0; }
+  .abs-item {
+    display: flex; gap: 16px; align-items: flex-start;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-left: 3px solid var(--p);
+    border-radius: 0 3px 3px 0; padding: 10px 14px;
+  }
+  .abs-dur {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px; color: var(--p); line-height: 1; flex-shrink: 0; width: 48px;
+  }
+  .abs-body { flex: 1; }
+  .abs-dates { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); margin-bottom: 4px; }
+  .abs-avant { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #707040; font-style: italic; }
+  .abs-retour { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #908030; margin-top: 2px; }
+
+  /* ── CITATIONS ── */
+  .citations { display: flex; flex-direction: column; gap: 16px; margin: 24px 0; }
+  .cit {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-left: 3px solid var(--p); border-radius: 0 3px 3px 0;
+    padding: 16px 20px;
+  }
+  .cit-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: #909040; line-height: 1.65;
+    margin-bottom: 8px;
+  }
+  .cit-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: var(--muted); letter-spacing: 1px;
+  }
+  .cit.faded { border-left-color: var(--dim); }
+  .cit.faded .cit-text { color: #504010; }
+
+  /* ── RELATIONS ── */
+  .relations { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 24px 0; }
+  @media (max-width: 600px) { .relations { grid-template-columns: 1fr; } }
+  .rel-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 3px; padding: 18px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .rel-av {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif; font-size: 16px;
+  }
+  .rel-name { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: var(--white); letter-spacing: 1px; }
+  .rel-surnom {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--p); letter-spacing: 1px;
+  }
+  .rel-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 48px 8vw;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .footer-logo { font-family: 'Crimson Pro', serif; font-size: 18px; font-style: italic; color: var(--muted); }
+  .footer-nav { display: flex; gap: 24px; }
+  .footer-link {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--muted); letter-spacing: 2px; text-transform: uppercase;
+    text-decoration: none; transition: color 0.2s;
+  }
+  .footer-link:hover { color: var(--white); }
+
+  @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 600px) {
+    .container { padding: 0 20px; }
+    .hero-left { padding: 60px 20px 48px; }
+    footer { padding: 40px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="hero-left">
+    <a href="index.html" class="hero-back">Retour au Discordeum</a>
+    <div class="hero-tag">Profil · Membre fondateur · Fugueur</div>
+    <h1>layvi</h1>
+    <div class="hero-role">
+      <strong>Le premier à être là. Le plus souvent absent.</strong> Fondateur du canal, capitaine pishot, streamer intermittent, auteur du pavé César. 69,9% d'absence. Revenu après 116 jours avec un GIF de Shrek.
+    </div>
+    <div class="hero-stats-row">
+      <div class="hs"><div class="hs-v">5 346</div><div class="hs-l">messages</div></div>
+      <div class="hs"><div class="hs-v">798</div><div class="hs-l">jours actifs</div></div>
+      <div class="hs"><div class="hs-v">69,9%</div><div class="hs-l">absence</div></div>
+      <div class="hs"><div class="hs-v">219</div><div class="hs-l">fugues &gt;3j</div></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="stat-card">
+      <div class="sc-label">Premier message · 14 déc 2018</div>
+      <div class="sc-text">"Oh je suis où ?"</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Dernier message avant 116 jours</div>
+      <div class="sc-text">"Je suis d'accord"<br>→ [GIF Shrek] · 116 jours plus tard</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Kouffardor 2025</div>
+      <div class="sc-text">🏆 Lauréat · 22/30 · 33 jours actifs sur 365 · chute d'activité -85,4%</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Pattern des derniers mots avant absence</div>
+      <div class="sc-text">"Je suis d'accord" · "ui" · "jui chaud" · "Pour dire" · "ça compte pas"</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ══ 01 · PRÉSENCE ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">01</div><div class="sh-title">Sa présence</div></div>
+
+    <p class="prose">
+      Layvi est le fondateur du Discordeum — <em>"Oh je suis où ?"</em>, 14 décembre 2018, 12h03. Il est là avant tout le monde. Et pourtant, il est le membre le plus absent du groupe sur sept ans : <strong>69,9%</strong>, soit 1 856 jours perdus depuis son arrivée. Son pic d'activité est 2020 — 2 457 messages, 226 jours actifs — une année où le confinement et pishot l'ont maintenu présent malgré lui. Depuis, la descente est continue.
+    </p>
+
+    <p class="prose">
+      En 2025 : <strong>33 jours actifs sur 365</strong>. Il était là 9% de l'année. Ses absences ne s'annoncent jamais — elles commencent après des messages ordinaires, sans signal. "Je suis d'accord." Puis plus rien pendant 116 jours.
+    </p>
+
+    <div class="year-chart" id="yearChart"></div>
+
+    <p class="prose" style="margin-top:0">
+      Sa plage horaire est l'après-midi et le début de soirée — <strong>16h–20h</strong>, avec un pic à 17h (470 messages). Contrairement à cryo ou dosinge, il est peu actif la nuit — sauf en 2019-2020 où les soirées gaming le maintenaient connecté jusqu'à 1h du matin.
+    </p>
+
+    <div class="hour-map" id="hourMap"></div>
+    <div class="hour-labels" id="hourLabels"></div>
+  </section>
+
+  <!-- ══ 02 · PORTRAIT ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">02</div><div class="sh-title">Portrait</div></div>
+
+    <p class="prose">
+      Layvi est le membre le plus difficile à saisir. Il est là depuis le premier jour — premier message du canal, fondateur de fait — mais sa présence a toujours été intermittente. Il est la preuve que l'ancienneté ne produit pas la fidélité.
+    </p>
+
+    <p class="prose">
+      Son rôle dans le groupe a évolué : en 2019-2020 il est le capitaine de facto de la Team A pishot, l'intermédiaire entre le groupe d'amis et la structure esport, l'auteur des pavés les plus denses de l'arc. C'est lui qui rédige le <em>pavé César</em> à Dadai dans la nuit du 1er septembre 2020 — un texte de 1 800 caractères sur l'incompatibilité entre le fonctionnement corporate de pishot et la culture du groupe. Il est au sommet de sa présence intellectuelle et de son implication. C'est aussi, à peu près, le moment où sa trajectoire commence à descendre.
+    </p>
+
+    <p class="prose">
+      Il est streamer sur <strong>twitch.tv/layvii</strong> — une activité documentée de 2019 à 2021, avec des apparitions sporadiques ensuite. Le stream explique une partie de ses absences : quand il stream, il n'est pas là. Quand il ne stream plus, il n'est toujours pas là. La corrélation est asymétrique.
+    </p>
+
+    <p class="prose">
+      Ce qui caractérise layvi, c'est l'<em>absence de signal</em>. Ses disparitions ne s'annoncent pas. Ses retours non plus. Le GIF de Shrek après 116 jours n'est pas une blague — c'est son mode de communication naturel. Il n'a pas conscience que quelque chose s'est passé. C'est précisément pourquoi le groupe ne peut pas lui en vouloir, et précisément pourquoi le groupe lui en veut quand même.
+    </p>
+  </section>
+
+  <!-- ══ 03 · LES FUGUES ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">03</div><div class="sh-title">Les fugues</div></div>
+
+    <p class="prose">
+      219 absences supérieures à 3 jours sur sept ans. 8 absences supérieures à 30 jours. Un pattern récurrent : les derniers messages avant une longue absence sont toujours des fragments — jamais une phrase complète, jamais un signal. Inventaire des plus grandes :
+    </p>
+
+    <div class="absence-list">
+      <div class="abs-item">
+        <div class="abs-dur">116j</div>
+        <div class="abs-body">
+          <div class="abs-dates">21 déc 2024 → 17 avr 2025</div>
+          <div class="abs-avant">Avant : "Je suis d'accord"</div>
+          <div class="abs-retour">Retour : [GIF de Shrek]</div>
+        </div>
+      </div>
+      <div class="abs-item">
+        <div class="abs-dur">51j</div>
+        <div class="abs-body">
+          <div class="abs-dates">6 mai 2025 → 27 juin 2025</div>
+          <div class="abs-avant">Avant : "Ça va être une dinguerie ce jeu quand même ils sont sacrément forts chez rockstar"</div>
+          <div class="abs-retour">Retour : "une légende"</div>
+        </div>
+      </div>
+      <div class="abs-item">
+        <div class="abs-dur">40j</div>
+        <div class="abs-body">
+          <div class="abs-dates">4 avr 2019 → 14 mai 2019</div>
+          <div class="abs-avant">Avant : [lien YouTube]</div>
+          <div class="abs-retour">Retour : [lien watch2gether]</div>
+        </div>
+      </div>
+      <div class="abs-item">
+        <div class="abs-dur">33j</div>
+        <div class="abs-body">
+          <div class="abs-dates">4 nov 2023 → 7 déc 2023</div>
+          <div class="abs-avant">Avant : [lien gyazo]</div>
+          <div class="abs-retour">Retour : [lien YouTube]</div>
+        </div>
+      </div>
+      <div class="abs-item">
+        <div class="abs-dur">32j</div>
+        <div class="abs-body">
+          <div class="abs-dates">25 sept 2024 → 27 oct 2024</div>
+          <div class="abs-avant">Avant : "ui"</div>
+          <div class="abs-retour">Retour : <@espy></div>
+        </div>
+      </div>
+      <div class="abs-item">
+        <div class="abs-dur">31j</div>
+        <div class="abs-body">
+          <div class="abs-dates">5 août 2023 → 5 sept 2023</div>
+          <div class="abs-avant">Avant : "jui chaud"</div>
+          <div class="abs-retour">Retour : "J'ai sondé 14,000,605 timelines il n'y en a aucune où je donne des cacahuetes malheureusement"</div>
+        </div>
+      </div>
+      <div class="abs-item">
+        <div class="abs-dur">30j</div>
+        <div class="abs-body">
+          <div class="abs-dates">23 jan 2023 → 22 fév 2023</div>
+          <div class="abs-avant">Avant : "Pour dire"</div>
+          <div class="abs-retour">Retour : "Ayaa"</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="prose" style="margin-top:16px">
+      Le pattern est lisible : les mots qui précèdent une longue absence sont toujours des fragments sans fin — une phrase coupée, un accord implicite, un "ui" laconique. Il n'y a pas de signal d'alarme. Juste le dernier message, et ensuite le silence.
+    </p>
+  </section>
+
+  <!-- ══ 04 · GAMING & STREAM ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">04</div><div class="sh-title">Gaming &amp; stream</div></div>
+
+    <p class="prose">
+      Layvi est le membre du groupe le plus éclectique dans ses jeux — il est présent sur presque tout ce que le groupe a essayé, et il a sa propre ligne de jeux solo (Genshin Impact, Palworld). Son activité twitch.tv/layvii couvre 2019-2021 principalement.
+    </p>
+
+    <div class="gaming-timeline">
+      <div class="gt-row">
+        <div class="gt-year">2018</div>
+        <div class="gt-games">
+          <span class="gt-game g-lol">LoL</span>
+        </div>
+      </div>
+      <div class="gt-row">
+        <div class="gt-year">2019</div>
+        <div class="gt-games">
+          <span class="gt-game g-lol">LoL</span>
+          <span class="gt-game g-ffxiv">FFXIV</span>
+          <span class="gt-game g-terra">Terraria</span>
+          <span class="gt-game g-stream">Twitch (début)</span>
+        </div>
+      </div>
+      <div class="gt-row">
+        <div class="gt-year">2020</div>
+        <div class="gt-games">
+          <span class="gt-game g-lol">LoL</span>
+          <span class="gt-game g-pishot">pishot · Team A</span>
+          <span class="gt-game g-stream">Twitch · layvii</span>
+          <span class="gt-game g-terra">Terraria</span>
+        </div>
+      </div>
+      <div class="gt-row">
+        <div class="gt-year">2021</div>
+        <div class="gt-games">
+          <span class="gt-game g-lol">LoL</span>
+          <span class="gt-game g-stream">Twitch (actif)</span>
+          <span class="gt-game g-dofus">Dofus</span>
+        </div>
+      </div>
+      <div class="gt-row">
+        <div class="gt-year">2022</div>
+        <div class="gt-games">
+          <span class="gt-game g-dofus">Dofus</span>
+          <span class="gt-game g-tft">TFT</span>
+        </div>
+      </div>
+      <div class="gt-row">
+        <div class="gt-year">2023</div>
+        <div class="gt-games">
+          <span class="gt-game g-dofus">Dofus</span>
+          <span class="gt-game g-zzn">ZZN</span>
+        </div>
+      </div>
+      <div class="gt-row">
+        <div class="gt-year">2024–26</div>
+        <div class="gt-games">
+          <span class="gt-game g-genshin">Genshin / Palworld</span>
+          <span class="gt-game g-lol">LoL (résiduel)</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="prose" style="margin-top:16px">
+      Sa période pishot (2020) est aussi sa période de présence maximale — les deux sont liés. C'est le seul moment où un engagement extérieur au groupe a structuré sa présence dans le canal plutôt que de l'en éloigner. Depuis, rien n'a joué ce rôle.
+    </p>
+  </section>
+
+  <!-- ══ 05 · LEXIQUE ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">05</div><div class="sh-title">Son lexique</div></div>
+
+    <p class="prose">
+      Layvi a un style textuel distinct : des fautes de frappe assumées (<em>"faite"</em> à la place de "fait", ratio 55x), un usage massif de "mdr" (150×, ratio 24x), et une ponctuation absente dans les messages rapides. Il est le seul membre à utiliser "Théo" pour s'adresser à cryo — 7 fois documentées, toujours avec une affection légèrement moqueuse.
+    </p>
+
+    <div class="lexique">
+      <div class="lex-item">
+        <div class="lex-word">MDR</div>
+        <div class="lex-def">Sa ponctuation. 150 usages, ratio 24x. Il rit de tout — des absurdités du canal, des situations gaming, de lui-même. Le "mdr" de layvi est rarement ironique ; c'est une vraie réaction.</div>
+        <div class="lex-count">150 occurrences · présent chaque année</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">THÉO</div>
+        <div class="lex-def">Seul membre à appeler cryo par son prénom réel. 7 usages documentés. "Ma boite vocale encore plus saturée que quand Théo m'appel pour me réveiller en mode GO FAIRE BAHAM." Affection non dissimulée.</div>
+        <div class="lex-count">7× · usage exclusif layvi pour cryo</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">BONSOIR · SALAM</div>
+        <div class="lex-def">Ses salutations — ratio élevé vs reste du groupe. Layvi marque ses arrivées dans le canal avec des formules de politesse que les autres n'utilisent pas. Probablement inconscient.</div>
+        <div class="lex-count">bonsoir : ratio 47x · salam : ratio 41x</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">ARCHI</div>
+        <div class="lex-def">Intensificateur favori. "Archi chaud", "archi pas du tout kiffé", "archi nul". Ratio 35x. Vient du verlan de banlieue mais layvi l'utilise avec une précision presque clinique.</div>
+        <div class="lex-count">6 occurrences · ratio 35x</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">JUI CHAUD · UI</div>
+        <div class="lex-def">Ses acquiescements rapides — "j'y suis", "j'arrive", "oui". Souvent le dernier message avant une longue absence. "Jui chaud" → 31 jours de silence. "Ui" → 32 jours de silence.</div>
+        <div class="lex-count">Pattern documenté · voir section Fugues</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">PAVÉ CÉSAR</div>
+        <div class="lex-def">Expression qu'il a lui-même inventée pour désigner ses propres longs messages. "Bah tkt que le pavé césar il va tomber." En septembre 2020, il envoie le vrai — 1 800 caractères à Dadai. L'expression lui survit.</div>
+        <div class="lex-count">2 septembre 2020 · événement fondateur</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 06 · CITATIONS ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">06</div><div class="sh-title">Citations</div></div>
+
+    <p class="prose">Une sélection qui capture l'éventail layvi — le capitaine pishot, le fugueur, le noctambule, le analyste culturel, le streamer disparu.</p>
+
+    <div class="citations">
+
+      <div class="cit">
+        <div class="cit-text">"Oh je suis où ?"</div>
+        <div class="cit-meta">14 décembre 2018 · 12:03 · premier message du Discordeum · restera valable toute sa vie</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"Du coup on va devoir attendre que la corporation pishot se face avant de prendre une décision qui est plus qu'évidente et qui peut être prise instantanément"</div>
+        <div class="cit-meta">2020 · pishot · la critique corporate formulée avec une précision parfaite</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"Bah tkt que le pavé cesar il va tomber"</div>
+        <div class="cit-meta">23 août 2020 · annonce du futur pavé César · dix jours avant les démissions</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"C'est tellement compliqué de s'entrainer à 5 / Il faut demander à kyim qu'elle organise un planning [...] COMBIEN DE TEMPS J'AI PRIS A LE FAIRE ? / LEGIT AU MOINS 1000 MICRO SECRONDES C'EST ENORME LE TAFF FOURNI BORDEL"</div>
+        <div class="cit-meta">5 juillet 2020 · réponse à Dadai sur la gestion des créneaux · ton layvi pur</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"J'ai sondé 14,000,605 timelines il n'y en a aucune où je donne des cacahuetes malheureusement"</div>
+        <div class="cit-meta">5 septembre 2023 · message de retour après 31 jours d'absence · référence Doctor Strange</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"Je suis dans le vestiaire à tourcoing les bains, je veux me sécher pour m'habiller j'ai l'impression que dehors c'est le CHAOS TOTAL les cris, les hurlements, les portes qui claquent, les insultes..."</div>
+        <div class="cit-meta">11 août 2022 · correspondance depuis une piscine publique · reportage terrain</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"Ma boite vocale encore plus saturée que quand Théo m'appel pour me réveiller en mode 'GO FAIRE BAHAM'"</div>
+        <div class="cit-meta">2020 · sur cryo · seul usage affectueux du prénom réel de cryo dans tout le canal</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"bonne année le discordeum"</div>
+        <div class="cit-meta">31 décembre 2025 · minuit · après 9 mois d'absence cumulée sur l'année · son seul message de décembre</div>
+      </div>
+
+      <div class="cit faded">
+        <div class="cit-text">"hmm"</div>
+        <div class="cit-meta">21 mars 2026 · 18:47 · dernier message archivé · réponse à quelque chose · sujet inconnu</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ 07 · RELATIONS ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">07</div><div class="sh-title">Ses relations</div></div>
+
+    <div class="relations">
+      <div class="rel-card">
+        <div class="rel-av" style="background:#0a2030; color:#5eead4">E</div>
+        <div class="rel-name" style="color:#5eead4">espy</div>
+        <div class="rel-surnom">luco · luca</div>
+        <div class="rel-desc">111 pings directs — sa relation la plus dense en volume. Ils se sont vus IRL presque quotidiennement selon leurs propres messages. Le canal n'est qu'un canal — leur vrai espace est ailleurs.</div>
+      </div>
+      <div class="rel-card">
+        <div class="rel-av" style="background:#2a1a5a; color:#a78bfa">D</div>
+        <div class="rel-name" style="color:#a78bfa">dosinge</div>
+        <div class="rel-surnom">dorian · dorion</div>
+        <div class="rel-desc">62 pings. Il l'appelle "Dorian" — le seul prénom réel utilisé régulièrement dans le groupe. Layvi et dosinge ont partagé le coaching pishot et les JCS. Leur lien est dans l'histoire commune.</div>
+      </div>
+      <div class="rel-card">
+        <div class="rel-av" style="background:#201005; color:#fb923c">C</div>
+        <div class="rel-name" style="color:#fb923c">cryo</div>
+        <div class="rel-surnom">Théo · tot</div>
+        <div class="rel-desc">34 pings. Il est le seul à l'appeler "Théo". Cryo a inventé des dizaines de surnoms pour layvi — layvi n'en a inventé aucun pour cryo. Mais il utilise son vrai prénom, ce qui vaut plus.</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="footer-logo">Le Discordeum</div>
+  <nav class="footer-nav">
+    <a href="index.html" class="footer-link">← Sommaire</a>
+    <a href="proces_layvi.html" class="footer-link">Le Procès</a>
+    <a href="kouffardor.html" class="footer-link">Kouffardor</a>
+    <a href="absences.html" class="footer-link">Absences</a>
+  </nav>
+</footer>
+
+<script>
+// Activité par année
+const yearData = [
+  {y:'2018', n:22, peak:false},
+  {y:'2019', n:982, peak:false},
+  {y:'2020', n:2457, peak:true},
+  {y:'2021', n:873, peak:false},
+  {y:'2022', n:390, peak:false},
+  {y:'2023', n:276, peak:false},
+  {y:'2024', n:208, peak:false},
+  {y:'2025', n:108, peak:false},
+  {y:'2026', n:30, peak:false},
+];
+const maxY = Math.max(...yearData.map(d=>d.n));
+const chartEl = document.getElementById('yearChart');
+yearData.forEach(d => {
+  const col = document.createElement('div');
+  col.className = 'yc-col';
+  const h = Math.max(4, Math.round((d.n/maxY)*100));
+  col.innerHTML = `
+    <div class="yc-val">${d.n}</div>
+    <div class="yc-bar${d.peak?' peak':d.n<100?' low':''}" style="height:${h}px"></div>
+    <div class="yc-year">${d.y}</div>
+  `;
+  chartEl.appendChild(col);
+});
+
+// Heatmap horaire
+const hourData = [95,30,8,10,0,3,8,62,89,94,204,260,411,284,408,373,449,470,468,386,417,388,291,138];
+const maxH = Math.max(...hourData);
+const hmEl = document.getElementById('hourMap');
+const hlEl = document.getElementById('hourLabels');
+hourData.forEach((n, h) => {
+  const cell = document.createElement('div');
+  cell.className = 'hm-cell';
+  const intensity = n / maxH;
+  const alpha = 0.05 + intensity * 0.85;
+  cell.style.background = `rgba(251,191,36,${alpha})`;
+  cell.setAttribute('data-label', `${String(h).padStart(2,'0')}h · ${n} msgs`);
+  hmEl.appendChild(cell);
+
+  const lbl = document.createElement('div');
+  lbl.className = 'hl';
+  lbl.textContent = h % 3 === 0 ? String(h).padStart(2,'0') : '';
+  hlEl.appendChild(lbl);
+});
+</script>
+
+</body>
+</html>
