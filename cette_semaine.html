@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cette semaine en 20XX — Le Discordeum</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+  :root {
+    --bg:     #08080e;
+    --bg2:    #0d0d16;
+    --bg3:    #121220;
+    --border: #1c1c2c;
+    --text:   #b0b0cc;
+    --muted:  #484862;
+    --dim:    #202030;
+    --white:  #e8e8f8;
+    --dos: #a78bfa;
+    --esp: #5eead4;
+    --cry: #fb923c;
+    --lay: #fbbf24;
+    --bai: #4ade80;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 100px 8vw 80px;
+    border-bottom: 1px solid var(--border);
+    position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; top: -20px; right: 4vw;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(120px, 22vw, 260px);
+    color: var(--white); opacity: 0.02;
+    line-height: 1; pointer-events: none; user-select: none;
+    letter-spacing: -2px;
+  }
+  .hero-back {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 3px; color: var(--muted);
+    text-transform: uppercase; margin-bottom: 20px;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    transition: color 0.2s;
+  }
+  .hero-back:hover { color: var(--white); }
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 10vw, 110px);
+    color: var(--white); line-height: 0.92; letter-spacing: 2px;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.3s;
+  }
+  .hero h1 em { font-style: italic; color: var(--white); opacity: 0.3; }
+  .hero-sub {
+    font-size: clamp(14px, 2vw, 18px); font-style: italic;
+    color: var(--muted); margin-top: 18px; max-width: 520px;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.6s;
+  }
+
+  /* ── NAV ANNÉES ── */
+  .year-nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(8,8,14,0.96); backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    height: 44px; display: flex; align-items: center;
+    padding: 0 8vw; gap: 0; overflow-x: auto;
+  }
+  .year-nav a {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px; letter-spacing: 2px; color: var(--muted);
+    text-decoration: none; padding: 0 18px; height: 44px;
+    display: flex; align-items: center; white-space: nowrap;
+    border-right: 1px solid var(--border);
+    transition: color 0.2s, background 0.2s;
+  }
+  .year-nav a:first-child { border-left: 1px solid var(--border); }
+  .year-nav a:hover { color: var(--white); background: rgba(255,255,255,0.03); }
+
+  /* ── SEMAINES ── */
+  .week-section {
+    border-bottom: 1px solid var(--border);
+    position: relative; overflow: hidden;
+  }
+
+  /* Bande colorée latérale */
+  .week-section::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    background: var(--wc, var(--muted));
+  }
+
+  .week-header {
+    padding: 64px 8vw 40px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 48px; align-items: start;
+  }
+  @media (max-width: 768px) { .week-header { grid-template-columns: 1fr; gap: 24px; } }
+
+  .week-year-big {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(80px, 15vw, 160px);
+    color: var(--wc, var(--muted)); opacity: 0.12;
+    line-height: 1; pointer-events: none; user-select: none;
+    position: absolute; left: 6vw; top: 20px;
+    letter-spacing: -2px;
+  }
+
+  .week-meta { position: relative; z-index: 1; }
+  .week-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--wc, var(--muted)); margin-bottom: 12px;
+  }
+  .week-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(28px, 5vw, 52px);
+    color: var(--white); letter-spacing: 1px; line-height: 1.1;
+    margin-bottom: 10px;
+  }
+  .week-dates {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--muted); letter-spacing: 1px;
+    margin-bottom: 20px;
+  }
+  .week-desc {
+    font-size: 14px; color: var(--text); line-height: 1.8;
+    max-width: 420px;
+  }
+  .week-desc strong { color: var(--white); }
+  .week-desc em { color: var(--wc, var(--muted)); font-style: italic; }
+
+  /* Stats de la semaine */
+  .week-stats {
+    position: relative; z-index: 1;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .wstat {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 3px; padding: 12px 16px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .wstat-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px; color: var(--wc, var(--muted)); line-height: 1; flex-shrink: 0;
+  }
+  .wstat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--muted); letter-spacing: 1px;
+    text-transform: uppercase; line-height: 1.4;
+  }
+
+  /* Barre de présence membres */
+  .presence-bar {
+    display: flex; gap: 6px; align-items: center; flex-wrap: wrap;
+    margin-top: 4px;
+  }
+  .pb-item {
+    display: flex; align-items: center; gap: 5px;
+  }
+  .pb-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .pb-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: var(--muted); letter-spacing: 0.5px;
+  }
+  .pb-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: var(--dim);
+  }
+
+  /* ── MESSAGES DE LA SEMAINE ── */
+  .week-messages {
+    padding: 0 8vw 56px;
+  }
+  .msg-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 16px;
+  }
+  .msg-feed { display: flex; flex-direction: column; gap: 6px; }
+  .msg {
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .msg-av {
+    width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+  }
+  .msg-body { flex: 1; }
+  .msg-author { font-size: 11px; font-weight: 700; margin-bottom: 1px; }
+  .msg-text {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: #9090b0; line-height: 1.5;
+    background: var(--bg2); border-radius: 3px; padding: 5px 10px;
+    border-left: 2px solid var(--border);
+  }
+  .msg-time { font-size: 9px; color: var(--muted); margin-top: 1px; font-family: 'JetBrains Mono', monospace; }
+
+  .av-dos { background: #2a1a5a; color: var(--dos); }
+  .av-esp { background: #0a2030; color: var(--esp); }
+  .av-cry { background: #2a1205; color: var(--cry); }
+  .av-lay { background: #2a1f05; color: var(--lay); }
+  .av-bai { background: #0a2010; color: var(--bai); }
+  .col-dos { color: var(--dos); }
+  .col-esp { color: var(--esp); }
+  .col-cry { color: var(--cry); }
+  .col-lay { color: var(--lay); }
+  .col-bai { color: var(--bai); }
+
+  /* Citation de la semaine */
+  .week-quote {
+    margin: 20px 0 0;
+    font-family: 'Crimson Pro', serif; font-style: italic;
+    font-size: clamp(15px, 2.2vw, 18px);
+    color: var(--wc, var(--muted));
+    border-left: 2px solid var(--wc, var(--muted));
+    padding: 10px 0 10px 18px; line-height: 1.5;
+  }
+  .week-quote .attr {
+    display: block; font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; font-style: normal; color: var(--muted);
+    margin-top: 6px; letter-spacing: 1px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 48px 8vw;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .footer-logo { font-family: 'Crimson Pro', serif; font-size: 18px; font-style: italic; color: var(--muted); }
+  .footer-back { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; text-decoration: none; transition: color 0.2s; }
+  .footer-back:hover { color: var(--white); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 600px) {
+    .hero { padding: 60px 20px 48px; }
+    .week-header { padding: 48px 20px 28px; }
+    .week-messages { padding: 0 20px 40px; }
+    .year-nav { padding: 0 20px; }
+    footer { padding: 40px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg">20XX</div>
+  <a href="index.html" class="hero-back">← Retour aux archives</a>
+  <h1>Cette semaine<br>en <em>20XX</em></h1>
+  <p class="hero-sub">Sept semaines types. Une par année. Le même canal, les mêmes gens — et sept ambiances entièrement différentes.</p>
+</div>
+
+<!-- NAV -->
+<nav class="year-nav">
+  <a href="#y2019">2019</a>
+  <a href="#y2020">2020</a>
+  <a href="#y2021">2021</a>
+  <a href="#y2022">2022</a>
+  <a href="#y2023">2023</a>
+  <a href="#y2024">2024</a>
+  <a href="#y2025">2025</a>
+</nav>
+
+
+<!-- ══════════════════════════════════════ -->
+<!-- SEMAINE 2019 — FFXIV SHADOWBRINGERS  -->
+<!-- ══════════════════════════════════════ -->
+<div class="week-section" id="y2019" style="--wc: #b0a0ff">
+  <div class="week-year-big">2019</div>
+  <div class="week-header">
+    <div class="week-meta">
+      <div class="week-tag">Semaine 26 · Juin 2019 · 956 messages</div>
+      <div class="week-title">FFXIV Shadowbringers<br>vient de sortir</div>
+      <div class="week-dates">24 → 30 juin 2019</div>
+      <div class="week-desc">
+        L'extension Shadowbringers de Final Fantasy XIV vient de sortir. Le groupe est dedans à temps plein. <strong>956 messages en 7 jours</strong> — c'est la semaine record de 2019, et la deuxième plus active de toute l'histoire du canal. Dosinge et espy mènent. Cryo est là. Layvi aussi, mais il arrive après les autres comme d'habitude. La journée du vendredi 28 juin sera la journée record absolue du Discordeum : <em>333 messages en une seule journée.</em>
+      </div>
+    </div>
+    <div class="week-stats">
+      <div class="wstat">
+        <div class="wstat-val" style="color:#b0a0ff">956</div>
+        <div class="wstat-label">messages · semaine record 2019</div>
+      </div>
+      <div class="wstat">
+        <div class="wstat-val" style="color:#b0a0ff">333</div>
+        <div class="wstat-label">messages le vendredi 28 juin · record absolu du canal</div>
+      </div>
+      <div class="wstat">
+        <div class="wstat-label">Présence</div>
+      </div>
+      <div class="presence-bar">
+        <div class="pb-item"><div class="pb-dot" style="background:var(--dos)"></div><span class="pb-name">dosinge</span><span class="pb-count"> 335</span></div>
+        <div class="pb-item"><div class="pb-dot" style="background:var(--esp)"></div><span class="pb-name">espy</span><span class="pb-count"> 309</span></div>
+        <div class="pb-item"><div class="pb-dot" style="background:var(--lay)"></div><span class="pb-name">layvi</span><span class="pb-count"> 209</span></div>
+        <div class="pb-item"><div class="pb-dot" style="background:var(--cry)"></div><span class="pb-name">cryo</span><span class="pb-count"> 103</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="week-messages">
+    <div class="msg-label">Messages de la semaine · sélection</div>
+    <div class="msg-feed">
+      <div class="msg">
+        <div class="msg-av av-dos">D</div>
+        <div class="msg-body">
+          <div class="msg-author col-dos">dosinge</div>
+          <div class="msg-text">Peut etre un voyageur dimensionnel, peut etre une hallucination collective</div>
+          <div class="msg-time">Mar 25/06 · 21:17</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-lay">L</div>
+        <div class="msg-body">
+          <div class="msg-author col-lay">layvi</div>
+          <div class="msg-text">Je vais pas dormir avant longtemps</div>
+          <div class="msg-time">Mar 25/06 · 21:51</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-cry">C</div>
+        <div class="msg-body">
+          <div class="msg-author col-cry">cryoslinger</div>
+          <div class="msg-text">mais qu'est-ce qui vous arrive ? xD</div>
+          <div class="msg-time">Ven 28/06 · 18:14 · il débarque en milieu de semaine</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-cry">C</div>
+        <div class="msg-body">
+          <div class="msg-author col-cry">cryoslinger</div>
+          <div class="msg-text">dorian t'as une section memes, nique toi</div>
+          <div class="msg-time">Ven 28/06 · 19:31</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-dos">D</div>
+        <div class="msg-body">
+          <div class="msg-author col-dos">dosinge</div>
+          <div class="msg-text">T'sais quoi ben nique ta mere</div>
+          <div class="msg-time">Ven 28/06 · 19:31 · 0 secondes d'écart</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-dos">D</div>
+        <div class="msg-body">
+          <div class="msg-author col-dos">dosinge</div>
+          <div class="msg-text">J'ai envie de mourire</div>
+          <div class="msg-time">Ven 28/06 · 20:54</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-esp">E</div>
+        <div class="msg-body">
+          <div class="msg-author col-esp">espy</div>
+          <div class="msg-text">c'est des mobs spécifiques écrit dans ton carnet</div>
+          <div class="msg-time">Dim 30/06 · 19:31 · conseil de coach FFXIV</div>
+        </div>
+      </div>
+    </div>
+    <div class="week-quote" style="--wc: #b0a0ff">
+      "FFXIV et le RSA."
+      <span class="attr">espy · juin 2019 · résumé de la situation en cinq mots</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════ -->
+<!-- SEMAINE 2020 — CONFINEMENT + PISHOT  -->
+<!-- ══════════════════════════════════════ -->
+<div class="week-section" id="y2020" style="--wc: #f87171">
+  <div class="week-year-big">2020</div>
+  <div class="week-header">
+    <div class="week-meta">
+      <div class="week-tag">Semaine 20 · Mai 2020 · 883 messages</div>
+      <div class="week-title">Confinement.<br>Pishot commence.</div>
+      <div class="week-dates">11 → 17 mai 2020</div>
+      <div class="week-desc">
+        Deux mois de confinement. Dosinge vient d'être recruté comme coach par pishot. Il passe ses matinées à analyser des replays. Ses soirées à jouer. Le canal tourne à <strong>883 messages sur 7 jours</strong> — le troisième chiffre hebdomadaire le plus élevé de toute l'histoire. Layvi gère la bureaucratie pishot depuis son canapé. Cryo demande pourquoi son répondeur surchauffe. <em>C'est le mois le plus actif du Discordeum — 2 932 messages en mai 2020.</em>
+      </div>
+    </div>
+    <div class="week-stats">
+      <div class="wstat">
+        <div class="wstat-val" style="color:#f87171">883</div>
+        <div class="wstat-label">messages · dans le mois record absolu</div>
+      </div>
+      <div class="wstat">
+        <div class="wstat-val" style="color:#f87171">4</div>
+        <div class="wstat-label">membres actifs · confinement total · tous là</div>
+      </div>
+      <div class="presence-bar">
+        <div class="pb-item"><div class="pb-dot" style="background:var(--dos)"></div><span class="pb-name">dosinge</span><span class="pb-count"> 338</span></div>
+        <div class="pb-item"><div class="pb-dot" style="background:var(--esp)"></div><span class="pb-name">espy</span><span class="pb-count"> 193</span></div>
+        <div class="pb-item"><div class="pb-dot" style="background:var(--lay)"></div><span class="pb-name">layvi</span><span class="pb-count"> 189</span></div>
+        <div class="pb-item"><div class="pb-dot" style="background:var(--cry)"></div><span class="pb-name">cryo</span><span class="pb-count"> 163</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="week-messages">
+    <div class="msg-label">Messages de la semaine · sélection</div>
+    <div class="msg-feed">
+      <div class="msg">
+        <div class="msg-av av-dos">D</div>
+        <div class="msg-body">
+          <div class="msg-author col-dos">dosinge</div>
+          <div class="msg-text">JE VAIS TE LE FOUTRE DANS LE CUL TON RAMACHIASSE AAAH</div>
+          <div class="msg-time">Mar 12/05 · 07:53 · réveil matinal, humeur stable</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-dos">D</div>
+        <div class="msg-body">
+          <div class="msg-author col-dos">dosinge</div>
+          <div class="msg-text">Mais 5h c'est pas une nuit</div>
+          <div class="msg-time">Mar 12/05 · 08:20</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-lay">L</div>
+        <div class="msg-body">
+          <div class="msg-author col-lay">layvi</div>
+          <div class="msg-text">Sachant qu'il a send un pavé à dadai parce qu'il voulait pas vocal il a full dodge</div>
+          <div class="msg-time">Mer 13/05 · 17:33 · compte-rendu pishot</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-esp">E</div>
+        <div class="msg-body">
+          <div class="msg-author col-esp">espy</div>
+          <div class="msg-text">Troisième team, troisième chromosome à chaque paire</div>
+          <div class="msg-time">Mer 13/05 · 17:51</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-cry">C</div>
+        <div class="msg-body">
+          <div class="msg-author col-cry">cryoslinger</div>
+          <div class="msg-text">c'quoi ton but, surcharger ton répondeur ?</div>
+          <div class="msg-time">Jeu 14/05 · 18:03 · à dosinge</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-esp">E</div>
+        <div class="msg-body">
+          <div class="msg-author col-esp">espy</div>
+          <div class="msg-text">J'sais pas quelle genre de position ignoble tu as pour jouer</div>
+          <div class="msg-time">Jeu 14/05 · 19:12</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-cry">C</div>
+        <div class="msg-body">
+          <div class="msg-author col-cry">cryoslinger</div>
+          <div class="msg-text">mais pourquoi t'es si MÉCHANT</div>
+          <div class="msg-time">Dim 17/05 · 18:51</div>
+        </div>
+      </div>
+    </div>
+    <div class="week-quote" style="--wc: #f87171">
+      "J'aurais bien uninstall mais on doit COACH 🙂"
+      <span class="attr">dosinge · 11 mai 2020 · le coaching comme contrainte existentielle</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════ -->
+<!-- SEMAINE 2021 — VALHEIM + BAIEDHIVER  -->
+<!-- ══════════════════════════════════════ -->
+<div class="week-section" id="y2021" style="--wc: #4ade80">
+  <div class="week-year-big">2021</div>
+  <div class="week-header">
+    <div class="week-meta">
+      <div class="week-tag">Semaine 11 · Mars 2021 · 510 messages</div>
+      <div class="week-title">Valheim.<br>Layvi perd l'électricité.</div>
+      <div class="week-dates">15 → 21 mars 2021</div>
+      <div class="week-desc">
+        Valheim vient de sortir en early access. Le groupe y est à fond — les vikings, le craft, le survival. Baiedhiver a rejoint le canal 10 jours plus tôt avec <em>"j'suis up perso"</em>. Cette semaine, layvi signale que son électricité est coupée un samedi soir en pleine session. <strong>EDF est convoqué comme ennemi collectif.</strong> Le groupe continue quand même. Dosinge poste un script AutoHotkey incompréhensible. Cryo constate tout ça depuis son confort.
+      </div>
+    </div>
+    <div class="week-stats">
+      <div class="wstat">
+        <div class="wstat-val" style="color:#4ade80">510</div>
+        <div class="wstat-label">messages · mars 2021 sera le 3e mois le plus actif</div>
+      </div>
+      <div class="wstat">
+        <div class="wstat-val" style="color:#4ade80">4</div>
+        <div class="wstat-label">membres actifs · baiedhiver absent cette semaine</div>
+      </div>
+      <div class="presence-bar">
+        <div class="pb-item"><div class="pb-dot" style="background:var(--lay)"></div><span class="pb-name">layvi</span><span class="pb-count"> 177</span></div>
+        <div class="pb-item"><div class="pb-dot" style="background:var(--dos)"></div><span class="pb-name">dosinge</span><span class="pb-count"> 126</span></div>
+        <div class="pb-item"><div class="pb-dot" style="background:var(--cry)"></div><span class="pb-name">cryo</span><span class="pb-count"> 117</span></div>
+        <div class="pb-item"><div class="pb-dot" style="background:var(--esp)"></div><span class="pb-name">espy</span><span class="pb-count"> 90</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="week-messages">
+    <div class="msg-label">Messages de la semaine · sélection</div>
+    <div class="msg-feed">
+      <div class="msg">
+        <div class="msg-av av-cry">C</div>
+        <div class="msg-body">
+          <div class="msg-author col-cry">cryoslinger</div>
+          <div class="msg-text">on peut juste go cape et garder l'iron armor pour l'instant en vrai</div>
+          <div class="msg-time">Lun 15/03 · 22:01 · stratégie Valheim</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-lay">L</div>
+        <div class="msg-body">
+          <div class="msg-author col-lay">layvi</div>
+          <div class="msg-text">Je vais rentrer je vais taper mon meilleur coma</div>
+          <div class="msg-time">Jeu 18/03 · 06:07</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-cry">C</div>
+        <div class="msg-body">
+          <div class="msg-author col-cry">cryoslinger</div>
+          <div class="msg-text">oh le petit confort du cul de dod</div>
+          <div class="msg-time">Jeu 18/03 · 10:22</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-lay">L</div>
+        <div class="msg-body">
+          <div class="msg-author col-lay">layvi</div>
+          <div class="msg-text">EDF par contre vous commencez à m'exploser les couilles</div>
+          <div class="msg-time">Sam 20/03 · 18:27 · coupure de courant en pleine session</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-dos">D</div>
+        <div class="msg-body">
+          <div class="msg-author col-dos">dosinge</div>
+          <div class="msg-text">Yora moy de continuer valheim quand t'auras recup ton electricite ?</div>
+          <div class="msg-time">Sam 20/03 · 20:20 · pragmatique</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-lay">L</div>
+        <div class="msg-body">
+          <div class="msg-author col-lay">layvi</div>
+          <div class="msg-text">Mais maintenant je sais pas si ils dorment où si ils ont plus de jus xD</div>
+          <div class="msg-time">Sam 20/03 · 22:19</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-dos">D</div>
+        <div class="msg-body">
+          <div class="msg-author col-dos">dosinge</div>
+          <div class="msg-text">Par contre du coup c'est quoi ce bordel, pas d'élec depuis plusieurs heures — ce que t'as dans ton frigo et ton congel rip ?</div>
+          <div class="msg-time">Sam 20/03 · 22:21 · inquiet pour le frigo</div>
+        </div>
+      </div>
+    </div>
+    <div class="week-quote" style="--wc: #4ade80">
+      "T'inquiète demain t'as mon frère qui va les 'appeler'."
+      <span class="attr">layvi · 20 mars 2021 · sur EDF · la menace familiale comme solution technique</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════ -->
+<!-- SEMAINE 2022 — V RISING / MALVEILLANCE -->
+<!-- ══════════════════════════════════════ -->
+<div class="week-section" id="y2022" style="--wc: #a78bfa">
+  <div class="week-year-big">2022</div>
+  <div class="week-header">
+    <div class="week-meta">
+      <div class="week-tag">Semaine 26 · Juin 2022 · 263 messages</div>
+      <div class="week-title">V Rising.<br>La malveillance entre dans le lexique.</div>
+      <div class="week-dates">27 juin → 3 juillet 2022</div>
+      <div class="week-desc">
+        V Rising — le jeu de vampire en survival crafting — réunit brièvement le groupe. Mais le vrai événement de juin 2022, c'est l'institutionnalisation du mot <em>"malveillance"</em> comme catégorie d'analyse du groupe. Ce mois de juin est le premier où le terme est utilisé de façon récurrente non plus comme insulte mais comme <strong>concept analytique</strong>. Le futur Kouffardor commence ici. Baiedhiver fait une apparition (5 messages). Dosinge est "une ombre confirmée" selon espy.
+      </div>
+    </div>
+    <div class="week-stats">
+      <div class="wstat">
+        <div class="wstat-val" style="color:#a78bfa">263</div>
+        <div class="wstat-label">messages · activité divisée par 3,5 vs 2020</div>
+      </div>
+      <div class="wstat">
+        <div class="wstat-val" style="color:#a78bfa">5</div>
+        <div class="wstat-label">membres · baiedhiver réapparaît après 46 jours</div>
+      </div>
+      <div class="presence-bar">
+        <div class="pb-item"><div class="pb-dot" style="background:var(--dos)"></div><span class="pb-name">dosinge</span><span class="pb-count"> 108</span></div>
+        <div class="pb-item"><div class="pb-dot" style="background:var(--esp)"></div><span class="pb-name">espy</span><span class="pb-count"> 66</span></div>
+        <div class="pb-item"><div class="pb-dot" style="background:var(--lay)"></div><span class="pb-name">layvi</span><span class="pb-count"> 58</span></div>
+        <div class="pb-item"><div class="pb-dot" style="background:var(--cry)"></div><span class="pb-name">cryo</span><span class="pb-count"> 26</span></div>
+        <div class="pb-item"><div class="pb-dot" style="background:var(--bai)"></div><span class="pb-name">baiedhiver</span><span class="pb-count"> 5</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="week-messages">
+    <div class="msg-label">Messages de la semaine · sélection</div>
+    <div class="msg-feed">
+      <div class="msg">
+        <div class="msg-av av-dos">D</div>
+        <div class="msg-body">
+          <div class="msg-author col-dos">dosinge</div>
+          <div class="msg-text">ON A UNE VITESSE DE FOU</div>
+          <div class="msg-time">Lun 27/06 · 18:01 · V Rising, joie pure</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-cry">C</div>
+        <div class="msg-body">
+          <div class="msg-author col-cry">cryoslinger</div>
+          <div class="msg-text">Elle est où l'emote mme sardoche ?</div>
+          <div class="msg-time">Lun 27/06 · 18:39 · priorités</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-esp">E</div>
+        <div class="msg-body">
+          <div class="msg-author col-esp">espy</div>
+          <div class="msg-text">VITE DOD OPTIMISE MA ROUTE</div>
+          <div class="msg-time">Mar 28/06 · 17:04</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-dos">D</div>
+        <div class="msg-body">
+          <div class="msg-author col-dos">dosinge</div>
+          <div class="msg-text">Ah ouai la malveillance du scouting ici</div>
+          <div class="msg-time">Mer 29/06 · 09:26 · premier usage analytique du terme</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-dos">D</div>
+        <div class="msg-body">
+          <div class="msg-author col-dos">dosinge</div>
+          <div class="msg-text">En dépit de semoule le troll</div>
+          <div class="msg-time">Jeu 30/06 · 07:22</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-esp">E</div>
+        <div class="msg-body">
+          <div class="msg-author col-esp">espy</div>
+          <div class="msg-text">Dod est une ombre confirmed</div>
+          <div class="msg-time">Sam 02/07 · 16:54 · diagnostic d'absence</div>
+        </div>
+      </div>
+    </div>
+    <div class="week-quote" style="--wc: #a78bfa">
+      "Il a mis de la ponctuation, c'est dire à quel point t'es malveillant dodent."
+      <span class="attr">layvi à dosinge · juin 2022 · la ponctuation comme preuve à charge</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════ -->
+<!-- SEMAINE 2023 — ZZN + LAYVI EN ALGÉRIE -->
+<!-- ══════════════════════════════════════ -->
+<div class="week-section" id="y2023" style="--wc: #fbbf24">
+  <div class="week-year-big">2023</div>
+  <div class="week-header">
+    <div class="week-meta">
+      <div class="week-tag">Semaine 29 · Juillet 2023 · 205 messages</div>
+      <div class="week-title">Layvi en Algérie.<br>46 degrés à l'ombre.</div>
+      <div class="week-dates">17 → 23 juillet 2023</div>
+      <div class="week-desc">
+        Layvi est en vacances en Algérie — il prend l'avion en catastrophe après une histoire de billet raté, il atterrit dans un hôtel surclassé avec une suite royale, et il rapporte tout en direct. <em>"46 degrés à l'ombre ZEBI."</em> Cryo joue à ZZN. Baiedhiver est là pour une semaine active. Dosinge a faim et n'a rien à manger. <strong>C'est la semaine la plus active de 2023</strong> — essentiellement grâce à layvi qui poste depuis son téléphone en terre étrangère.
+      </div>
+    </div>
+    <div class="week-stats">
+      <div class="wstat">
+        <div class="wstat-val" style="color:#fbbf24">205</div>
+        <div class="wstat-label">messages · semaine la plus active de 2023</div>
+      </div>
+      <div class="wstat">
+        <div class="wstat-val" style="color:#fbbf24">96</div>
+        <div class="wstat-label">messages de layvi · 47% du total · depuis l'Algérie</div>
+      </div>
+      <div class="presence-bar">
+        <div class="pb-item"><div class="pb-dot" style="background:var(--lay)"></div><span class="pb-name">layvi</span><span class="pb-count"> 96</span></div>
+        <div class="pb-item"><div class="pb-dot" style="background:var(--cry)"></div><span class="pb-name">cryo</span><span class="pb-count"> 51</span></div>
+        <div class="pb-item"><div class="pb-dot" style="background:var(--esp)"></div><span class="pb-name">espy</span><span class="pb-count"> 28</span></div>
+        <div class="pb-item"><div class="pb-dot" style="background:var(--bai)"></div><span class="pb-name">baiedhiver</span><span class="pb-count"> 17</span></div>
+        <div class="pb-item"><div class="pb-dot" style="background:var(--dos)"></div><span class="pb-name">dosinge</span><span class="pb-count"> 13</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="week-messages">
+    <div class="msg-label">Messages de la semaine · sélection</div>
+    <div class="msg-feed">
+      <div class="msg">
+        <div class="msg-av av-dos">D</div>
+        <div class="msg-body">
+          <div class="msg-author col-dos">dosinge</div>
+          <div class="msg-text">PUTAIN J AI FAIM ET Y A PLUS RIEN A BOUFFER</div>
+          <div class="msg-time">Mar 18/07 · 10:27 · depuis chez lui</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-lay">L</div>
+        <div class="msg-body">
+          <div class="msg-author col-lay">layvi</div>
+          <div class="msg-text">Aujourd'hui on démarre pour Alger, on passe 2 nuits là bas à l'hotel et la journée du 19 on visite, le 20 le bateau démarre à 16h...</div>
+          <div class="msg-time">Mar 18/07 · 14:29 · itinéraire complet</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-lay">L</div>
+        <div class="msg-body">
+          <div class="msg-author col-lay">layvi</div>
+          <div class="msg-text">46 degrés À L'OMBRE ZEBI</div>
+          <div class="msg-time">Mer 19/07 · 11:24 · rapport météo depuis Alger</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-lay">L</div>
+        <div class="msg-body">
+          <div class="msg-author col-lay">layvi</div>
+          <div class="msg-text">On est en règle vis à vis du tout puissant</div>
+          <div class="msg-time">Mer 19/07 · 12:02</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-lay">L</div>
+        <div class="msg-body">
+          <div class="msg-author col-lay">layvi</div>
+          <div class="msg-text">On a été surclassé on a eu la suite royale, la meilleure de l'hôtel c'est une DINGUERIE</div>
+          <div class="msg-time">Mer 19/07 · 12:59</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-lay">L</div>
+        <div class="msg-body">
+          <div class="msg-author col-lay">layvi</div>
+          <div class="msg-text">Je te souhaite de marcher sur un lego</div>
+          <div class="msg-time">Mer 19/07 · 11:15 · réponse à espy</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-bai">B</div>
+        <div class="msg-body">
+          <div class="msg-author col-bai">baiedhiver</div>
+          <div class="msg-text">en tant que seconde-voix</div>
+          <div class="msg-time">Mer 19/07 · 22:16 · contribution hebdomadaire</div>
+        </div>
+      </div>
+    </div>
+    <div class="week-quote" style="--wc: #fbbf24">
+      "J'ai sondé 14,000,605 timelines il n'y en a aucune où je donne des cacahuetes malheureusement."
+      <span class="attr">layvi · 5 septembre 2023 · retour après 31 jours d'absence · contexte : aucun</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════ -->
+<!-- SEMAINE 2024 — ACTIVITÉ RÉSIDUELLE   -->
+<!-- ══════════════════════════════════════ -->
+<div class="week-section" id="y2024" style="--wc: #5eead4">
+  <div class="week-year-big">2024</div>
+  <div class="week-header">
+    <div class="week-meta">
+      <div class="week-tag">Semaine 26 · Juin 2024 · 101 messages</div>
+      <div class="week-title">L'escalade.<br>L'odeur de pet oeufé.</div>
+      <div class="week-dates">24 → 29 juin 2024</div>
+      <div class="week-desc">
+        101 messages en une semaine. C'est désormais un bon résultat. Espy parle d'un jeu mobile qui l'énerve. Dosinge fait de l'escalade et a une question urgente sur son odeur de chaise. Cryo organise. Layvi est là pour 9 messages, ce qui est déjà bien pour 2024. <em>Baiedhiver fait 5 messages.</em> L'activité a chuté de 90% par rapport à 2020 — mais le groupe est toujours là, dans le même canal, avec les mêmes habitudes.
+      </div>
+    </div>
+    <div class="week-stats">
+      <div class="wstat">
+        <div class="wstat-val" style="color:#5eead4">101</div>
+        <div class="wstat-label">messages · -89% vs la même semaine en 2020</div>
+      </div>
+      <div class="wstat">
+        <div class="wstat-val" style="color:#5eead4">5</div>
+        <div class="wstat-label">membres présents · le groupe reste complet</div>
+      </div>
+      <div class="presence-bar">
+        <div class="pb-item"><div class="pb-dot" style="background:var(--esp)"></div><span class="pb-name">espy</span><span class="pb-count"> 41</span></div>
+        <div class="pb-item"><div class="pb-dot" style="background:var(--dos)"></div><span class="pb-name">dosinge</span><span class="pb-count"> 25</span></div>
+        <div class="pb-item"><div class="pb-dot" style="background:var(--cry)"></div><span class="pb-name">cryo</span><span class="pb-count"> 21</span></div>
+        <div class="pb-item"><div class="pb-dot" style="background:var(--lay)"></div><span class="pb-name">layvi</span><span class="pb-count"> 9</span></div>
+        <div class="pb-item"><div class="pb-dot" style="background:var(--bai)"></div><span class="pb-name">baiedhiver</span><span class="pb-count"> 5</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="week-messages">
+    <div class="msg-label">Messages de la semaine · sélection</div>
+    <div class="msg-feed">
+      <div class="msg">
+        <div class="msg-av av-esp">E</div>
+        <div class="msg-body">
+          <div class="msg-author col-esp">espy</div>
+          <div class="msg-text">fin bref la goutte de diarrhée a touché l'œsophage</div>
+          <div class="msg-time">Lun 24/06 · 15:30 · sur un jeu mobile · métaphore d'espy standard</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-dos">D</div>
+        <div class="msg-body">
+          <div class="msg-author col-dos">dosinge</div>
+          <div class="msg-text">Tu m'as habitué à mieux</div>
+          <div class="msg-time">Lun 24/06 · 20:15 · à espy · sur la fréquence de ses sorties escalade</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-dos">D</div>
+        <div class="msg-body">
+          <div class="msg-author col-dos">dosinge</div>
+          <div class="msg-text">Moi je suis là je felicite et j'encourage fin sad la commu</div>
+          <div class="msg-time">Lun 24/06 · 20:17</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-cry">C</div>
+        <div class="msg-body">
+          <div class="msg-author col-cry">cryoslinger</div>
+          <div class="msg-text">pourquoi il se ping lui-même ce connard</div>
+          <div class="msg-time">Lun 24/06 · 20:31 · sur dosinge</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-lay">L</div>
+        <div class="msg-body">
+          <div class="msg-author col-lay">layvi</div>
+          <div class="msg-text">J'ai pas envie de savoir quelle genre de politique il suit et j'ai pas suffisamment de cacahuète pour feed la vidéo malheureusement</div>
+          <div class="msg-time">Mar 25/06 · 15:45 · sur un youtuber politique</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-dos">D</div>
+        <div class="msg-body">
+          <div class="msg-author col-dos">dosinge</div>
+          <div class="msg-text">Je crois que j'ai imprégné ma chaise d'odeur de pet oeufé comment la fix svp ?</div>
+          <div class="msg-time">Jeu 27/06 · 16:45 · question urgente</div>
+        </div>
+      </div>
+    </div>
+    <div class="week-quote" style="--wc: #5eead4">
+      "se co n'importe quand et faire ta session de 10-15 min 🙂"
+      <span class="attr">espy · 24 juin 2024 · sur layvi · le profil d'utilisation de 2024 résumé</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════ -->
+<!-- SEMAINE 2025 — DÉCEMBRE CONCERT      -->
+<!-- ══════════════════════════════════════ -->
+<div class="week-section" id="y2025" style="--wc: #fb923c">
+  <div class="week-year-big">2025</div>
+  <div class="week-header">
+    <div class="week-meta">
+      <div class="week-tag">Semaine 49 · Décembre 2025 · 87 messages</div>
+      <div class="week-title">Concert Clair Obscur.<br>Le site plante.</div>
+      <div class="week-dates">1 → 6 décembre 2025</div>
+      <div class="week-desc">
+        Cryo essaie de prendre 6 places pour un concert de Clair Obscur. Le site de billetterie plante. Il perd son panier. Layvi et baiedhiver sont là. Espy envoie <strong>1 message</strong> dans la semaine. Dosinge veut "faire un concert dans le cul du T". <em>C'est la semaine la plus active de 2025</em> avec 87 messages — portée essentiellement par la logistique concert. Le Kouffardor approche. Personne ne le sait encore officiellement.
+      </div>
+    </div>
+    <div class="week-stats">
+      <div class="wstat">
+        <div class="wstat-val" style="color:#fb923c">87</div>
+        <div class="wstat-label">messages · meilleure semaine de 2025</div>
+      </div>
+      <div class="wstat">
+        <div class="wstat-val" style="color:#fb923c">1</div>
+        <div class="wstat-label">message d'espy sur toute la semaine</div>
+      </div>
+      <div class="presence-bar">
+        <div class="pb-item"><div class="pb-dot" style="background:var(--cry)"></div><span class="pb-name">cryo</span><span class="pb-count"> 34</span></div>
+        <div class="pb-item"><div class="pb-dot" style="background:var(--bai)"></div><span class="pb-name">baiedhiver</span><span class="pb-count"> 23</span></div>
+        <div class="pb-item"><div class="pb-dot" style="background:var(--lay)"></div><span class="pb-name">layvi</span><span class="pb-count"> 17</span></div>
+        <div class="pb-item"><div class="pb-dot" style="background:var(--dos)"></div><span class="pb-name">dosinge</span><span class="pb-count"> 12</span></div>
+        <div class="pb-item"><div class="pb-dot" style="background:var(--esp)"></div><span class="pb-name">espy</span><span class="pb-count"> 1</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="week-messages">
+    <div class="msg-label">Messages de la semaine · sélection</div>
+    <div class="msg-feed">
+      <div class="msg">
+        <div class="msg-av av-cry">C</div>
+        <div class="msg-body">
+          <div class="msg-author col-cry">cryoslinger</div>
+          <div class="msg-text">@here je tente de prendre 6 places pour le concert Clair Obscur ?</div>
+          <div class="msg-time">Mar 02/12 · 09:05 · l'organisateur à l'œuvre</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-bai">B</div>
+        <div class="msg-body">
+          <div class="msg-author col-bai">baiedhiver</div>
+          <div class="msg-text">Je veux bien, je check avec laura si elle est interested et je te dis uwu</div>
+          <div class="msg-time">Mar 02/12 · 09:07</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-cry">C</div>
+        <div class="msg-body">
+          <div class="msg-author col-cry">cryoslinger</div>
+          <div class="msg-text">Et précise que si besoin on la place loin de Dorian</div>
+          <div class="msg-time">Mar 02/12 · 09:09 · sur Laura et dosinge</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-cry">C</div>
+        <div class="msg-body">
+          <div class="msg-author col-cry">cryoslinger</div>
+          <div class="msg-text">Personne a besoin d'être devant la scène pour pleurer en couleurs ?</div>
+          <div class="msg-time">Mar 02/12 · 09:13</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-lay">L</div>
+        <div class="msg-body">
+          <div class="msg-author col-lay">layvi</div>
+          <div class="msg-text">Et du coup oui prends les moins cher</div>
+          <div class="msg-time">Mar 02/12 · 09:14 · dans son budget</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-cry">C</div>
+        <div class="msg-body">
+          <div class="msg-author col-cry">cryoslinger</div>
+          <div class="msg-text">j'avais 4 places mais j'ai pas pu valider le panier</div>
+          <div class="msg-time">Mar 02/12 · 10:14 · le site a planté</div>
+        </div>
+      </div>
+      <div class="msg">
+        <div class="msg-av av-dos">D</div>
+        <div class="msg-body">
+          <div class="msg-author col-dos">dosinge</div>
+          <div class="msg-text">Je vais faire un concert dans le cul du T ca sera tout aussi bien</div>
+          <div class="msg-time">Mar 02/12 · 12:10 · plan B</div>
+        </div>
+      </div>
+    </div>
+    <div class="week-quote" style="--wc: #fb923c">
+      "JE SUIS LA TEMPÊTE QUI APPROCHE"
+      <span class="attr">cryoslinger · 27 décembre 2025 · retour au canal après 8 jours · contexte : aucun fourni</span>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">Le Discordeum</div>
+  <a href="index.html" class="footer-back">← Retour aux archives</a>
+</footer>
+
+</body>
+</html>
