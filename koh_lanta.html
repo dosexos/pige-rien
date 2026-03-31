@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Koh Lanta — Le Discordeum</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Barlow+Condensed:wght@300;400;600;700;800;900&display=swap');
+
+  :root {
+    --bg:       #050c08;
+    --bg2:      #091410;
+    --bg3:      #0e1c16;
+    --border:   #142a1e;
+    --text:     #a8c4b0;
+    --muted:    #3a6048;
+    --dim:      #0c2018;
+    --white:    #e8f4ec;
+
+    --jungle:   #4ade80;
+    --jungle2:  #22c55e;
+    --gold:     #fbbf24;
+    --red:      #ef4444;
+    --orange:   #f97316;
+    --fire:     #fb923c;
+
+    --dos: #a78bfa;
+    --esp: #5eead4;
+    --cry: #fb923c;
+    --lay: #fbbf24;
+    --bai: #4ade80;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  /* Texture végétale en fond */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse at 0% 0%, rgba(74,222,128,0.04) 0%, transparent 40%),
+      radial-gradient(ellipse at 100% 100%, rgba(34,197,94,0.03) 0%, transparent 40%);
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ── GÉNÉRIQUE ── */
+  .opening {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 0 80px;
+    position: relative; overflow: hidden;
+    border-bottom: 3px solid var(--jungle2);
+  }
+
+  /* Fond jungle */
+  .opening-bg {
+    position: absolute; inset: 0;
+    background:
+      repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(74,222,128,0.012) 40px, rgba(74,222,128,0.012) 41px),
+      repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(74,222,128,0.008) 40px, rgba(74,222,128,0.008) 41px),
+      radial-gradient(ellipse at 20% 50%, rgba(74,222,128,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 30%, rgba(34,197,94,0.05) 0%, transparent 40%),
+      var(--bg);
+    z-index: 0;
+  }
+
+  .opening-content {
+    position: relative; z-index: 1;
+    padding: 0 8vw;
+  }
+
+  .tv-logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; font-weight: 700; letter-spacing: 6px;
+    color: var(--muted); text-transform: uppercase; margin-bottom: 20px;
+    opacity: 0; animation: fadeUp 0.6s ease forwards 0.2s;
+  }
+
+  .show-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 15vw, 180px);
+    color: var(--white); line-height: 0.88;
+    letter-spacing: 2px;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.4s;
+  }
+  .show-title .koh { color: var(--jungle); }
+  .show-title .sub {
+    display: block;
+    font-size: 0.28em; letter-spacing: 8px;
+    color: var(--muted); font-style: normal;
+    margin-top: 8px;
+  }
+
+  .show-meta {
+    display: flex; gap: 32px; margin-top: 40px; flex-wrap: wrap;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.8s;
+  }
+  .meta-item { display: flex; flex-direction: column; gap: 3px; }
+  .meta-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px; color: var(--jungle); line-height: 1;
+  }
+  .meta-lab {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; font-weight: 600; letter-spacing: 2px;
+    color: var(--muted); text-transform: uppercase;
+  }
+
+  /* Tribus */
+  .tribus-row {
+    display: flex; gap: 24px; margin-top: 48px; flex-wrap: wrap;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 1.1s;
+  }
+  .tribu-block {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 4px; padding: 20px 24px; flex: 1; min-width: 220px;
+  }
+  .tribu-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px; letter-spacing: 2px; margin-bottom: 14px;
+  }
+  .tribu-members { display: flex; gap: 10px; flex-wrap: wrap; }
+  .tribu-member {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .tm-av {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif; font-size: 12px;
+  }
+  .tm-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .hero-back {
+    position: absolute; top: 24px; left: 8vw;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; font-weight: 600; letter-spacing: 3px;
+    color: var(--muted); text-transform: uppercase;
+    text-decoration: none; transition: color 0.2s; z-index: 10;
+  }
+  .hero-back:hover { color: var(--white); }
+
+  /* ── NAV ÉPISODES ── */
+  .ep-nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(5,12,8,0.96); backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    height: 44px; display: flex; align-items: center;
+    padding: 0 8vw; gap: 0; overflow-x: auto;
+  }
+  .ep-nav a {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; font-weight: 700; letter-spacing: 2px;
+    color: var(--muted); text-decoration: none; padding: 0 18px;
+    height: 44px; display: flex; align-items: center; white-space: nowrap;
+    border-right: 1px solid var(--border); text-transform: uppercase;
+    transition: color 0.2s, background 0.2s;
+  }
+  .ep-nav a:first-child { border-left: 1px solid var(--border); }
+  .ep-nav a:hover { color: var(--jungle); background: rgba(74,222,128,0.04); }
+
+  /* ── ÉPISODE ── */
+  .episode {
+    border-bottom: 2px solid var(--border);
+    position: relative;
+  }
+  .ep-header {
+    padding: 64px 8vw 40px;
+    display: grid; grid-template-columns: auto 1fr;
+    gap: 40px; align-items: start;
+    border-bottom: 1px solid var(--border);
+    position: relative; overflow: hidden;
+  }
+  .ep-header::after {
+    content: attr(data-ep);
+    position: absolute; right: 6vw; top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(80px, 15vw, 160px);
+    color: var(--jungle); opacity: 0.05; line-height: 1;
+    pointer-events: none; user-select: none;
+  }
+  .ep-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 8vw, 80px);
+    color: var(--jungle); line-height: 1; flex-shrink: 0;
+  }
+  .ep-info {}
+  .ep-tag {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: 3px;
+    color: var(--muted); text-transform: uppercase; margin-bottom: 8px;
+  }
+  .ep-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(28px, 5vw, 52px);
+    color: var(--white); letter-spacing: 1px; line-height: 1.1;
+  }
+  .ep-desc {
+    font-size: 14px; color: var(--text); line-height: 1.75;
+    max-width: 560px; margin-top: 10px;
+  }
+  .ep-desc strong { color: var(--white); }
+  .ep-desc em { color: var(--jungle); font-style: italic; }
+
+  /* ── SCÈNE ── */
+  .scene {
+    padding: 28px 8vw 0;
+  }
+  .scene-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: 3px;
+    color: var(--muted); text-transform: uppercase; margin-bottom: 10px;
+  }
+  .scene-text {
+    font-size: 15px; color: var(--text); line-height: 1.85;
+    max-width: 720px;
+  }
+  .scene-text strong { color: var(--white); }
+  .scene-text em { color: var(--jungle); font-style: italic; }
+
+  /* ── CONFESSIONNAL ── */
+  .conf {
+    margin: 20px 8vw 0;
+    background: var(--bg3); border: 1px solid var(--border);
+    border-left: 4px solid var(--cc, var(--jungle));
+    border-radius: 0 4px 4px 0; padding: 16px 22px;
+    position: relative;
+  }
+  .conf-hdr {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+  }
+  .conf-av {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif; font-size: 12px; flex-shrink: 0;
+  }
+  .conf-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  }
+  .conf-badge {
+    margin-left: auto;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px; font-weight: 700; letter-spacing: 2px;
+    color: var(--muted); text-transform: uppercase;
+  }
+  .conf-text {
+    font-size: 13.5px; color: #7aa888; line-height: 1.75; font-style: italic;
+  }
+  .conf-text strong { color: var(--white); font-style: normal; }
+  .conf-text em { color: var(--cc, var(--jungle)); }
+
+  /* ── DIALOGUE ── */
+  .dialogue {
+    margin: 20px 8vw 0;
+    display: flex; flex-direction: column; gap: 7px;
+  }
+  .dlg { display: flex; gap: 10px; align-items: flex-start; }
+  .dlg-av {
+    width: 26px; height: 26px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif; font-size: 11px; flex-shrink: 0; margin-top: 1px;
+  }
+  .dlg-body { flex: 1; }
+  .dlg-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; margin-bottom: 2px;
+  }
+  .dlg-text {
+    font-size: 13px; color: #90a898; line-height: 1.55;
+    background: var(--bg2); border-radius: 0 8px 8px 8px;
+    padding: 6px 12px; display: inline-block; max-width: 540px;
+    border-left: 2px solid var(--border);
+  }
+  .dlg-action {
+    font-size: 12px; color: var(--muted); font-style: italic;
+    padding: 4px 0 4px 36px; width: 100%;
+  }
+
+  .av-dos { background: #2a1a5a; color: var(--dos); }
+  .av-esp { background: #0a2030; color: var(--esp); }
+  .av-cry { background: #2a1205; color: var(--cry); }
+  .av-lay { background: #2a1f05; color: var(--lay); }
+  .av-bai { background: #0a2010; color: var(--bai); }
+  .col-dos { color: var(--dos); }
+  .col-esp { color: var(--esp); }
+  .col-cry { color: var(--cry); }
+  .col-lay { color: var(--lay); }
+  .col-bai { color: var(--bai); }
+
+  /* ── ÉPREUVE ── */
+  .epreuve {
+    margin: 28px 8vw 0;
+    background: var(--bg2); border: 2px solid var(--gold);
+    border-radius: 4px; padding: 22px 28px; position: relative;
+  }
+  .epreuve::before {
+    content: '⚡ ÉPREUVE';
+    position: absolute; top: -11px; left: 16px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: 3px;
+    background: var(--bg2); padding: 0 8px;
+    color: var(--gold); text-transform: uppercase;
+  }
+  .ep-epr-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(20px, 3.5vw, 32px); color: var(--gold); letter-spacing: 1px; margin-bottom: 10px;
+  }
+  .ep-epr-text { font-size: 14px; color: var(--text); line-height: 1.75; }
+  .ep-epr-text strong { color: var(--white); }
+  .ep-epr-result {
+    margin-top: 14px; padding-top: 12px;
+    border-top: 1px solid rgba(251,191,36,0.2);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; font-weight: 600; color: var(--gold); letter-spacing: 1px;
+  }
+
+  /* ── CONSEIL ── */
+  .conseil {
+    margin: 28px 8vw 0;
+    background: #050c08; border: 2px solid var(--red);
+    border-radius: 4px; padding: 24px 28px; position: relative;
+  }
+  .conseil::before {
+    content: '🔥 CONSEIL DE TRIBU';
+    position: absolute; top: -11px; left: 16px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: 3px;
+    background: #050c08; padding: 0 8px;
+    color: var(--red); text-transform: uppercase;
+  }
+  .conseil-text { font-size: 14px; color: var(--text); line-height: 1.8; margin-bottom: 16px; }
+  .conseil-text strong { color: var(--white); }
+  .vote-row {
+    display: flex; align-items: center; gap: 12px; padding: 8px 0;
+    border-bottom: 1px solid var(--border); flex-wrap: wrap;
+  }
+  .vote-row:last-child { border-bottom: none; }
+  .vote-from {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; width: 90px; flex-shrink: 0;
+  }
+  .vote-arrow { color: var(--muted); flex-shrink: 0; font-size: 12px; }
+  .vote-to {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; flex-shrink: 0;
+  }
+  .vote-reason { font-size: 12px; color: var(--muted); font-style: italic; flex: 1; min-width: 140px; }
+  .elim-banner {
+    margin-top: 20px; padding: 14px 18px;
+    background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.3);
+    border-radius: 3px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(20px, 3.5vw, 30px); letter-spacing: 2px;
+    color: var(--red); text-align: center;
+  }
+  .elim-banner span { color: var(--white); }
+
+  /* ── JOURNAL DE BORD BAIEDHIVER ── */
+  .journal {
+    margin: 28px 8vw 0;
+    background: var(--bg3); border: 1px solid var(--border);
+    border-left: 4px solid var(--bai);
+    border-radius: 0 4px 4px 0; padding: 18px 22px;
+    position: relative;
+  }
+  .journal::before {
+    content: '📓 JOURNAL DE BORD · BAIEDHIVER';
+    position: absolute; top: -10px; left: 14px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px; font-weight: 700; letter-spacing: 2px;
+    background: var(--bg3); padding: 0 6px;
+    color: var(--bai); text-transform: uppercase;
+  }
+  .journal-text {
+    font-size: 13px; color: #7aaa88; line-height: 1.8; font-style: italic;
+  }
+  .journal-text strong { color: var(--white); font-style: normal; }
+
+  /* ── COLLIERS / IMMUNITÉ ── */
+  .immunity {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.3);
+    border-radius: 3px; padding: 6px 14px; margin: 14px 0;
+  }
+  .immunity-text {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; font-weight: 700; letter-spacing: 2px;
+    color: var(--gold); text-transform: uppercase;
+  }
+
+  /* ── SCORE CAMP ── */
+  .score-camp {
+    margin: 24px 8vw 0;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 4px; padding: 16px 20px;
+    position: relative;
+  }
+  .score-camp::before {
+    content: '📊 PRÉSENCE AU CAMP · SEMAINE';
+    position: absolute; top: -10px; left: 14px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px; font-weight: 700; letter-spacing: 2px;
+    background: var(--bg2); padding: 0 6px;
+    color: var(--muted); text-transform: uppercase;
+  }
+  .score-row {
+    display: flex; align-items: center; gap: 12px; margin: 6px 0;
+  }
+  .score-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; width: 100px; flex-shrink: 0;
+  }
+  .score-bar-wrap { flex: 1; height: 8px; background: var(--dim); border-radius: 2px; overflow: hidden; }
+  .score-bar { height: 100%; border-radius: 2px; }
+  .score-pct {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; font-weight: 700; width: 36px; text-align: right; flex-shrink: 0;
+  }
+
+  /* ── FINALE ── */
+  .finale-podium {
+    margin: 28px 8vw 0;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+  }
+  @media (max-width: 600px) { .finale-podium { grid-template-columns: 1fr; } }
+  .podium-place {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 4px; padding: 20px; text-align: center;
+  }
+  .podium-rank {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 40px; color: var(--muted); line-height: 1; margin-bottom: 8px;
+  }
+  .podium-av {
+    width: 48px; height: 48px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif; font-size: 20px;
+    margin: 0 auto 8px;
+  }
+  .podium-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .podium-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  .winner-box {
+    margin: 20px 8vw 0;
+    background: rgba(251,191,36,0.06); border: 2px solid var(--gold);
+    border-radius: 4px; padding: 28px 32px; text-align: center;
+    position: relative;
+  }
+  .winner-box::before {
+    content: '🏆 VAINQUEUR DE KOH LANTA — LE DISCORDEUM';
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: 3px;
+    background: var(--bg); padding: 0 12px;
+    color: var(--gold); white-space: nowrap;
+  }
+  .winner-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 8vw, 80px);
+    color: var(--gold); letter-spacing: 3px; line-height: 1;
+  }
+  .winner-reason { font-size: 14px; color: var(--text); margin-top: 12px; line-height: 1.75; max-width: 480px; margin: 12px auto 0; }
+  .winner-reason strong { color: var(--white); }
+
+  /* ── ÉPILOGUE ── */
+  .epilogue {
+    padding: 64px 8vw 80px;
+    border-top: 1px solid var(--border);
+  }
+  .ep-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: 4px;
+    color: var(--muted); text-transform: uppercase; margin-bottom: 20px;
+  }
+  .ep-text { font-size: 15px; color: var(--muted); line-height: 1.9; max-width: 620px; }
+  .ep-text strong { color: var(--white); }
+  .ep-text em { color: var(--jungle); font-style: italic; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 40px 8vw;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif; font-size: 18px;
+    color: var(--muted); letter-spacing: 2px;
+  }
+  .footer-back {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 11px;
+    color: var(--muted); letter-spacing: 2px; text-transform: uppercase;
+    text-decoration: none; transition: color 0.2s;
+  }
+  .footer-back:hover { color: var(--white); }
+
+  /* ── ESPACE BAS D'ÉPISODE ── */
+  .ep-end { height: 48px; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 600px) {
+    .scene, .conf, .dialogue, .epreuve, .conseil, .journal, .score-camp, .winner-box, .epilogue { padding-left: 20px; padding-right: 20px; }
+    .ep-header { padding: 48px 20px 28px; grid-template-columns: 1fr; }
+    .ep-nav { padding: 0 20px; }
+    footer { padding: 36px 20px; }
+    .finale-podium { padding: 0 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ GÉNÉRIQUE ══ -->
+<div class="opening">
+  <a href="index.html" class="hero-back">← Archives</a>
+  <div class="opening-bg"></div>
+  <div class="opening-content">
+    <div class="tv-logo">Discordeum TV · Saison 2 · Production TF-Chromosome</div>
+    <div class="show-title">
+      <span class="koh">Koh</span> Lanta
+      <span class="sub">Le Discordeum</span>
+    </div>
+    <div class="show-meta">
+      <div class="meta-item"><div class="meta-val">6</div><div class="meta-lab">épisodes</div></div>
+      <div class="meta-item"><div class="meta-val">5</div><div class="meta-lab">aventuriers</div></div>
+      <div class="meta-item"><div class="meta-val">2</div><div class="meta-lab">tribus</div></div>
+      <div class="meta-item"><div class="meta-val">1</div><div class="meta-lab">La Chancla</div></div>
+    </div>
+    <div class="tribus-row">
+      <div class="tribu-block">
+        <div class="tribu-name" style="color:var(--dos)">Tribu <span style="color:var(--white)">Chromosome</span></div>
+        <div class="tribu-members">
+          <div class="tribu-member">
+            <div class="tm-av av-dos">D</div>
+            <div class="tm-name col-dos">dosinge</div>
+          </div>
+          <div class="tribu-member">
+            <div class="tm-av av-esp">E</div>
+            <div class="tm-name col-esp">espy</div>
+          </div>
+          <div class="tribu-member">
+            <div class="tm-av av-bai">B</div>
+            <div class="tm-name col-bai">baiedhiver</div>
+          </div>
+        </div>
+      </div>
+      <div class="tribu-block">
+        <div class="tribu-name" style="color:var(--lay)">Tribu <span style="color:var(--white)">Semoule</span></div>
+        <div class="tribu-members">
+          <div class="tribu-member">
+            <div class="tm-av av-cry">C</div>
+            <div class="tm-name col-cry">cryo</div>
+          </div>
+          <div class="tribu-member">
+            <div class="tm-av av-lay">L</div>
+            <div class="tm-name col-lay">layvi</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="ep-nav">
+  <a href="#ep1">Ép. 1</a>
+  <a href="#ep2">Ép. 2</a>
+  <a href="#ep3">Ép. 3</a>
+  <a href="#ep4">Ép. 4</a>
+  <a href="#ep5">Ép. 5</a>
+  <a href="#ep6">Finale</a>
+</nav>
+
+
+<!-- ══════════════════════════════════ -->
+<!-- ÉPISODE 1 — L'ARRIVÉE             -->
+<!-- ══════════════════════════════════ -->
+<div class="episode" id="ep1">
+  <div class="ep-header" data-ep="01">
+    <div class="ep-num">01</div>
+    <div class="ep-info">
+      <div class="ep-tag">Épisode 1 · Semaine 1</div>
+      <div class="ep-title">L'arrivée</div>
+      <div class="ep-desc">
+        Cinq aventuriers débarquent sur une île. Deux tribus sont formées. Un camp doit être construit avant la nuit. <strong>Layvi arrive en retard.</strong> Baiedhiver contemple le paysage et dit quelque chose d'incompréhensible. La Chancla préside.
+      </div>
+    </div>
+  </div>
+
+  <div class="scene" style="padding-top:32px">
+    <div class="scene-label">Jour 1 · Plage · 11h00</div>
+    <div class="scene-text">
+      Les aventuriers arrivent par bateau. Cryo est le premier à poser le pied sur la plage — il a déjà un plan en tête. Dosinge sort son téléphone et commence à analyser le terrain. Espy sort le chien. Baiedhiver pose son sac, regarde l'horizon, et dit <em>"Le feu, cette molécule de chaud."</em> Personne ne répond.
+      <br><br>
+      Layvi manque l'embarcation. Il arrive deux heures plus tard sur un second bateau, en disant qu'il avait "des trucs". Production lui demande de préciser. <strong>Il dit qu'il est là maintenant.</strong>
+    </div>
+  </div>
+
+  <div class="dialogue">
+    <div class="dlg">
+      <div class="dlg-av av-cry">C</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-cry">cryo</div>
+        <div class="dlg-text">Bon. J'ai repéré un emplacement pour le camp. Y a de l'eau douce à 200 mètres. On monte l'abri avant la nuit, ykk ?</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-dos">D</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-dos">dosinge</div>
+        <div class="dlg-text">Attends j'ai une stratégie. Si on monte pas l'abri optimal en premier on va souffrir toute la saison. J'ai calculé les angles.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-esp">E</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-esp">espy</div>
+        <div class="dlg-text">Vous ne faites que perdre du temps.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-bai">B</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-bai">baiedhiver</div>
+        <div class="dlg-text">Dans quel univers parallèle sommes-nous.</div>
+      </div>
+    </div>
+    <div class="dlg-action">Cryo est parti construire l'abri pendant ce temps. Il a terminé en vingt minutes.</div>
+  </div>
+
+  <div class="conf" style="--cc: var(--cry)">
+    <div class="conf-hdr">
+      <div class="conf-av av-cry">C</div>
+      <div class="conf-name col-cry">cryoslinger</div>
+      <div class="conf-badge">📹 Confessionnal</div>
+    </div>
+    <div class="conf-text">
+      "C'est exactement ce que je pensais. <strong>Tribu Semoule, c'est moi et layvi.</strong> Ce qui veut dire que c'est moi. Layvi est là en soutien moral. Je construis le camp, je trouve l'eau, je fais le feu, je pêche. <em>Lui il gère l'ambiance.</em> Ça marche. On est complémentaires."
+    </div>
+  </div>
+
+  <div class="conf" style="--cc: var(--lay)">
+    <div class="conf-hdr">
+      <div class="conf-av av-lay">L</div>
+      <div class="conf-name col-lay">layvi</div>
+      <div class="conf-badge">📹 Confessionnal</div>
+    </div>
+    <div class="conf-text">
+      "Je suis chaud. <strong>Je suis archi chaud.</strong> Ce jeu c'est fait pour moi — la stratégie, les alliances, la psychologie. Je vais tout gérer. Dès que je me serai reposé un peu du voyage."
+    </div>
+  </div>
+
+  <div class="conf" style="--cc: var(--bai)">
+    <div class="conf-hdr">
+      <div class="conf-av av-bai">B</div>
+      <div class="conf-name col-bai">baiedhiver</div>
+      <div class="conf-badge">📹 Confessionnal</div>
+    </div>
+    <div class="conf-text">
+      "Je crois avoir beaucoup changé, depuis que je considère mon âme comme la forme de la matière première, évidemment aussi forme d'un corps organisé ayant la vie en puissance. <em>Cette île n'est pas un obstacle — c'est une proposition ontologique.</em> J'attends les représailles de pied ferme."
+    </div>
+  </div>
+
+  <div class="scene" style="padding-top:24px">
+    <div class="scene-label">Jour 3 · Camp Chromosome · Nuit</div>
+    <div class="scene-text">
+      Dosinge et espy se disputent sur le placement des hamacs depuis deux heures. Baiedhiver a déjà dormi. La dispute n'a pas de solution évidente — les deux ont mathématiquement raison depuis leur propre référentiel.
+    </div>
+  </div>
+
+  <div class="dialogue">
+    <div class="dlg">
+      <div class="dlg-av av-dos">D</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-dos">dosinge</div>
+        <div class="dlg-text">Si mon hamac est côté nord j'ai le vent dans la gueule toute la nuit c'est non</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-esp">E</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-esp">espy</div>
+        <div class="dlg-text">Et si le mien est côté sud j'ai le soleil à 6h du matin. C'est aussi non.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-dos">D</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-dos">dosinge</div>
+        <div class="dlg-text">T'as qu'à dormir avec baiedhiver</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-bai">B</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-bai">baiedhiver</div>
+        <div class="dlg-text">Je ne me souviens d'aucune demande en ce sens.</div>
+      </div>
+    </div>
+    <div class="dlg-action">Ils dorment finalement dans le même sens que prévu initialement. Deux heures de discussion pour rien. Espy écrit un compte-rendu dans son journal.</div>
+  </div>
+
+  <div class="journal">
+    <div class="journal-text">
+      <strong>Journal de bord · Jour 3</strong><br><br>
+      "Nous semblons au complet — l'équipe est composée de cinq membres, mais l'un d'entre eux, frappé par une malédiction dimensionnelle, semble avoir des difficultés à maintenir une présence physique dans notre espace commun. Un autre, dit 'dosinge', confond analyse stratégique et paralysie décisionnelle. Le troisième construit des abris avec une efficacité qui me perturbe philosophiquement. <em>Moi-même, je reste. J'observe. J'attends de comprendre en quel univers parallèle nous sommes.</em>"
+    </div>
+  </div>
+
+  <div class="ep-end"></div>
+</div>
+
+
+<!-- ══════════════════════════════════ -->
+<!-- ÉPISODE 2 — LA PREMIÈRE ÉPREUVE  -->
+<!-- ══════════════════════════════════ -->
+<div class="episode" id="ep2">
+  <div class="ep-header" data-ep="02">
+    <div class="ep-num">02</div>
+    <div class="ep-info">
+      <div class="ep-tag">Épisode 2 · Semaine 2</div>
+      <div class="ep-title">La première épreuve</div>
+      <div class="ep-desc">
+        Première épreuve d'immunité. La tribu perdante va au conseil. <strong>Layvi disparaît au bout de 12 minutes.</strong> Baiedhiver a "une urgence philosophique". Cryo tient seul. Premier conseil — première élimination.
+      </div>
+    </div>
+  </div>
+
+  <div class="epreuve">
+    <div class="ep-epr-title">ÉPREUVE D'IMMUNITÉ N°1<br>"LE VOCAL SANS DODGE"</div>
+    <div class="ep-epr-text">
+      Chaque tribu doit maintenir <strong>tous ses membres connectés sur le même vocal Discord</strong> pendant 45 minutes sans qu'aucun ne déconnecte, ne passe en "Ne pas déranger", ou ne disparaisse dans sa chambre. Le premier membre à dropper fait perdre sa tribu.
+      <br><br>
+      Règle additionnelle : le silence de plus de 8 minutes consécutives compte comme un abandon.
+    </div>
+    <div class="ep-epr-result">
+      RÉSULTAT : Tribu Semoule éliminée · Layvi a disparu à 12 minutes 04 · Il était "en train de manger" · Cryo a tenu les 45 minutes seul · Tribu Chromosome gagne l'immunité
+    </div>
+  </div>
+
+  <div class="conf" style="--cc: var(--lay)">
+    <div class="conf-hdr">
+      <div class="conf-av av-lay">L</div>
+      <div class="conf-name col-lay">layvi</div>
+      <div class="conf-badge">📹 Confessionnal</div>
+    </div>
+    <div class="conf-text">
+      "J'avais faim. <em>On peut pas prévoir la faim.</em> C'est un facteur externe. La faim elle attend pas. J'aurais pu rester mais j'aurais été moins performant. <strong>C'était stratégique.</strong> J'ai optimisé la qualité de ma présence en réduisant la quantité."
+    </div>
+  </div>
+
+  <div class="conf" style="--cc: var(--cry)">
+    <div class="conf-hdr">
+      <div class="conf-av av-cry">C</div>
+      <div class="conf-name col-cry">cryoslinger</div>
+      <div class="conf-badge">📹 Confessionnal</div>
+    </div>
+    <div class="conf-text">
+      "Défaite 45 à 12 minutes. Je suis sur une table. <em>Le mec nous dodge toute la journée et il part en ARAM.</em> Même à Koh Lanta. Même là. Je vais le nominer avec le sourire."
+    </div>
+  </div>
+
+  <div class="conf" style="--cc: var(--bai)">
+    <div class="conf-hdr">
+      <div class="conf-av av-bai">B</div>
+      <div class="conf-name col-bai">baiedhiver</div>
+      <div class="conf-badge">📹 Confessionnal · Tribu Chromosome</div>
+    </div>
+    <div class="conf-text">
+      "Dosinge a quitté le vocal à 31 minutes pour 'aller aux toilettes'. Il est revenu à 39 minutes. <strong>Il ne l'a pas dit à l'épreuve parce que la règle disait microphone ouvert, pas présence physique.</strong> <em>Il a trouvé une faille dans le règlement.</em> C'est son trait de caractère le plus admirable et le plus navrant."
+    </div>
+  </div>
+
+  <div class="conseil">
+    <div class="conseil-text">
+      Tribu Semoule au conseil. La Chancla préside dans un silence absolu. Deux membres, deux votes. Le dépouillement sera sans appel.
+    </div>
+    <div class="vote-row">
+      <div class="vote-from col-cry">cryo</div>
+      <div class="vote-arrow">→</div>
+      <div class="vote-to col-lay">layvi</div>
+      <div class="vote-reason">"12 minutes. T'as tenu 12 minutes. J'ai tenu 45 seul. Je te nomme avec plaisir et sans rancune."</div>
+    </div>
+    <div class="vote-row">
+      <div class="vote-from col-lay">layvi</div>
+      <div class="vote-arrow">→</div>
+      <div class="vote-to col-cry">cryo</div>
+      <div class="vote-reason">"J'aurais pas dû. Mais le jeu c'est le jeu. Désolé Théo."</div>
+    </div>
+    <div class="elim-banner">
+      Égalité · Départage · La Chancla décide · Éliminé : <span>layvi</span>
+    </div>
+  </div>
+
+  <div class="scene" style="padding-top:20px">
+    <div class="scene-label">Après le conseil · Plage · 22h30</div>
+    <div class="scene-text">
+      Layvi prend son flambeau. Il le tend à La Chancla. Il se retourne vers cryo, lui fait un signe de tête. Il dit <em>"Je suis d'accord."</em> Il part dans la nuit. La caméra le suit. Il disparaît entre les palmiers.
+    </div>
+  </div>
+
+  <div class="ep-end"></div>
+</div>
+
+
+<!-- ══════════════════════════════════ -->
+<!-- ÉPISODE 3 — LE COUP DE POIGNARD  -->
+<!-- ══════════════════════════════════ -->
+<div class="episode" id="ep3">
+  <div class="ep-header" data-ep="03">
+    <div class="ep-num">03</div>
+    <div class="ep-info">
+      <div class="ep-tag">Épisode 3 · Semaine 3</div>
+      <div class="ep-title">Le coup de poignard</div>
+      <div class="ep-desc">
+        Espy retourne sa veste. <strong>Alliance secrète avec cryo.</strong> Dosinge ne comprend pas ce qui se passe mais rédige une analyse de 800 mots. Deuxième épreuve : reconstituer la timeline du Discordeum de mémoire. Résultats catastrophiques des deux tribus.
+      </div>
+    </div>
+  </div>
+
+  <div class="scene" style="padding-top:32px">
+    <div class="scene-label">Jour 8 · Forêt · 14h00 · Caméra cachée</div>
+    <div class="scene-text">
+      Espy demande à rencontrer cryo en forêt. Il marche jusqu'à un point précis, s'assoit sur un rocher, et attend. Cryo arrive six minutes plus tard. Ils parlent pendant vingt minutes. La caméra capte quelques fragments.
+    </div>
+  </div>
+
+  <div class="dialogue">
+    <div class="dlg">
+      <div class="dlg-av av-esp">E</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-esp">espy</div>
+        <div class="dlg-text">Attention à ne pas être trop évident dans ton dégoût — quelqu'un risque d'appeler les pompiers.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-cry">C</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-cry">cryo</div>
+        <div class="dlg-text">J'ai pas pu retenir un sourire machiavélique.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-esp">E</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-esp">espy</div>
+        <div class="dlg-text">On vote ensemble à la réunification. Dosinge en premier. Baiedhiver comprendra.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-cry">C</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-cry">cryo</div>
+        <div class="dlg-text">Deal. Frotaj ce soir pour sceller l'alliance ?</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-esp">E</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-esp">espy</div>
+        <div class="dlg-text">Non je sais même pas ce que c'est.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="conf" style="--cc: var(--esp)">
+    <div class="conf-hdr">
+      <div class="conf-av av-esp">E</div>
+      <div class="conf-name col-esp">espy</div>
+      <div class="conf-badge">📹 Confessionnal</div>
+    </div>
+    <div class="conf-text">
+      "Je me fais à manger et je réfléchis. <em>La malveillance institutionnelle, c'est pas l'impulsion — c'est la patience.</em> Dosinge va comprendre ce qui s'est passé exactement au moment où ça aura déjà eu lieu. <strong>C'était la dernière fois que j'étais bienveillant.</strong>"
+    </div>
+  </div>
+
+  <div class="epreuve">
+    <div class="ep-epr-title">ÉPREUVE D'IMMUNITÉ N°2<br>"LA MÉMOIRE DU DISCORDEUM"</div>
+    <div class="ep-epr-text">
+      Chaque aventurier doit répondre à 10 questions sur l'histoire du Discordeum — dates clés, citations, records. Le meilleur score dans chaque tribu gagne l'immunité individuelle pour son camp.
+      <br><br>
+      Questions incluent : date du premier message de cryo · nombre d'usages de "chromosome" · auteur du message le plus long · dernier mot de layvi avant ses 116 jours d'absence.
+    </div>
+    <div class="ep-epr-result">
+      Scores · dosinge : 4/10 ("j'étais pas là pour les premières années") · espy : 7/10 · baiedhiver : 9/10 (a récité le journal de bord entier par cœur) · cryo : 10/10 ("c'est mon canal") · Immunité individuelle → cryo
+    </div>
+  </div>
+
+  <div class="conf" style="--cc: var(--dos)">
+    <div class="conf-hdr">
+      <div class="conf-av av-dos">D</div>
+      <div class="conf-name col-dos">dosinge</div>
+      <div class="conf-badge">📹 Confessionnal · 800 mots</div>
+    </div>
+    <div class="conf-text">
+      "Je comprends pas ce qui se passe. <em>J'ai une théorie.</em> Espy a rencontré cryo en forêt — j'ai les logs de la caméra cachée, enfin j'ai pas les logs mais j'ai vu leurs traces de pas converger, c'est de l'analyse terrain. La question c'est : <strong>est-ce qu'il y a une alliance ou est-ce que c'est juste qu'ils avaient besoin d'air frais simultanément ?</strong> Les deux hypothèses sont valides. J'ai fait un tableau comparatif. Je te l'enverrai."
+    </div>
+  </div>
+
+  <div class="immunity"><span class="immunity-text">🏅 collier d'immunité individuelle → cryoslinger</span></div>
+
+  <div class="conseil">
+    <div class="conseil-text">
+      Tribu Chromosome au conseil. Trois membres, trois flambeaux. L'alliance espy-cryo est supposée — mais rien n'est confirmé.
+    </div>
+    <div class="vote-row">
+      <div class="vote-from col-dos">dosinge</div>
+      <div class="vote-arrow">→</div>
+      <div class="vote-to col-bai">baiedhiver</div>
+      <div class="vote-reason">"T'as eu 9/10 en citant le journal de bord par cœur. C'est suspect. Personne mémorise ça sans arrière-pensée."</div>
+    </div>
+    <div class="vote-row">
+      <div class="vote-from col-esp">espy</div>
+      <div class="vote-arrow">→</div>
+      <div class="vote-to col-dos">dosinge</div>
+      <div class="vote-reason">"Je me désolidarise. C'était prévu."</div>
+    </div>
+    <div class="vote-row">
+      <div class="vote-from col-bai">baiedhiver</div>
+      <div class="vote-arrow">→</div>
+      <div class="vote-to col-dos">dosinge</div>
+      <div class="vote-reason">"Un procès me semblerait déjà trop généreux. Il faut envoyer un message fort."</div>
+    </div>
+    <div class="elim-banner">
+      2 voix contre dosinge · Éliminé : <span>dosinge</span>
+    </div>
+  </div>
+
+  <div class="conf" style="--cc: var(--dos)">
+    <div class="conf-hdr">
+      <div class="conf-av av-dos">D</div>
+      <div class="conf-name col-dos">dosinge</div>
+      <div class="conf-badge">📹 Dernier confessionnal</div>
+    </div>
+    <div class="conf-text">
+      "C'était pas un coup de poignard. C'était <em>deux coups de poignard simultanés de deux directions différentes.</em> Le niveau d'organisation est incroyable. Je les aurais pas cru capables. <strong>J'aurais dû faire un tableau comparatif plus tôt.</strong>"
+    </div>
+  </div>
+
+  <div class="ep-end"></div>
+</div>
+
+
+<!-- ══════════════════════════════════ -->
+<!-- ÉPISODE 4 — LE RETOUR            -->
+<!-- ══════════════════════════════════ -->
+<div class="episode" id="ep4">
+  <div class="ep-header" data-ep="04">
+    <div class="ep-num">04</div>
+    <div class="ep-info">
+      <div class="ep-tag">Épisode 4 · Semaine 4</div>
+      <div class="ep-title">Le retour</div>
+      <div class="ep-desc">
+        Layvi, éliminé à l'épisode 2, <strong>frappe à la porte du camp</strong> avec un GIF de Shrek sur son téléphone. Le règlement ne prévoit pas ça. Il est réintégré. Épreuve du collier d'immunité : une partie de Codenames. Cryo gagne sans surprise.
+      </div>
+    </div>
+  </div>
+
+  <div class="scene" style="padding-top:32px">
+    <div class="scene-label">Jour 15 · Lisière du camp · 09h47</div>
+    <div class="scene-text">
+      Cryo prépare le feu du matin. Espy sort le chien symbolique. Baiedhiver médite. Une silhouette apparaît à la lisière de la forêt. Elle avance lentement. Elle tient un téléphone allumé. Sur l'écran : <strong>un GIF de Shrek.</strong>
+    </div>
+  </div>
+
+  <div class="dialogue">
+    <div class="dlg">
+      <div class="dlg-av av-cry">C</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-cry">cryo</div>
+        <div class="dlg-text">Ayaent.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-esp">E</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-esp">espy</div>
+        <div class="dlg-text">Harry, Souhil ça n'existe pas.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-lay">L</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-lay">layvi</div>
+        <div class="dlg-text">Je suis là. C'est moi. J'ai le GIF.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-bai">B</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-bai">baiedhiver</div>
+        <div class="dlg-text">Souhil qui stack les points de présence.</div>
+      </div>
+    </div>
+    <div class="dlg-action">Production consulte le règlement. Le règlement dit "les aventuriers éliminés ne peuvent pas revenir". Il ne dit pas ce qui se passe si quelqu'un revient quand même avec un GIF de Shrek. La production décide de le laisser rentrer. Il n'y a pas de précédent.</div>
+    <div class="dlg">
+      <div class="dlg-av av-cry">C</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-cry">cryo</div>
+        <div class="dlg-text">T'as faim ? J'ai du poisson.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-lay">L</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-lay">layvi</div>
+        <div class="dlg-text">Ouais. Merci Théo.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="conf" style="--cc: var(--lay)">
+    <div class="conf-hdr">
+      <div class="conf-av av-lay">L</div>
+      <div class="conf-name col-lay">layvi</div>
+      <div class="conf-badge">📹 Confessionnal · Retour</div>
+    </div>
+    <div class="conf-text">
+      "J'ai pas vraiment quitté. <em>J'ai fait une pause.</em> 15 jours c'est rien. J'ai sondé 14 000 605 timelines — il n'y en a aucune où je reste éliminé de Koh Lanta. <strong>Statistiquement mon retour était inévitable.</strong>"
+    </div>
+  </div>
+
+  <div class="epreuve">
+    <div class="ep-epr-title">ÉPREUVE D'IMMUNITÉ N°3<br>"CODENAMES · SESSION OFFICIELLE"</div>
+    <div class="ep-epr-text">
+      Une partie de Codenames. Cryo est spymaster d'office — il a posté 158 liens Codenames en sept ans, ratio 63x supérieur à tous les autres membres. <strong>Son adversaire spymaster : baiedhiver, CAPES de philosophie option "associations d'idées ésotériques".</strong>
+      <br><br>
+      La partie dure 43 minutes. Cryo donne des indices chirurgicaux. Son équipe devine tout. Baiedhiver donne l'indice "molécule : 3" — ses agents devinent "feu", "eau" et "philosophie" au lieu de "carbone", "oxygène" et "azote". Sa tribu perd.
+    </div>
+    <div class="ep-epr-result">
+      Victoire cryo · Immunité individuelle → cryo · Record : 3e collier consécutif
+    </div>
+  </div>
+
+  <div class="conf" style="--cc: var(--bai)">
+    <div class="conf-hdr">
+      <div class="conf-av av-bai">B</div>
+      <div class="conf-name col-bai">baiedhiver</div>
+      <div class="conf-badge">📹 Confessionnal</div>
+    </div>
+    <div class="conf-text">
+      "Mes agents n'ont pas compris que <em>'molécule'</em> était une entrée en matière épistémologique vers les composants fondamentaux, pas une métaphore sur les états de la matière. <strong>Ça aurait dû être évident.</strong> J'attends qu'ils aient passé leur CAPES pour en reparler."
+    </div>
+  </div>
+
+  <div class="score-camp">
+    <div class="scene-label" style="margin-bottom:14px; padding:0">Présence au camp · Semaine 4 (layvi réintégré)</div>
+    <div class="score-row">
+      <div class="score-name col-cry">cryo</div>
+      <div class="score-bar-wrap"><div class="score-bar" style="width:98%; background:var(--cry)"></div></div>
+      <div class="score-pct" style="color:var(--cry)">98%</div>
+    </div>
+    <div class="score-row">
+      <div class="score-name col-esp">espy</div>
+      <div class="score-bar-wrap"><div class="score-bar" style="width:85%; background:var(--esp)"></div></div>
+      <div class="score-pct" style="color:var(--esp)">85%</div>
+    </div>
+    <div class="score-row">
+      <div class="score-name col-bai">baiedhiver</div>
+      <div class="score-bar-wrap"><div class="score-bar" style="width:60%; background:var(--bai)"></div></div>
+      <div class="score-pct" style="color:var(--bai)">60%</div>
+    </div>
+    <div class="score-row">
+      <div class="score-name col-lay">layvi</div>
+      <div class="score-bar-wrap"><div class="score-bar" style="width:28%; background:var(--lay)"></div></div>
+      <div class="score-pct" style="color:var(--lay)">28%</div>
+    </div>
+  </div>
+
+  <div class="ep-end"></div>
+</div>
+
+
+<!-- ══════════════════════════════════ -->
+<!-- ÉPISODE 5 — LA RÉUNIFICATION     -->
+<!-- ══════════════════════════════════ -->
+<div class="episode" id="ep5">
+  <div class="ep-header" data-ep="05">
+    <div class="ep-num">05</div>
+    <div class="ep-info">
+      <div class="ep-tag">Épisode 5 · Semaine 5</div>
+      <div class="ep-title">La réunification</div>
+      <div class="ep-desc">
+        Les deux tribus fusionnent. Tout le monde au même camp. <strong>Baiedhiver disparaît dans la forêt la nuit.</strong> Il revient au matin avec une citation d'Aristote. L'alliance espy-cryo commence à se fissurer. Le vote devient personnel.
+      </div>
+    </div>
+  </div>
+
+  <div class="scene" style="padding-top:32px">
+    <div class="scene-label">Jour 18 · Camp réunifié · Matin</div>
+    <div class="scene-text">
+      Cryo se réveille à 5h30. Baiedhiver n'est pas dans son hamac. Il est parti à 2h du matin — production a les images mais personne ne sait où il est allé. À 6h15, il revient, s'assoit près du feu, et dit :
+    </div>
+  </div>
+
+  <div class="dialogue">
+    <div class="dlg">
+      <div class="dlg-av av-bai">B</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-bai">baiedhiver</div>
+        <div class="dlg-text">L'âme est acte premier d'un corps naturel organisé ayant la vie en puissance. J'ai vérifié. C'est confirmé.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-cry">C</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-cry">cryo</div>
+        <div class="dlg-text">T'as mangé au moins ?</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-bai">B</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-bai">baiedhiver</div>
+        <div class="dlg-text">J'ai trouvé mon animal totem. C'était urgent.</div>
+      </div>
+    </div>
+    <div class="dlg-action">Baiedhiver sort une mangue de sa poche. Il l'a visiblement portée pendant toute sa marche nocturne. Il la mange en silence avec une expression sereine.</div>
+  </div>
+
+  <div class="scene" style="padding-top:20px">
+    <div class="scene-label">Jour 19 · Camp · Après-midi</div>
+    <div class="scene-text">
+      L'alliance espy-cryo commence à montrer des signes de tension. Cryo veut garder layvi — qui est revenu et fait partie du paysage maintenant. Espy considère layvi comme une <em>"goutte de diarrhée qui n'a toujours pas quitté l'œsophage"</em> et pense qu'il faut l'éliminer avant la finale.
+    </div>
+  </div>
+
+  <div class="conf" style="--cc: var(--esp)">
+    <div class="conf-hdr">
+      <div class="conf-av av-esp">E</div>
+      <div class="conf-name col-esp">espy</div>
+      <div class="conf-badge">📹 Confessionnal</div>
+    </div>
+    <div class="conf-text">
+      "Cryo veut garder sauce. <em>Sauce a 28% de présence au camp.</em> C'est de la sentimentalité. Je suis pas sentimental. <strong>Jamais là quand on a besoin de lui.</strong> En revanche je dois admettre que son retour avec le GIF de Shrek était une stratégie que je n'avais pas anticipée. Il a peut-être un QI Koh Lanta."
+    </div>
+  </div>
+
+  <div class="epreuve">
+    <div class="ep-epr-title">ÉPREUVE D'IMMUNITÉ N°4<br>"L'ENDURANCE PHYSIOLOGIQUE"</div>
+    <div class="ep-epr-text">
+      Tenir une position inconfortable (bras levés, pied sur un plot, objet en équilibre sur la tête) aussi longtemps que possible. Le dernier debout gagne l'immunité.
+      <br><br>
+      Layvi abandonne à 7 minutes — il avait faim. Baiedhiver tient 1h12 en état méditatif apparent. Espy tient 1h34 et sort le chien imaginaire pour se concentrer. Cryo tient 2h07. <strong>Vainqueur : cryo. Encore.</strong>
+    </div>
+    <div class="ep-epr-result">
+      4e immunité pour cryo · Baiedhiver : "c'est surtout de la physique chimie, matière très osef" · Layvi : "j'avais une crampe"
+    </div>
+  </div>
+
+  <div class="conseil">
+    <div class="conseil-text">
+      Premier conseil réunifié. Quatre membres votent. Cryo est immunisé. L'alliance est censée voter layvi — mais cryo vote autrement.
+    </div>
+    <div class="vote-row">
+      <div class="vote-from col-esp">espy</div>
+      <div class="vote-arrow">→</div>
+      <div class="vote-to col-lay">layvi</div>
+      <div class="vote-reason">"Petit rappel journalier pour que les gens n'oublient pas."</div>
+    </div>
+    <div class="vote-row">
+      <div class="vote-from col-cry">cryo</div>
+      <div class="vote-arrow">→</div>
+      <div class="vote-to col-bai">baiedhiver</div>
+      <div class="vote-reason">"Désolé. Alliance ou pas — 4 immunités et tu vas en finale avec moi c'est non."</div>
+    </div>
+    <div class="vote-row">
+      <div class="vote-from col-lay">layvi</div>
+      <div class="vote-arrow">→</div>
+      <div class="vote-to col-bai">baiedhiver</div>
+      <div class="vote-reason">"Il va gagner si on le laisse. C'est de la logique."</div>
+    </div>
+    <div class="vote-row">
+      <div class="vote-from col-bai">baiedhiver</div>
+      <div class="vote-arrow">→</div>
+      <div class="vote-to col-esp">espy</div>
+      <div class="vote-reason">"Je ne me souviens d'aucune demande de ma part à être éliminé. J'enregistre ce moment par écrit."</div>
+    </div>
+    <div class="elim-banner">
+      2 voix contre baiedhiver · Éliminé : <span>baiedhiver</span>
+    </div>
+  </div>
+
+  <div class="journal">
+    <div class="journal-text">
+      <strong>Journal de bord · Dernier message · Baiedhiver</strong><br><br>
+      "Tant de gens — mais je me sens si seul. Je pars. Je reviendrai peut-être, dans un univers parallèle, sous une autre forme, à une autre heure. <em>Je maintiens que ledit auteur de mon élimination ne fait rien de grave.</em> Je suis prêt à le défendre philosophiquement. CAPES de philosophie option malveillance, rang 34 sur liste. Je vous laisse mes notes sur l'âme comme forme de la matière première — c'était pour vous."
+    </div>
+  </div>
+
+  <div class="ep-end"></div>
+</div>
+
+
+<!-- ══════════════════════════════════ -->
+<!-- ÉPISODE 6 — LA FINALE            -->
+<!-- ══════════════════════════════════ -->
+<div class="episode" id="ep6">
+  <div class="ep-header" data-ep="06">
+    <div class="ep-num">06</div>
+    <div class="ep-info">
+      <div class="ep-tag">Épisode 6 · Finale</div>
+      <div class="ep-title">La finale</div>
+      <div class="ep-desc">
+        Trois finalistes : cryo, espy, layvi. Dernière épreuve d'endurance. Conseil final. Vote du jury. <strong>La Chancla annonce le résultat.</strong> Discours des finalistes. Épilogue.
+      </div>
+    </div>
+  </div>
+
+  <div class="scene" style="padding-top:32px">
+    <div class="scene-label">Jour 25 · Camp · Matin de la finale</div>
+    <div class="scene-text">
+      Trois aventuriers restants. Cryo a 4 colliers d'immunité. Espy a une alliance retournée à son avantage. Layvi est là depuis deux semaines et demie — ce qui, pour lui, constitue un record absolu de présence continue documenté en dehors du confinement 2020.
+    </div>
+  </div>
+
+  <div class="conf" style="--cc: var(--cry)">
+    <div class="conf-hdr">
+      <div class="conf-av av-cry">C</div>
+      <div class="conf-name col-cry">cryoslinger</div>
+      <div class="conf-badge">📹 Confessionnal · Finale</div>
+    </div>
+    <div class="conf-text">
+      "Je suis là depuis le début. J'ai tout construit. J'ai tout organisé. J'ai gagné 4 épreuves. <em>C'pas ma femme pour rien.</em> Si je gagne pas ce jeu en ayant fait tout ça, je vais chercher Thélio à l'école avec un T-shirt 'Kouffardor 2025 — j'aurais dû gagner Koh Lanta aussi'."
+    </div>
+  </div>
+
+  <div class="conf" style="--cc: var(--lay)">
+    <div class="conf-hdr">
+      <div class="conf-av av-lay">L</div>
+      <div class="conf-name col-lay">layvi</div>
+      <div class="conf-badge">📹 Confessionnal · Finale</div>
+    </div>
+    <div class="conf-text">
+      "Mon jeu c'était le jeu long. Partir tôt, revenir, être là à la fin. <em>C'est de la stratégie.</em> J'ai pas de collier d'immunité. J'ai pas construit de camp. J'ai pas gagné d'épreuve. <strong>Mais je suis là.</strong> Et dans ce jeu, être là c'est déjà quelque chose."
+    </div>
+  </div>
+
+  <div class="epreuve">
+    <div class="ep-epr-title">DERNIÈRE ÉPREUVE D'IMMUNITÉ<br>"LE PIED SUR LE TOTEM"</div>
+    <div class="ep-epr-text">
+      Les trois finalistes posent un pied sur le totem. Le dernier à retirer son pied gagne l'immunité finale et choisit qui emmener avec lui en finale devant le jury.
+      <br><br>
+      Règle spéciale : tout abandon doit être motivé oralement.
+    </div>
+    <div class="ep-epr-result">
+      Layvi abandonne à 23 min ("j'ai une crampe à l'orteil, c'est sérieux") · Espy abandonne à 1h48 ("j'ai fait sortir le chien symbolique et ça m'a distrait") · Cryo tient jusqu'à la fin · Immunité finale → cryo · Il emmène layvi · "Espy est trop dangereux"
+    </div>
+  </div>
+
+  <div class="conf" style="--cc: var(--esp)">
+    <div class="conf-hdr">
+      <div class="conf-av av-esp">E</div>
+      <div class="conf-name col-esp">espy</div>
+      <div class="conf-badge">📹 Confessionnal · Éliminé en finale</div>
+    </div>
+    <div class="conf-text">
+      "Ah bah ça va finir en heures noirissimes, j'avoue. <em>Je suis éliminé en finale par quelqu'un que j'ai mis en place, allié, maintenu, et emmené jusqu'ici.</em> C'est assez beau. <strong>C'est ma malveillance retournée contre moi.</strong> C'est le seul truc qui méritait que ça finisse comme ça."
+    </div>
+  </div>
+
+  <!-- CONSEIL FINAL -->
+  <div class="conseil">
+    <div class="conseil-text">
+      Le jury — dosinge, baiedhiver, espy — vote pour le grand vainqueur entre cryo et layvi. Chacun des finalistes fait un discours. La Chancla préside.
+      <br><br>
+      <strong>Discours de cryo :</strong> "J'ai construit le camp, trouvé l'eau, fait le feu, gagné 4 épreuves, organisé les alliances, cuisiné le poisson, tenu le planning des corvées à jour. Personne n'a respecté ce planning. Mais il existait. Je pense que ça dit tout."
+      <br><br>
+      <strong>Discours de layvi :</strong> "Je suis arrivé en retard le jour 1. J'ai été éliminé à l'épisode 2. Je suis revenu avec un GIF de Shrek. Je suis en finale. Je vous demande de voter pour moi parce que mon jeu était le jeu le plus imprévisible de l'histoire de cette émission. Même moi j'avais pas prévu que ça finirait comme ça. Je suis d'accord avec tout ce que vous allez voter."
+    </div>
+    <div class="vote-row">
+      <div class="vote-from col-dos">dosinge</div>
+      <div class="vote-arrow">→</div>
+      <div class="vote-to col-cry">cryo</div>
+      <div class="vote-reason">"T'as tout fait. C'est mérité. Et t'as eu le chromosome le moins élevé de nous tous."</div>
+    </div>
+    <div class="vote-row">
+      <div class="vote-from col-bai">baiedhiver</div>
+      <div class="vote-arrow">→</div>
+      <div class="vote-to col-cry">cryo</div>
+      <div class="vote-reason">"Je maintiens que le retour de layvi était une proposition ontologique intéressante. Mais cryo a construit l'abri. L'abri existe. C'est concret."</div>
+    </div>
+    <div class="vote-row">
+      <div class="vote-from col-esp">espy</div>
+      <div class="vote-arrow">→</div>
+      <div class="vote-to col-lay">layvi</div>
+      <div class="vote-reason">"Pour l'audace du GIF. Et parce que voter pour quelqu'un qui m'a éliminé c'est trop prévisible."</div>
+    </div>
+  </div>
+
+  <div class="winner-box">
+    <div class="winner-name">cryoslinger</div>
+    <div class="winner-reason">
+      <strong>2 voix contre 1.</strong> Vainqueur de Koh Lanta — Le Discordeum. 4 colliers d'immunité. 98% de présence au camp. A construit l'abri, trouvé l'eau, organisé les alliances, tenu le planning. Kimyaku peut être fière. Thélio aussi, quand il sera en âge de comprendre.
+    </div>
+  </div>
+
+  <div class="conf" style="--cc: var(--cry); margin-top:24px">
+    <div class="conf-hdr">
+      <div class="conf-av av-cry">C</div>
+      <div class="conf-name col-cry">cryoslinger</div>
+      <div class="conf-badge">📹 Confessionnal final</div>
+    </div>
+    <div class="conf-text">
+      "Ayaent. <em>Sah quel plaisir.</em> <strong>C'pas ma femme pour rien.</strong>"
+    </div>
+  </div>
+
+  <!-- PODIUM -->
+  <div class="finale-podium" style="margin-top:28px">
+    <div class="podium-place">
+      <div class="podium-rank" style="color:var(--gold)">🥇</div>
+      <div class="podium-av av-cry" style="border: 2px solid var(--cry)">C</div>
+      <div class="podium-name col-cry">cryoslinger</div>
+      <div class="podium-desc">4 immunités · 98% présence · A tout construit · Méritait de gagner</div>
+    </div>
+    <div class="podium-place">
+      <div class="podium-rank" style="color:var(--muted)">🥈</div>
+      <div class="podium-av av-lay" style="border: 2px solid var(--lay)">L</div>
+      <div class="podium-name col-lay">layvi</div>
+      <div class="podium-desc">Éliminé · Revenu · Finaliste · GIF de Shrek comme stratégie de jeu</div>
+    </div>
+    <div class="podium-place">
+      <div class="podium-rank" style="color:var(--muted)">🥉</div>
+      <div class="podium-av av-esp" style="border: 2px solid var(--esp)">E</div>
+      <div class="podium-name col-esp">espy</div>
+      <div class="podium-desc">Alliance retournée · Éliminé en finale · Malveillance institutionnelle retournée contre lui</div>
+    </div>
+  </div>
+
+  <div class="ep-end"></div>
+</div>
+
+
+<!-- ÉPILOGUE -->
+<div class="epilogue">
+  <div class="ep-label">Après la saison · Ce qu'il s'est passé ensuite</div>
+  <div class="ep-text">
+    <strong>Cryo</strong> a utilisé le chèque de victoire pour prendre 6 places au concert Clair Obscur. Le site de billetterie a planté. Il a perdu son panier. Il a recommencé le lendemain.<br><br>
+    <strong>Layvi</strong> est rentré chez lui. Il a envoyé un message dans le Discord du groupe deux jours plus tard : <em>"bonne année le discordeum"</em>. C'était en décembre.<br><br>
+    <strong>Espy</strong> a rédigé une analyse en trois paragraphes de sa propre élimination. Il l'a gardée pour lui. <em>C'était la meilleure analyse de la saison.</em><br><br>
+    <strong>Dosinge</strong> a fait un tableau comparatif de tous les conseils et l'a partagé dans le Discord. Baiedhiver a répondu "dod qui n'a pas compris la consigne". Cryo a répondu "nonobstant". Layvi n'a pas répondu.<br><br>
+    <strong>Baiedhiver</strong> a publié ses notes sur l'âme comme forme de la matière première. <em>Personne ne les a lues. Il est prêt à les défendre philosophiquement.</em>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">DISCORDEUM TV</div>
+  <a href="index.html" class="footer-back">← Retour aux archives</a>
+</footer>
+
+</body>
+</html>

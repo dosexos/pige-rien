@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>baiedhiver — Profil · Le Discordeum</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+  :root {
+    --bg:      #050c08;
+    --bg2:     #091410;
+    --bg3:     #0e1c16;
+    --border:  #122010;
+    --text:    #98bca8;
+    --muted:   #2a5038;
+    --dim:     #0a1a10;
+    --white:   #daf0e4;
+
+    --p:       #4ade80;
+    --p2:      #16a34a;
+    --p3:      #0a2010;
+    --purple:  #a78bfa;
+    --teal:    #5eead4;
+    --orange:  #fb923c;
+    --amber:   #fbbf24;
+    --red:     #f87171;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--border);
+    position: relative; overflow: hidden;
+  }
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+  }
+
+  .hero-left {
+    padding: 100px 8vw 80px;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    position: relative; z-index: 1;
+    border-right: 1px solid var(--border);
+  }
+
+  .hero-right {
+    background: var(--bg2);
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    padding: 60px 40px; gap: 32px;
+    position: relative; overflow: hidden;
+  }
+  .hero-right::before {
+    content: 'B';
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 480px; color: var(--p);
+    opacity: 0.04; line-height: 1;
+    pointer-events: none; user-select: none;
+  }
+
+  .hero-back {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 3px; color: var(--muted);
+    text-transform: uppercase; margin-bottom: 32px;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    transition: color 0.2s; align-self: flex-start;
+  }
+  .hero-back:hover { color: var(--white); }
+  .hero-back::before { content: '←'; }
+
+  .hero-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--p); margin-bottom: 16px;
+    opacity: 0; animation: rise 0.7s ease forwards 0.1s;
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(56px, 10vw, 120px);
+    color: var(--white); line-height: 0.9; letter-spacing: 3px;
+    opacity: 0; animation: rise 0.7s ease forwards 0.3s;
+  }
+
+  .hero-role {
+    font-family: 'Crimson Pro', serif;
+    font-size: clamp(15px, 2vw, 19px); font-style: italic;
+    color: var(--muted); margin-top: 20px; line-height: 1.5;
+    max-width: 420px;
+    opacity: 0; animation: rise 0.7s ease forwards 0.6s;
+  }
+  .hero-role strong { color: var(--p); font-style: normal; font-weight: 600; }
+
+  .hero-stats-row {
+    display: flex; gap: 32px; margin-top: 48px; flex-wrap: wrap;
+    opacity: 0; animation: rise 0.7s ease forwards 0.9s;
+  }
+  .hs { display: flex; flex-direction: column; gap: 3px; }
+  .hs-v { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--p); line-height: 1; }
+  .hs-l { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: 1px; }
+
+  .stat-card {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 3px; padding: 18px 22px; width: 100%; max-width: 340px;
+    position: relative; z-index: 1;
+  }
+  .sc-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--p); margin-bottom: 8px;
+  }
+  .sc-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: #406050; line-height: 1.6;
+    font-style: italic;
+  }
+
+  /* ── CONTAINER ── */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 8vw; }
+
+  /* ── SECTIONS ── */
+  .section { padding: 72px 0; border-bottom: 1px solid var(--border); }
+  .section:last-of-type { border-bottom: none; }
+  .sh { display: flex; align-items: baseline; gap: 16px; margin-bottom: 40px; }
+  .sh-num { font-family: 'Bebas Neue', sans-serif; font-size: 40px; color: var(--dim); line-height: 1; }
+  .sh-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(24px, 4vw, 38px); color: var(--white); letter-spacing: 1px; }
+
+  /* ── PROSE ── */
+  .prose { font-size: 15px; line-height: 1.9; color: var(--text); margin-bottom: 22px; max-width: 680px; }
+  .prose strong { color: var(--white); font-weight: 600; }
+  .prose em { color: var(--p); font-style: italic; }
+
+  /* ── GRAPHIQUE ACTIVITÉ ── */
+  .year-chart { display: flex; align-items: flex-end; gap: 6px; height: 120px; margin: 32px 0; }
+  .yc-col { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; }
+  .yc-val { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--p); }
+  .yc-bar {
+    width: 100%; border-radius: 2px 2px 0 0;
+    background: var(--p); opacity: 0.7; transition: opacity 0.2s;
+  }
+  .yc-bar:hover { opacity: 1; }
+  .yc-bar.peak { opacity: 1; }
+  .yc-bar.low { background: var(--dim); opacity: 1; }
+  .yc-bar.absent {
+    background: repeating-linear-gradient(45deg, var(--dim), var(--dim) 3px, transparent 3px, transparent 6px);
+    border: 1px dashed var(--border); opacity: 1;
+  }
+  .yc-year { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); }
+
+  /* ── HEATMAP HORAIRE ── */
+  .hour-map {
+    display: grid; grid-template-columns: repeat(24, 1fr);
+    gap: 3px; margin: 20px 0;
+  }
+  .hm-cell {
+    height: 28px; border-radius: 2px; position: relative;
+  }
+  .hm-cell:hover::after {
+    content: attr(data-label);
+    position: absolute; bottom: 110%; left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg2); border: 1px solid var(--border);
+    padding: 3px 7px; border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    color: var(--white); white-space: nowrap; z-index: 10;
+  }
+  .hour-labels {
+    display: grid; grid-template-columns: repeat(24, 1fr);
+    gap: 3px; margin-top: 4px;
+  }
+  .hl { font-family: 'JetBrains Mono', monospace; font-size: 8px; color: var(--muted); text-align: center; }
+
+  /* ── TIMELINE ABSENCES ── */
+  .absence-list { display: flex; flex-direction: column; gap: 8px; margin: 20px 0; }
+  .abs-item {
+    display: flex; gap: 16px; align-items: flex-start;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-left: 3px solid var(--p);
+    border-radius: 0 3px 3px 0; padding: 10px 14px;
+  }
+  .abs-item.featured { border-left-color: var(--amber); }
+  .abs-dur {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px; line-height: 1; flex-shrink: 0; width: 48px;
+  }
+  .abs-body { flex: 1; }
+  .abs-dates { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); margin-bottom: 4px; }
+  .abs-avant { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #304838; font-style: italic; }
+  .abs-retour { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #406050; margin-top: 3px; }
+
+  /* ── DOCUMENT OFFICIEL ── */
+  .doc-officiel {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 3px; padding: 24px 28px; margin: 20px 0;
+    position: relative;
+  }
+  .doc-officiel::before {
+    content: attr(data-label);
+    position: absolute; top: -10px; left: 16px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 2px;
+    text-transform: uppercase; background: var(--bg2); padding: 0 8px;
+    color: var(--p);
+  }
+  .doc-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: #406050; line-height: 1.8; font-style: italic;
+  }
+  .doc-text strong { color: var(--white); font-style: normal; }
+
+  /* ── LEXIQUE ── */
+  .lexique { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 24px 0; }
+  @media (max-width: 600px) { .lexique { grid-template-columns: 1fr; } }
+  .lex-item {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 3px; padding: 14px 16px;
+  }
+  .lex-word {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px; color: var(--p); letter-spacing: 1px; margin-bottom: 4px;
+  }
+  .lex-def { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .lex-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: var(--dim); margin-top: 6px;
+  }
+
+  /* ── CITATIONS ── */
+  .citations { display: flex; flex-direction: column; gap: 16px; margin: 24px 0; }
+  .cit {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-left: 3px solid var(--p); border-radius: 0 3px 3px 0;
+    padding: 16px 20px;
+  }
+  .cit-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: #406050; line-height: 1.65;
+    margin-bottom: 8px;
+  }
+  .cit-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: var(--muted); letter-spacing: 1px;
+  }
+  .cit.faded { border-left-color: var(--dim); }
+  .cit.faded .cit-text { color: #243028; }
+
+  /* ── RELATIONS ── */
+  .relations { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 24px 0; }
+  @media (max-width: 600px) { .relations { grid-template-columns: 1fr; } }
+  .rel-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 3px; padding: 18px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .rel-av {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif; font-size: 16px;
+  }
+  .rel-name { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: var(--white); letter-spacing: 1px; }
+  .rel-surnom { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--p); letter-spacing: 1px; }
+  .rel-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 48px 8vw;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .footer-logo { font-family: 'Crimson Pro', serif; font-size: 18px; font-style: italic; color: var(--muted); }
+  .footer-nav { display: flex; gap: 24px; }
+  .footer-link {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--muted); letter-spacing: 2px; text-transform: uppercase;
+    text-decoration: none; transition: color 0.2s;
+  }
+  .footer-link:hover { color: var(--white); }
+
+  @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 600px) {
+    .container { padding: 0 20px; }
+    .hero-left { padding: 60px 20px 48px; }
+    footer { padding: 40px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="hero-left">
+    <a href="index.html" class="hero-back">Retour au Discordeum</a>
+    <div class="hero-tag">Profil · Arrivée mars 2021 · Philosophe · Fonctionnaire</div>
+    <h1>baie<br>dhiver</h1>
+    <div class="hero-role">
+      <strong>La présence épisodique à haute valeur ajoutée.</strong> Frère de cryoslinger. CAPES de philosophie, rang 34. Greffier spontané du Discordeum. 86% d'absence. Premier message : "j'suis up perso." Retour après 318 jours : Aristote.
+    </div>
+    <div class="hero-stats-row">
+      <div class="hs"><div class="hs-v">750</div><div class="hs-l">messages</div></div>
+      <div class="hs"><div class="hs-v">256</div><div class="hs-l">jours actifs</div></div>
+      <div class="hs"><div class="hs-v">86%</div><div class="hs-l">absence</div></div>
+      <div class="hs"><div class="hs-v">318j</div><div class="hs-l">disparition record</div></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="stat-card">
+      <div class="sc-label">Premier message · 6 mars 2021</div>
+      <div class="sc-text">"j'suis up perso"</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Dernier message avant 318 jours</div>
+      <div class="sc-text">"hihihihi" → [318 jours] → "Je crois avoir beaucoup changé, depuis que je considère mon âme comme la forme de la matière première..."</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">CAPES Philosophie · Juin 2025</div>
+      <div class="sc-text">🥳 Reçu 34e · "J'attends ta copie" [à cryo]</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Fonction officielle non sollicitée</div>
+      <div class="sc-text">Greffier du Discordeum · Auteur du Journal de Bord · Notaire des échanges vocaux · Fonctionnaire stagiaire*</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ══ 01 · PRÉSENCE ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">01</div><div class="sh-title">Sa présence</div></div>
+
+    <p class="prose">
+      Baiedhiver arrive dans le Discordeum le 6 mars 2021 — deux ans et demi après l'ouverture du canal — avec <em>"j'suis up perso"</em>. Il est le frère de cryoslinger. Il repart le lendemain avec <em>"hihihihi"</em>. Il revient 318 jours plus tard en ayant beaucoup changé.
+    </p>
+
+    <p class="prose">
+      Sur 1 831 jours de présence possible depuis son arrivée, il est actif <strong>256 jours</strong> — soit un taux d'absence de <strong>86%</strong>, le plus élevé du groupe. Ses absences sont longues, imprévisibles, et ne s'annoncent jamais. Ses retours non plus. Contrairement à layvi qui revient avec un GIF de Shrek, baiedhiver revient avec Aristote.
+    </p>
+
+    <p class="prose">
+      Il est le membre le plus récent — et pourtant ses contributions ont une densité inhabituelle. 750 messages pour 256 jours actifs : quand il est là, <em>il est vraiment là.</em> Son pic est décembre 2022 (75 messages), suivi de 2023 où il accumule 249 messages sur l'année, son record annuel. Depuis 2024, la tendance descend — mais il est encore présent en mars 2026.
+    </p>
+
+    <div class="year-chart" id="yearChart"></div>
+
+    <p class="prose" style="margin-top:0">
+      Sa plage horaire est l'après-midi et le début de soirée — <strong>13h–20h</strong>, avec un pic à 20h (75 messages). Aucune présence significative la nuit, contrairement à cryo ou dosinge. C'est un membre diurne, ce qui est cohérent avec son statut de fonctionnaire stagiaire — profession qu'il tient à préciser avec l'astérisque.
+    </p>
+
+    <div class="hour-map" id="hourMap"></div>
+    <div class="hour-labels" id="hourLabels"></div>
+  </section>
+
+  <!-- ══ 02 · LES 318 JOURS ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">02</div><div class="sh-title">Les 318 jours</div></div>
+
+    <p class="prose">
+      La disparition fondatrice. Baiedhiver arrive le 6 mars 2021, poste cinq messages en deux jours — dont <em>"hihihihi"</em> comme dernier mot — et disparaît pendant <strong>318 jours consécutifs</strong>. Il revient le 20 janvier 2022 avec un message de 255 caractères sur l'âme comme forme de la matière première, citation d'Aristote adaptée. Aucune explication sur les 318 jours. Aucune mention de l'absence. Comme si rien ne s'était passé — mais avec une vision du monde radicalement transformée.
+    </p>
+
+    <div class="absence-list">
+      <div class="abs-item featured">
+        <div class="abs-dur" style="color:var(--amber)">318j</div>
+        <div class="abs-body">
+          <div class="abs-dates">7 mars 2021 → 20 janvier 2022</div>
+          <div class="abs-avant">Avant : "hihihihi"</div>
+          <div class="abs-retour">Retour : "Je crois avoir beaucoup changé, depuis que je considère mon âme comme la forme de la matière première, évidemment aussi forme d'un corps organisé ayant la vie en puissance..."</div>
+        </div>
+      </div>
+      <div class="abs-item">
+        <div class="abs-dur" style="color:var(--p)">46j</div>
+        <div class="abs-body">
+          <div class="abs-dates">20 janvier → 8 mars 2022</div>
+          <div class="abs-avant">Avant : "Cimer 🥲"</div>
+          <div class="abs-retour">Retour : "Oh oui je pratique la pensée oui oui"</div>
+        </div>
+      </div>
+      <div class="abs-item">
+        <div class="abs-dur" style="color:var(--p)">42j</div>
+        <div class="abs-body">
+          <div class="abs-dates">15 septembre → 27 octobre 2024</div>
+          <div class="abs-avant">Avant : "Ok y a un suspens qui est créé"</div>
+          <div class="abs-retour">Retour : "Plus Gragas que jamais"</div>
+        </div>
+      </div>
+      <div class="abs-item">
+        <div class="abs-dur" style="color:var(--p)">46j</div>
+        <div class="abs-body">
+          <div class="abs-dates">2 mai → 17 juin 2025</div>
+          <div class="abs-avant">Avant : "ptdrrr"</div>
+          <div class="abs-retour">Retour : "Marre du brawl-bashing"</div>
+        </div>
+      </div>
+      <div class="abs-item">
+        <div class="abs-dur" style="color:var(--p)">29j</div>
+        <div class="abs-body">
+          <div class="abs-dates">12 avril → 11 mai 2022</div>
+          <div class="abs-avant">Avant : "allez 17jours pour briller"</div>
+          <div class="abs-retour">Retour : [lien zemmour gif]</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="prose" style="margin-top:16px">
+      Le pattern de baiedhiver diffère de celui de layvi : ses derniers mots avant absence ne sont pas des fragments — ils sont parfois des phrases entières, parfois des blagues, parfois des gifs. Il n'y a pas de signal. Et ses retours sont souvent les plus mémorables du canal, parce qu'il revient avec quelque chose — une citation, une observation, une mise à jour philosophique sur son état intérieur.
+    </p>
+  </section>
+
+  <!-- ══ 03 · PORTRAIT ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">03</div><div class="sh-title">Portrait</div></div>
+
+    <p class="prose">
+      Baiedhiver occupe une place unique dans le Discordeum : il est à la fois le membre le plus absent et celui dont les interventions sont les plus denses intellectuellement. Quand il est là, il tient le journal de bord, rédige les procès-verbaux des discussions vocales, consigne les aveux publics, et commente l'action avec une distance philosophique que personne d'autre n'a.
+    </p>
+
+    <p class="prose">
+      Il est <strong>fonctionnaire stagiaire</strong> — il tient à l'astérisque. Avant ça, il a passé son <strong>CAPES de philosophie</strong> et a été reçu 34e. Son premier message après la réception : taguer cryo en disant "J'attends ta copie." Cryo n'a pas rendu de copie.
+    </p>
+
+    <p class="prose">
+      Sa relation au groupe est paradoxale : il est le membre le moins présent en volume mais celui qui a laissé le <em>Journal de bord du Discordéum</em> — un document officiel non sollicité rédigé le 2 novembre 2023, dans lequel il documente l'absence de layvi en termes de "forces cosmiques" et d'"arcane discordéenne". C'est le seul membre à avoir produit une fiction documentaire sur le groupe depuis l'intérieur du groupe.
+    </p>
+
+    <div class="doc-officiel" data-label="Journal de bord · 2 novembre 2023 · 691 caractères">
+      <div class="doc-text">
+        <strong>Journal de bord du Discordéum, entrée du 02/11/2023</strong><br><br>
+        "Nous semblons au complet, l'équipe est composée de cinq membres, mais l'un d'entre nous, frappé de désarroi, pense qu'il manque quelqu'un...<br><br>
+        Des réminiscences d'une vie passée ? Un concept philosophique ? Quelque chose d'un nom de <strong>S</strong> retient inlassablement l'attention d'Enzoclès, qui semble manifestement plus perturbé que d'habitude.<br><br>
+        Petit à petit, le nom de <strong>Bonk</strong> arrive aux lèvres de Totem-san... Soudain, tout revient à l'équipe, ils étaient six, ils étaient six...<br><br>
+        Affrontant les forces cosmiques, l'équipe décide d'essayer d'invoquer Souhil BonkeBonk grâce à une arcane discordéenne oubliée..."
+      </div>
+    </div>
+
+    <p class="prose">
+      Il documente aussi les aveux publics. Le 31 juillet 2023 : <em>"22h47 ; Théo admet enfin oralement être en possession pleine, durable, et pérenne, des cramptés. 22h50 ; celui-ci admet les avoir dissimulés."</em> Le 12 mai 2023 : un compte-rendu notarial d'un échange vocal à 1h50 du matin, avec mention des témoins. <strong>Personne ne lui a demandé de faire ça.</strong>
+    </p>
+  </section>
+
+  <!-- ══ 04 · LEXIQUE ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">04</div><div class="sh-title">Son lexique</div></div>
+
+    <p class="prose">
+      Baiedhiver a un style immédiatement reconnaissable : un registre soutenu qui coexiste avec des abréviations de tchat, une tendance à nommer les membres avec des surnoms narratifs (Enzoclès, Totem-san, le mini T), et un usage du "uwu" en fin de phrase qui contraste avec le reste de son registre.
+    </p>
+
+    <div class="lexique">
+      <div class="lex-item">
+        <div class="lex-word">UWU</div>
+        <div class="lex-def">Ponctuation de clôture affective. Apparaît en fin de message pour adoucir une proposition, confirmer une disponibilité, ou signaler une bonne humeur. Contraste maximal avec le registre philosophique du reste. Ratio d'usage très élevé.</div>
+        <div class="lex-count">12 occurrences · usage exclusif baiedhiver dans ce contexte</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">DISCORDÉUM</div>
+        <div class="lex-def">Il est le seul à écrire "Discordéum" avec accent, systématiquement. Ratio 201x. C'est lui qui a institutionnalisé l'orthographe accent aigu — le reste du groupe écrit "Discordeum" sans accent.</div>
+        <div class="lex-count">4 occurrences documentées · dénominateur officiel</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">NONOBSTANT</div>
+        <div class="lex-def">Connecteur logique hérité du lexique de cryo, mais retourné en parodie par baiedhiver. Il l'utilise dans des contextes où il ne sert à rien grammaticalement — ce qui est exactement son usage le plus juste.</div>
+        <div class="lex-count">Présent · usage parodique · hommage fraternel</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">JE MAINTIENS</div>
+        <div class="lex-def">Formule juridique de résistance. "Je maintiens que ledit auteur ne fait rien de grave." "Je maintiens qu'une 12ème place est équivalente philosophiquement à une 1ère." Position tenue contre vents et marées, avec documentation à l'appui.</div>
+        <div class="lex-count">Usage récurrent · formule signature</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">SOUSSIGNÉ · JE CONSTATE</div>
+        <div class="lex-def">Le registre notarial. "Je, soussigné Ahurin, avoir pu constaté l'échec du système scolaire sur le dit Dosinges." "Non, j'ai longuement interrogé ma mémoire : aucune trace de quelque demande." Il parle comme s'il produisait un acte officiel.</div>
+        <div class="lex-count">Plusieurs occurrences · rôle de greffier auto-désigné</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">PTDRRR · MDRR</div>
+        <div class="lex-def">Ses rires textuels — avec un r de trop par rapport au groupe. "ptdrrr" ratio 302x. Il rit souvent, franchement, de façon documentée. Le philosophe et le rire coexistent sans tension.</div>
+        <div class="lex-count">ptdrrr : 6× · mdrr : 12× · ratio très élevé</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 05 · CITATIONS ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">05</div><div class="sh-title">Citations</div></div>
+
+    <p class="prose">Une sélection qui capte l'éventail baiedhiver — le philosophe, le greffier, le frère, le joueur, le fonctionnaire.</p>
+
+    <div class="citations">
+
+      <div class="cit">
+        <div class="cit-text">"Je crois avoir beaucoup changé, depuis que je considère mon âme comme la forme de la matière première, évidemment aussi forme d'un corps organisé ayant la vie en puissance."</div>
+        <div class="cit-meta">20 janvier 2022 · premier message après 318 jours · Aristote, De l'âme, II, 1 · adapté librement</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"Je, soussigné Ahurin, avoir pu constaté l'échec du système scolaire sur le dit Dosinges l'après midi du 2 Février 2023."</div>
+        <div class="cit-meta">2 février 2023 · réponse au constat de dosinge sur lui-même · acte notarial spontané</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"Je pense qu'il faut agir au plus vite, un procès me semble déjà trop généreux. Il faut envoyer un message fort et organiser de suite une expédition punitive."</div>
+        <div class="cit-meta">17 avril 2023 · sur une faute de frappe de dosinge · proportionnalité de la réponse</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"Compte-rendu d'un échange audiovisuel auquel j'ai assisté ce treize mai deux mille vingt trois à une heure cinquante du matin : 'Souhil – Tu es au même niveau que Dorian. Théo – Oui !' *Devant non moins de trois témoins*"</div>
+        <div class="cit-meta">12 mai 2023 · 1h50 du matin · procès-verbal d'un aveu · non sollicité</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"31/07/2023 - 22h47 ; Théo admet enfin oralement être en possession pleine, durable, et pérenne, des cramptés. 22h50 ; celui-ci admet les avoir dissimulés de la vue."</div>
+        <div class="cit-meta">31 juillet 2023 · log de vocal notarial · cryo comme sujet</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"Non bah je me tiens disponible durant les vacances pour inculquer le libre-arbitre aux malotrus de ce discord."</div>
+        <div class="cit-meta">30 mars 2022 · sur sa disponibilité · mission pédagogique</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"Le feu, cette molécule de chaud."</div>
+        <div class="cit-meta">9 février 2024 · sans contexte · chimie générale</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"🥳 REÇU 34E AU CAPES DE PHILOSOPHIE 🥳 — J'attends ta copie."</div>
+        <div class="cit-meta">27 juin 2025 · à cryo · la réception du CAPES annoncée et convertie immédiatement en défi fraternel</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"Je suis fonctionnaire stagiaire* stp"</div>
+        <div class="cit-meta">12 février 2026 · correction d'une désignation imprécise · l'astérisque comme distinction statutaire fondamentale</div>
+      </div>
+
+      <div class="cit faded">
+        <div class="cit-text">"Try not to cringe : impossible edition"</div>
+        <div class="cit-meta">11 mars 2026 · dernier message archivé · sujet : inconnu · verdict : rendu</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ 06 · RELATIONS ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">06</div><div class="sh-title">Ses relations</div></div>
+
+    <div class="relations">
+      <div class="rel-card">
+        <div class="rel-av" style="background:#2a1205; color:var(--orange)">C</div>
+        <div class="rel-name" style="color:var(--orange)">cryoslinger</div>
+        <div class="rel-surnom">Théo · Totem-san · frère</div>
+        <div class="rel-desc">Son frère IRL. 27 pings directs — la relation la plus dense par volume. Il documente ses aveux, attend ses copies, l'appelle "Théo Théo" quand il est en forme. "Tot tu me dois 1500€ car 4-2=2."</div>
+      </div>
+      <div class="rel-card">
+        <div class="rel-av" style="background:#0a2030; color:var(--teal)">E</div>
+        <div class="rel-name" style="color:var(--teal)">espy</div>
+        <div class="rel-surnom">Enzoclès · Luca · monsieur</div>
+        <div class="rel-desc">19 pings. Il l'appelle "Enzoclès" dans le Journal de bord — le seul surnom narratif qu'il invente. Espy est souvent son interlocuteur préféré pour les débats philosophiques qui n'aboutissent à rien de concret.</div>
+      </div>
+      <div class="rel-card">
+        <div class="rel-av" style="background:#2a1a5a; color:var(--purple)">D</div>
+        <div class="rel-name" style="color:var(--purple)">dosinge</div>
+        <div class="rel-surnom">Dosinges · le mini T · dodule</div>
+        <div class="rel-desc">16 pings. Sa cible de prédilection pour les constats notariaux. "Je, soussigné Ahurin, avoir pu constaté l'échec du système scolaire sur le dit Dosinges." Dosinge est son cas d'étude favori.</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="footer-logo">Le Discordeum</div>
+  <nav class="footer-nav">
+    <a href="index.html" class="footer-link">← Sommaire</a>
+    <a href="profil_cryoslinger.html" class="footer-link">Profil cryo</a>
+    <a href="kouffardor.html" class="footer-link">Kouffardor</a>
+  </nav>
+</footer>
+
+<script>
+// Activité par année — 2021 quasi absent (barre hachurée)
+const yearData = [
+  {y:'2021', n:5, special:'absent'},
+  {y:'2022', n:242, peak:false},
+  {y:'2023', n:249, peak:true},
+  {y:'2024', n:110, peak:false},
+  {y:'2025', n:125, peak:false},
+  {y:'2026', n:19, peak:false},
+];
+const maxY = Math.max(...yearData.map(d=>d.n));
+const chartEl = document.getElementById('yearChart');
+yearData.forEach(d => {
+  const col = document.createElement('div');
+  col.className = 'yc-col';
+  const h = Math.max(4, Math.round((d.n/maxY)*100));
+  const barClass = d.special === 'absent' ? 'absent' : d.peak ? 'peak' : d.n < 30 ? 'low' : '';
+  col.innerHTML = `
+    <div class="yc-val">${d.special === 'absent' ? '—' : d.n}</div>
+    <div class="yc-bar ${barClass}" style="height:${d.special==='absent'?8:h}px"></div>
+    <div class="yc-year">${d.y}</div>
+  `;
+  chartEl.appendChild(col);
+});
+
+// Heatmap horaire
+const hourData = [0,0,0,0,0,2,2,8,16,46,40,48,33,59,62,72,56,37,60,67,75,39,21,7];
+const maxH = Math.max(...hourData);
+const hmEl = document.getElementById('hourMap');
+const hlEl = document.getElementById('hourLabels');
+hourData.forEach((n, h) => {
+  const cell = document.createElement('div');
+  cell.className = 'hm-cell';
+  const intensity = n / maxH;
+  const alpha = n === 0 ? 0.03 : 0.05 + intensity * 0.85;
+  cell.style.background = `rgba(74,222,128,${alpha})`;
+  cell.setAttribute('data-label', `${String(h).padStart(2,'0')}h · ${n} msgs`);
+  hmEl.appendChild(cell);
+  const lbl = document.createElement('div');
+  lbl.className = 'hl';
+  lbl.textContent = h % 3 === 0 ? String(h).padStart(2,'0') : '';
+  hlEl.appendChild(lbl);
+});
+</script>
+
+</body>
+</html>
