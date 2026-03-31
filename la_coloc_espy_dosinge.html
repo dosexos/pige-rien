@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Coloc — espy × dosinge · Discordeum TV</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Anton&family=Barlow:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Barlow+Condensed:wght@300;400;600;700;800;900&display=swap');
+
+  :root {
+    --bg:       #08080d;
+    --bg2:      #0e0e18;
+    --bg3:      #141420;
+    --border:   #1e1e2e;
+    --text:     #b0b0cc;
+    --muted:    #484860;
+    --white:    #e8e8f8;
+    --red:      #e84040;
+
+    --esp:      #5eead4;
+    --dos:      #a78bfa;
+    --esp2:     #0d9488;
+    --dos2:     #7c3aed;
+    --blend:    #8ac4d8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  /* Scanlines */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(transparent, transparent 1px, rgba(0,0,0,0.12) 1px, rgba(0,0,0,0.12) 2px);
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ── OPENING ── */
+  .opening {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    text-align: center; padding: 80px 8vw;
+    position: relative; overflow: hidden;
+    border-bottom: 3px solid var(--red);
+    background:
+      radial-gradient(ellipse at 30% 50%, rgba(94,234,212,0.05) 0%, transparent 45%),
+      radial-gradient(ellipse at 70% 50%, rgba(167,139,250,0.05) 0%, transparent 45%),
+      var(--bg);
+  }
+
+  .tv-logo {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(12px, 1.5vw, 16px);
+    letter-spacing: 8px; color: var(--red);
+    text-transform: uppercase; margin-bottom: 24px;
+    opacity: 0; animation: fadeUp 0.6s ease forwards 0.2s;
+    position: relative; z-index: 1;
+  }
+
+  .show-title {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(56px, 12vw, 140px);
+    color: var(--white); line-height: 0.88;
+    text-transform: uppercase; letter-spacing: -2px;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.4s;
+    position: relative; z-index: 1;
+  }
+  .show-title .la { display: block; font-size: 0.4em; color: var(--red); letter-spacing: 6px; }
+
+  .duo-line {
+    display: flex; align-items: center; gap: 24px;
+    justify-content: center; margin-top: 32px;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.7s;
+    position: relative; z-index: 1;
+  }
+  .duo-name {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(28px, 5vw, 56px); letter-spacing: 2px;
+  }
+  .duo-sep {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 24px; color: var(--muted); font-weight: 300;
+  }
+
+  .show-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(13px, 2vw, 17px); font-weight: 600;
+    color: var(--muted); letter-spacing: 3px; text-transform: uppercase;
+    margin-top: 20px;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 1s;
+    position: relative; z-index: 1;
+  }
+
+  .dossier {
+    margin-top: 40px;
+    display: flex; gap: 32px; flex-wrap: wrap; justify-content: center;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 1.2s;
+    position: relative; z-index: 1;
+  }
+  .dos-item { display: flex; flex-direction: column; gap: 3px; align-items: center; }
+  .dos-val {
+    font-family: 'Anton', sans-serif;
+    font-size: 28px; line-height: 1;
+  }
+  .dos-lab {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; font-weight: 600; letter-spacing: 2px;
+    color: var(--muted); text-transform: uppercase;
+  }
+
+  .hero-back {
+    position: absolute; top: 24px; left: 8vw;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; letter-spacing: 3px; color: var(--muted);
+    text-transform: uppercase; text-decoration: none;
+    transition: color 0.2s; z-index: 10;
+  }
+  .hero-back:hover { color: var(--white); }
+
+  /* ── NAV ── */
+  .day-nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(8,8,13,0.96); backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    height: 44px; display: flex; align-items: center;
+    padding: 0 8vw; gap: 0; overflow-x: auto;
+  }
+  .day-nav a {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; font-weight: 700; letter-spacing: 2px;
+    color: var(--muted); text-decoration: none; padding: 0 18px;
+    height: 44px; display: flex; align-items: center; white-space: nowrap;
+    border-right: 1px solid var(--border); text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .day-nav a:first-child { border-left: 1px solid var(--border); }
+  .day-nav a:hover { color: var(--white); }
+
+  /* ── JOUR ── */
+  .jour { border-bottom: 1px solid var(--border); }
+
+  .jour-header {
+    padding: 56px 8vw 36px;
+    display: flex; align-items: baseline; gap: 20px;
+    border-bottom: 1px solid var(--border);
+    position: relative; overflow: hidden;
+  }
+  .jour-header::after {
+    content: attr(data-j);
+    position: absolute; right: 6vw; top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(60px, 12vw, 120px);
+    color: var(--white); opacity: 0.03; line-height: 1;
+    pointer-events: none; user-select: none; letter-spacing: -2px;
+  }
+
+  .jour-label {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(36px, 6vw, 64px);
+    color: var(--red); letter-spacing: 2px; line-height: 1;
+  }
+  .jour-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; font-weight: 600; letter-spacing: 3px;
+    color: var(--muted); text-transform: uppercase; margin-top: 4px;
+  }
+  .jour-sep { flex: 1; height: 1px; background: var(--border); margin-bottom: 6px; }
+
+  /* ── SCÈNE ── */
+  .scene { padding: 28px 8vw 0; }
+  .scene-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: 3px;
+    color: var(--muted); text-transform: uppercase; margin-bottom: 10px;
+  }
+  .scene-text { font-size: 15px; color: var(--text); line-height: 1.85; max-width: 720px; }
+  .scene-text strong { color: var(--white); }
+  .scene-text em { color: var(--blend); font-style: italic; }
+
+  /* ── CONFESSIONNAL ── */
+  .conf {
+    margin: 20px 8vw 0;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-left: 4px solid var(--cc, var(--red));
+    border-radius: 0 4px 4px 0; padding: 16px 22px;
+  }
+  .conf-hdr {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+  }
+  .conf-av {
+    width: 30px; height: 30px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Anton', sans-serif; font-size: 13px; flex-shrink: 0;
+  }
+  .conf-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  }
+  .conf-badge {
+    margin-left: auto; font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px; font-weight: 700; letter-spacing: 2px;
+    color: var(--muted); text-transform: uppercase;
+  }
+  .conf-text {
+    font-size: 14px; color: var(--text); line-height: 1.8; font-style: italic;
+  }
+  .conf-text strong { color: var(--white); font-style: normal; }
+  .conf-text em { color: var(--cc, var(--blend)); }
+
+  /* ── DIALOGUE ── */
+  .dialogue { margin: 20px 8vw 0; display: flex; flex-direction: column; gap: 7px; }
+  .dlg { display: flex; gap: 10px; align-items: flex-start; }
+  .dlg-av {
+    width: 26px; height: 26px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Anton', sans-serif; font-size: 11px; flex-shrink: 0; margin-top: 1px;
+  }
+  .dlg-body { flex: 1; }
+  .dlg-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; margin-bottom: 2px;
+  }
+  .dlg-text {
+    font-size: 13px; color: #9090b8; line-height: 1.55;
+    background: var(--bg2); border-radius: 0 8px 8px 8px;
+    padding: 6px 12px; display: inline-block; max-width: 560px;
+    border-left: 2px solid var(--border);
+  }
+  .dlg-action {
+    font-size: 12px; color: var(--muted); font-style: italic;
+    padding: 4px 0 4px 36px; width: 100%;
+  }
+
+  .av-dos { background: #2a1a5a; color: var(--dos); }
+  .av-esp { background: #0a2030; color: var(--esp); }
+  .col-dos { color: var(--dos); }
+  .col-esp { color: var(--esp); }
+
+  /* ── ÉPREUVE ── */
+  .epreuve {
+    margin: 28px 8vw 0;
+    background: var(--bg2); border: 2px solid #c89b3c;
+    border-radius: 4px; padding: 22px 28px; position: relative;
+  }
+  .epreuve::before {
+    content: '⚡ ÉPREUVE DE LA SEMAINE';
+    position: absolute; top: -11px; left: 16px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: 3px;
+    background: var(--bg2); padding: 0 8px;
+    color: #c89b3c; text-transform: uppercase;
+  }
+  .epreuve-title {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(18px, 3vw, 28px); color: #c89b3c; letter-spacing: 1px; margin-bottom: 10px;
+  }
+  .epreuve-text { font-size: 14px; color: var(--text); line-height: 1.75; }
+  .epreuve-text strong { color: var(--white); }
+  .epreuve-result {
+    margin-top: 14px; padding-top: 12px;
+    border-top: 1px solid rgba(200,155,60,0.2);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; font-weight: 600; color: #c89b3c; letter-spacing: 1px;
+  }
+
+  /* ── DOCUMENT ── */
+  .document {
+    margin: 20px 8vw 0;
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 4px; padding: 20px 24px; position: relative;
+    font-family: 'Barlow Condensed', monospace;
+  }
+  .document::before {
+    content: attr(data-label);
+    position: absolute; top: -10px; left: 14px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px; font-weight: 700; letter-spacing: 2px;
+    background: var(--bg3); padding: 0 6px; color: var(--muted);
+    text-transform: uppercase;
+  }
+  .doc-content { font-size: 13px; color: #7878a0; line-height: 1.8; font-style: italic; }
+  .doc-content strong { color: var(--white); font-style: normal; }
+
+  /* ── NOMINATIONS ── */
+  .nominations {
+    margin: 28px 8vw 0;
+    background: #0a0508; border: 2px solid var(--red);
+    border-radius: 4px; padding: 22px 28px; position: relative;
+  }
+  .nominations::before {
+    content: '🗳 NOMINATIONS';
+    position: absolute; top: -11px; left: 16px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: 3px;
+    background: #0a0508; padding: 0 8px;
+    color: var(--red); text-transform: uppercase;
+  }
+  .nom {
+    padding: 12px 0; border-bottom: 1px solid var(--border);
+  }
+  .nom:last-child { border-bottom: none; padding-bottom: 0; }
+  .nom-header {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 8px;
+  }
+  .nom-from {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  }
+  .nom-arrow { color: var(--muted); font-size: 12px; }
+  .nom-to {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  }
+  .nom-text { font-size: 13px; color: var(--muted); line-height: 1.7; font-style: italic; }
+  .nom-text strong { color: var(--text); font-style: normal; }
+
+  /* ── VOTE ── */
+  .vote-block {
+    margin: 28px 8vw 0;
+    background: #0a0508; border: 2px solid var(--red);
+    border-radius: 4px; padding: 28px 32px; position: relative; text-align: center;
+  }
+  .vote-block::before {
+    content: '📞 VOTE DU PUBLIC';
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: 3px;
+    background: #0a0508; padding: 0 12px; color: var(--red); white-space: nowrap;
+  }
+  .vote-row {
+    display: flex; align-items: center; gap: 14px; margin: 10px 0; text-align: left;
+  }
+  .vote-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; width: 90px; flex-shrink: 0;
+  }
+  .vote-bar-wrap { flex: 1; height: 10px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
+  .vote-bar { height: 100%; border-radius: 2px; }
+  .vote-pct {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px; font-weight: 700; width: 40px; text-align: right; flex-shrink: 0;
+  }
+  .vote-result {
+    margin-top: 20px; padding-top: 16px;
+    border-top: 1px solid rgba(232,64,64,0.2);
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(18px, 3vw, 26px); letter-spacing: 2px; color: var(--red);
+    line-height: 1.3;
+  }
+
+  /* ── ÉPILOGUE ── */
+  .epilogue {
+    padding: 64px 8vw 80px;
+    border-top: 1px solid var(--border);
+  }
+  .ep-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: 4px;
+    color: var(--muted); text-transform: uppercase; margin-bottom: 20px;
+  }
+  .ep-text { font-size: 15px; color: var(--muted); line-height: 1.9; max-width: 640px; }
+  .ep-text strong { color: var(--white); }
+  .ep-text em { color: var(--blend); font-style: italic; }
+
+  /* ── SPACER ── */
+  .ep-end { height: 48px; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 40px 8vw;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .footer-logo { font-family: 'Anton', sans-serif; font-size: 18px; color: var(--muted); letter-spacing: 2px; }
+  .footer-back {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 11px;
+    color: var(--muted); letter-spacing: 2px; text-transform: uppercase;
+    text-decoration: none; transition: color 0.2s;
+  }
+  .footer-back:hover { color: var(--white); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 600px) {
+    .scene, .conf, .dialogue, .epreuve, .document, .nominations, .vote-block, .epilogue { padding-left: 20px; padding-right: 20px; }
+    .jour-header { padding: 40px 20px 24px; }
+    .day-nav { padding: 0 20px; }
+    footer { padding: 36px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- OPENING -->
+<div class="opening">
+  <a href="la_coloc.html" class="hero-back">← La Coloc S1</a>
+  <div class="tv-logo">Discordeum TV · Saison 3 · Spin-off</div>
+  <div class="show-title">
+    <span class="la">La</span>
+    Coloc
+  </div>
+  <div class="duo-line">
+    <span class="duo-name" style="color:var(--esp)">espy</span>
+    <span class="duo-sep">×</span>
+    <span class="duo-name" style="color:var(--dos)">dosinge</span>
+  </div>
+  <p class="show-sub">2 colocataires · 1 appartement · 7 ans de matière inflammable</p>
+  <div class="dossier">
+    <div class="dos-item"><div class="dos-val" style="color:var(--esp)">10 405</div><div class="dos-lab">messages espy</div></div>
+    <div class="dos-item"><div class="dos-val" style="color:var(--dos)">12 726</div><div class="dos-lab">messages dosinge</div></div>
+    <div class="dos-item"><div class="dos-val" style="color:var(--blend)">23 131</div><div class="dos-lab">à eux deux</div></div>
+    <div class="dos-item"><div class="dos-val" style="color:var(--muted)">7</div><div class="dos-lab">jours ensemble</div></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="day-nav">
+  <a href="#lundi">Lundi</a>
+  <a href="#mardi">Mardi</a>
+  <a href="#mercredi">Mercredi</a>
+  <a href="#jeudi">Jeudi</a>
+  <a href="#vendredi">Vendredi</a>
+  <a href="#samedi">Samedi</a>
+  <a href="#dimanche">Dimanche</a>
+</nav>
+
+
+<!-- ══ LUNDI ══ -->
+<div class="jour" id="lundi">
+  <div class="jour-header" data-j="LUN">
+    <div>
+      <div class="jour-label">Lundi</div>
+      <div class="jour-sub">Jour 1 · L'installation · Les règles</div>
+    </div>
+    <div class="jour-sep"></div>
+  </div>
+
+  <div class="scene" style="padding-top:32px">
+    <div class="scene-label">09h00 · Salon</div>
+    <div class="scene-text">
+      Dosinge arrive avec deux cartons, un setup gaming démonté, et un tableau Excel imprimé sur trois pages A4 intitulé <strong>"Organisation Coloc — Semaine 1 — Version 3.2"</strong>. La version 1.0 et la 2.0 existent mais n'ont pas survécu à la relecture. Il plastifie les trois feuilles et les accroche au mur de la cuisine. Espy arrive quarante minutes plus tard avec un sac et un chien. Production lui signale qu'il n'y a pas de chien dans cette coloc. Il repart avec le chien. Il revient dix minutes après. Sans le chien. Il ne l'a pas rendu — il l'a juste mis quelque part.
+    </div>
+  </div>
+
+  <div class="dialogue">
+    <div class="dlg">
+      <div class="dlg-av av-dos">D</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-dos">dosinge</div>
+        <div class="dlg-text">J'ai fait un tableau des tâches. Cuisine lundi mercredi vendredi. Salle de bain mardi jeudi. Poubelles dimanche. C'est équitable.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-esp">E</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-esp">espy</div>
+        <div class="dlg-text">Je vois.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-dos">D</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-dos">dosinge</div>
+        <div class="dlg-text">T'as des remarques ?</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-esp">E</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-esp">espy</div>
+        <div class="dlg-text">Non.</div>
+      </div>
+    </div>
+    <div class="dlg-action">Pause de huit secondes.</div>
+    <div class="dlg">
+      <div class="dlg-av av-esp">E</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-esp">espy</div>
+        <div class="dlg-text">Tu as fait trois versions de ce tableau.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-dos">D</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-dos">dosinge</div>
+        <div class="dlg-text">La 1.0 avait une faute dans "ménagères". La 2.0 avait un problème d'alignement.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-esp">E</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-esp">espy</div>
+        <div class="dlg-text">Je vois.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="conf" style="--cc: var(--dos)">
+    <div class="conf-hdr">
+      <div class="conf-av av-dos">D</div>
+      <div class="conf-name col-dos">dosinge</div>
+      <div class="conf-badge">📹 Confessionnal</div>
+    </div>
+    <div class="conf-text">
+      "Il a dit 'je vois' deux fois. Je sais pas ce que ça veut dire. <em>Est-ce qu'il valide tacitement ? Est-ce qu'il prépare une contre-proposition ?</em> Est-ce que 'je vois' est une forme de consentement implicite en droit de la colocation ? <strong>J'aurais dû faire une version 4.0 avec une case 'signature'.</strong>"
+    </div>
+  </div>
+
+  <div class="conf" style="--cc: var(--esp)">
+    <div class="conf-hdr">
+      <div class="conf-av av-esp">E</div>
+      <div class="conf-name col-esp">espy</div>
+      <div class="conf-badge">📹 Confessionnal</div>
+    </div>
+    <div class="conf-text">
+      "Le tableau est bien fait. <strong>Je ne le ferai pas.</strong> Non par principe — par économie d'énergie. Dorian va le faire de toute façon. C'est de l'optimisation. <em>Je lui rends service en ne le faisant pas.</em> Il a besoin de faire les choses. Si je les faisais, je lui volerais quelque chose."
+    </div>
+  </div>
+
+  <div class="ep-end"></div>
+</div>
+
+
+<!-- ══ MARDI ══ -->
+<div class="jour" id="mardi">
+  <div class="jour-header" data-j="MAR">
+    <div>
+      <div class="jour-label">Mardi</div>
+      <div class="jour-sub">Jour 2 · La playlist · L'escalade</div>
+    </div>
+    <div class="jour-sep"></div>
+  </div>
+
+  <div class="scene" style="padding-top:32px">
+    <div class="scene-label">11h00 · Salon</div>
+    <div class="scene-text">
+      Dosinge a branché son PC dans le salon. Il travaille — ou il joue à TFT, ce n'est pas clair. En fond sonore : les JCS. Pas la musique des JCS — les <em>commentaires des matchs</em>, avec les voix des casters, les sons de League of Legends, et les réactions en direct du chat. Volume moyen. Espy est au salon depuis neuf minutes. Il n'a rien dit. Sa mâchoire bouge légèrement.
+    </div>
+  </div>
+
+  <div class="dialogue">
+    <div class="dlg">
+      <div class="dlg-av av-esp">E</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-esp">espy</div>
+        <div class="dlg-text">C'est quoi le bruit.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-dos">D</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-dos">dosinge</div>
+        <div class="dlg-text">Les JCS. La semaine 3 du split printemps. Y a un match incroyable entre Karmine et LDLC.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-esp">E</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-esp">espy</div>
+        <div class="dlg-text">Tu regardes ça en fond sonore.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-dos">D</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-dos">dosinge</div>
+        <div class="dlg-text">Je connais tous les matchs par cœur. C'est pour l'ambiance.</div>
+      </div>
+    </div>
+    <div class="dlg-action">Espy sort le chien. Le chien n'est pas là. Il sort quand même.</div>
+    <div class="dlg-action">Il revient 47 minutes plus tard. Les JCS sont toujours en cours. Dosinge lui explique l'action en cours comme s'il avait été présent depuis le début.</div>
+    <div class="dlg">
+      <div class="dlg-av av-dos">D</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-dos">dosinge</div>
+        <div class="dlg-text">Du coup là Broken Blade il est full freeze sous sa tour parce que le jungler enemy c'est une merde mais le top de KC il gère son wave trop bien et—</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-esp">E</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-esp">espy</div>
+        <div class="dlg-text">J'ai fait la salle de bain.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-dos">D</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-dos">dosinge</div>
+        <div class="dlg-text">C'était mon tour mardi.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-esp">E</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-esp">espy</div>
+        <div class="dlg-text">Je sais.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="conf" style="--cc: var(--esp)">
+    <div class="conf-hdr">
+      <div class="conf-av av-esp">E</div>
+      <div class="conf-name col-esp">espy</div>
+      <div class="conf-badge">📹 Confessionnal</div>
+    </div>
+    <div class="conf-text">
+      "J'ai fait sa tâche. Intentionnellement. <em>Il va passer les deux prochaines heures à analyser pourquoi.</em> Est-ce que c'est de la bienveillance ? Est-ce que c'est une trahison du système ? Est-ce que ça remet en question le tableau version 3.2 ? <strong>Je lui ai volé son problème. C'est mon plus beau coup de la semaine.</strong>"
+    </div>
+  </div>
+
+  <div class="conf" style="--cc: var(--dos)">
+    <div class="conf-hdr">
+      <div class="conf-av av-dos">D</div>
+      <div class="conf-name col-dos">dosinge</div>
+      <div class="conf-badge">📹 Confessionnal · 23 minutes</div>
+    </div>
+    <div class="conf-text">
+      "Il a fait ma tâche. <em>Pourquoi il a fait ma tâche.</em> Hypothèse 1 : il voulait rendre service. Hypothèse 2 : il prépare un échange — il me doit la salle de bain, maintenant il peut me demander quelque chose. Hypothèse 3 : il teste si je vais mettre à jour le tableau ou laisser la case vide. <strong>Hypothèse 4 : il a fait la salle de bain parce que la salle de bain était sale.</strong> Je rejette l'hypothèse 4."
+    </div>
+  </div>
+
+  <div class="ep-end"></div>
+</div>
+
+
+<!-- ══ MERCREDI ══ -->
+<div class="jour" id="mercredi">
+  <div class="jour-header" data-j="MER">
+    <div>
+      <div class="jour-label">Mercredi</div>
+      <div class="jour-sub">Jour 3 · L'épreuve · Le document</div>
+    </div>
+    <div class="jour-sep"></div>
+  </div>
+
+  <div class="epreuve">
+    <div class="epreuve-title">ÉPREUVE : "LE DOCUMENT COMMUN"</div>
+    <div class="epreuve-text">
+      Production demande aux deux colocataires de rédiger ensemble un texte de <strong>500 mots minimum</strong> sur n'importe quel sujet de leur choix. Le texte doit être validé par les deux. Durée : 3 heures maximum. Enjeu : le perdant fait la cuisine toute la semaine restante.
+    </div>
+    <div class="epreuve-result">
+      RÉSULTAT : ÉCHEC · Durée réelle : 3h47 · Longueur finale du document : 4 mots
+    </div>
+  </div>
+
+  <div class="scene" style="padding-top:24px">
+    <div class="scene-label">10h00 → 13h47 · Table de cuisine</div>
+    <div class="scene-text">
+      Ils passent <strong>une heure et vingt minutes sur le titre.</strong> Dosinge propose "Analyse comparative des dynamiques de groupe dans les serveurs Discord amateurs." Espy dit que "amateurs" est condescendant. Dosinge propose "Analyse comparative des dynamiques de groupe dans les serveurs Discord." Espy dit que "comparatif" implique au moins deux objets d'étude et qu'ils n'en ont qu'un. Dosinge propose "Analyse des dynamiques de groupe dans les serveurs Discord." Espy demande ce que "dynamiques de groupe" veut dire exactement. La discussion qui s'ensuit dure quarante minutes.
+    </div>
+  </div>
+
+  <div class="dialogue">
+    <div class="dlg">
+      <div class="dlg-av av-dos">D</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-dos">dosinge</div>
+        <div class="dlg-text">Bon. On écrit quoi en premier.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-esp">E</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-esp">espy</div>
+        <div class="dlg-text">L'introduction.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-dos">D</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-dos">dosinge</div>
+        <div class="dlg-text">Ouais mais on écrit quoi dans l'introduction.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-esp">E</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-esp">espy</div>
+        <div class="dlg-text">Ce dont parle le document.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-dos">D</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-dos">dosinge</div>
+        <div class="dlg-text">Ouais mais on sait pas encore ce dont parle le document.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-esp">E</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-esp">espy</div>
+        <div class="dlg-text">Alors on commence pas par l'introduction.</div>
+      </div>
+    </div>
+    <div class="dlg-action">Une heure de silence. Ils sont tous les deux devant l'écran. Le curseur clignote.</div>
+  </div>
+
+  <div class="document" data-label="Document final · Validé · 13h47">
+    <div class="doc-content">
+      <strong>Le Discordeum est un serveur.</strong>
+    </div>
+  </div>
+
+  <div class="conf" style="--cc: var(--dos)">
+    <div class="conf-hdr">
+      <div class="conf-av av-dos">D</div>
+      <div class="conf-name col-dos">dosinge</div>
+      <div class="conf-badge">📹 Confessionnal</div>
+    </div>
+    <div class="conf-text">
+      "Quatre mots. On a passé presque quatre heures pour quatre mots. <em>Mais ce sont les quatre mots les plus précis possible.</em> Le Discordeum EST un serveur. Sujet, verbe, attribut. <strong>Aucune formulation alternative ne serait plus vraie.</strong> On a fait quelque chose d'important aujourd'hui."
+    </div>
+  </div>
+
+  <div class="conf" style="--cc: var(--esp)">
+    <div class="conf-hdr">
+      <div class="conf-av av-esp">E</div>
+      <div class="conf-name col-esp">espy</div>
+      <div class="conf-badge">📹 Confessionnal</div>
+    </div>
+    <div class="conf-text">
+      "Quatre mots. <em>C'était mon idée.</em> Dorian voulait en écrire 500. J'ai dit que 500 mots sur un sujet qu'on ne maîtrisait pas encore était de la désinformation. Il a dit que production avait demandé 500 mots. J'ai dit que la qualité primait sur la quantité. <strong>On a écrit quatre mots de qualité.</strong> Je considère avoir gagné."
+    </div>
+  </div>
+
+  <div class="ep-end"></div>
+</div>
+
+
+<!-- ══ JEUDI ══ -->
+<div class="jour" id="jeudi">
+  <div class="jour-header" data-j="JEU">
+    <div>
+      <div class="jour-label">Jeudi</div>
+      <div class="jour-sub">Jour 4 · Le carnet · La trahison</div>
+    </div>
+    <div class="jour-sep"></div>
+  </div>
+
+  <div class="scene" style="padding-top:32px">
+    <div class="scene-label">14h30 · Salon</div>
+    <div class="scene-text">
+      Espy a sorti un carnet. Il prend des notes depuis le matin. Il ne dit pas ce qu'il note. Il ne répond pas quand dosinge demande. Il dit juste <em>"stratégie"</em> et retourne au carnet. À 14h30, dosinge s'absente cinq minutes. Espy laisse le carnet sur la table. Dosinge revient, voit le carnet, le regarde, puis le retourne à sa place sans l'avoir ouvert. Espy rentre dans la pièce.
+    </div>
+  </div>
+
+  <div class="dialogue">
+    <div class="dlg">
+      <div class="dlg-av av-esp">E</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-esp">espy</div>
+        <div class="dlg-text">Tu l'as pas ouvert.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-dos">D</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-dos">dosinge</div>
+        <div class="dlg-text">Non.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-esp">E</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-esp">espy</div>
+        <div class="dlg-text">Pourquoi.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-dos">D</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-dos">dosinge</div>
+        <div class="dlg-text">C'est ton carnet.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-esp">E</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-esp">espy</div>
+        <div class="dlg-text">Je l'ai laissé exprès.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-dos">D</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-dos">dosinge</div>
+        <div class="dlg-text">Je sais.</div>
+      </div>
+    </div>
+    <div class="dlg-action">Long silence.</div>
+    <div class="dlg">
+      <div class="dlg-av av-esp">E</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-esp">espy</div>
+        <div class="dlg-text">C'est ton carnet.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-dos">D</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-dos">dosinge</div>
+        <div class="dlg-text">...</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-dos">D</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-dos">dosinge</div>
+        <div class="dlg-text">Attends c'est mon carnet ?</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-esp">E</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-esp">espy</div>
+        <div class="dlg-text">C'est ton carnet.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="conf" style="--cc: var(--esp)">
+    <div class="conf-hdr">
+      <div class="conf-av av-esp">E</div>
+      <div class="conf-name col-esp">espy</div>
+      <div class="conf-badge">📹 Confessionnal</div>
+    </div>
+    <div class="conf-text">
+      "C'était son carnet depuis le début. Je l'ai pris sur son bureau lundi soir. Je prenais des notes dans son propre carnet. Il ne l'a pas reconnu pendant quatre jours. <em>J'ai construit une alliance secrète avec lui contre lui-même</em>, en utilisant ses propres outils. <strong>Je suis le meilleur stratège de cette coloc.</strong> Nous ne sommes que deux."
+    </div>
+  </div>
+
+  <div class="conf" style="--cc: var(--dos)">
+    <div class="conf-hdr">
+      <div class="conf-av av-dos">D</div>
+      <div class="conf-name col-dos">dosinge</div>
+      <div class="conf-badge">📹 Confessionnal</div>
+    </div>
+    <div class="conf-text">
+      "Il prenait des notes stratégiques dans mon carnet. Ce qui veut dire que <em>soit il avait prévu dès le début de me faire croire que c'était son carnet pour me faire douter de moi-même</em>, soit il ne savait pas que c'était mon carnet et je suis dans une coloc avec quelqu'un qui ne reconnaît pas ses propres affaires. <strong>Les deux hypothèses sont également terrifiantes.</strong>"
+    </div>
+  </div>
+
+  <div class="ep-end"></div>
+</div>
+
+
+<!-- ══ VENDREDI ══ -->
+<div class="jour" id="vendredi">
+  <div class="jour-header" data-j="VEN">
+    <div>
+      <div class="jour-label">Vendredi</div>
+      <div class="jour-sub">Jour 5 · L'évitement · La guerre froide</div>
+    </div>
+    <div class="jour-sep"></div>
+  </div>
+
+  <div class="scene" style="padding-top:32px">
+    <div class="scene-label">Toute la journée · Appartement · Discord interne</div>
+    <div class="scene-text">
+      Dosinge s'est enfermé dans sa chambre à 9h17 pour jouer à TFT. Espy a sorti le chien absent quatre fois. Ils ne se sont pas vus de la journée. Mais ils ont un Discord interne de la coloc — créé par dosinge le lundi soir, version 2.0 après une faute dans le nom du serveur. Ils ont posté 47 messages depuis leurs chambres séparées.
+    </div>
+  </div>
+
+  <div class="document" data-label="Discord interne coloc · Vendredi · Sélection">
+    <div class="doc-content">
+      <strong>dosinge [10:23]</strong> — t'as mangé ?<br>
+      <strong>espy [10:41]</strong> — oui<br>
+      <strong>dosinge [10:42]</strong> — ok<br>
+      <strong>dosinge [11:15]</strong> — tu comptes faire quoi aujourd'hui<br>
+      <strong>espy [11:32]</strong> — des trucs<br>
+      <strong>dosinge [11:33]</strong> — ok<br>
+      <strong>dosinge [12:08]</strong> — j'ai mis du riz à cuire tu veux ?<br>
+      <strong>espy [12:09]</strong> — oui<br>
+      <strong>dosinge [12:10]</strong> — ok<br>
+      <strong>espy [14:47]</strong> — le riz c'était bien<br>
+      <strong>dosinge [14:47]</strong> — merci<br>
+      <strong>dosinge [14:48]</strong> — t'as vu la game de ce midi sur les JCS<br>
+      <strong>espy [14:49]</strong> — non<br>
+      <strong>dosinge [14:49]</strong> — tu veux que je t'explique<br>
+      <strong>espy [14:50]</strong> — non<br>
+      <strong>dosinge [14:50]</strong> — ok<br>
+      <strong>dosinge [14:51]</strong> — c'était incroyable quand même<br>
+      <strong>espy [14:52]</strong> — je vois<br>
+      <strong>dosinge [22:34]</strong> — bonne nuit<br>
+      <strong>espy [22:35]</strong> — bonne nuit<br>
+    </div>
+  </div>
+
+  <div class="conf" style="--cc: var(--dos)">
+    <div class="conf-hdr">
+      <div class="conf-av av-dos">D</div>
+      <div class="conf-name col-dos">dosinge</div>
+      <div class="conf-badge">📹 Confessionnal</div>
+    </div>
+    <div class="conf-text">
+      "On a passé la journée dans le même appartement à se parler sur Discord. <em>C'est exactement ce qu'on fait depuis sept ans.</em> Sauf que là on est dans le même appartement. <strong>Je suis pas sûr que ça change grand chose.</strong>"
+    </div>
+  </div>
+
+  <div class="conf" style="--cc: var(--esp)">
+    <div class="conf-hdr">
+      <div class="conf-av av-esp">E</div>
+      <div class="conf-name col-esp">espy</div>
+      <div class="conf-badge">📹 Confessionnal</div>
+    </div>
+    <div class="conf-text">
+      "Il m'a demandé si je voulais qu'il m'explique la game. <em>J'ai dit non.</em> Il m'a quand même dit que c'était incroyable. <strong>C'est le résumé de notre relation depuis 2018.</strong> Je dis non. Il m'explique quand même. Je trouve ça profondément juste."
+    </div>
+  </div>
+
+  <div class="ep-end"></div>
+</div>
+
+
+<!-- ══ SAMEDI ══ -->
+<div class="jour" id="samedi">
+  <div class="jour-header" data-j="SAM">
+    <div>
+      <div class="jour-label">Samedi</div>
+      <div class="jour-sub">Jour 6 · Les nominations</div>
+    </div>
+    <div class="jour-sep"></div>
+  </div>
+
+  <div class="scene" style="padding-top:32px">
+    <div class="scene-label">20h00 · Salon</div>
+    <div class="scene-text">
+      Production réunit les deux colocataires pour la cérémonie des nominations. Chaque membre nomme l'autre — c'est inévitable, ils sont deux. La règle dit que les nominations doivent être motivées. <strong>Ils ont chacun préparé un argumentaire écrit.</strong> Dosinge : 642 mots. Espy : 618 mots. Ils se les lisent à voix haute mutuellement.
+    </div>
+  </div>
+
+  <div class="nominations">
+    <div class="nom">
+      <div class="nom-header">
+        <div class="nom-from col-dos">dosinge</div>
+        <div class="nom-arrow">→</div>
+        <div class="nom-to col-esp">espy</div>
+      </div>
+      <div class="nom-text">
+        <strong>Extrait (642 mots, résumé).</strong> "Je nomme espy pour les raisons suivantes, que j'ai organisées en trois axes : l'axe de la non-participation aux tâches ménagères (avec nuances, cf. incident salle de bain mardi, facteur ambigu), l'axe de la malveillance institutionnelle documentée (le carnet, le 'je vois' répété, le silence stratégique de 47 secondes mercredi à 11h03), et l'axe de l'incompatibilité fondamentale avec mon mode de fonctionnement, tout en précisant que cette incompatibilité est aussi constitutive de ce qui rend notre dynamique productive sur sept ans, ce qui crée une tension analytique que je n'ai pas encore résolue au moment de cette nomination. <em>Je le nomine néanmoins.</em>"
+      </div>
+    </div>
+    <div class="nom">
+      <div class="nom-header">
+        <div class="nom-from col-esp">espy</div>
+        <div class="nom-arrow">→</div>
+        <div class="nom-to col-dos">dosinge</div>
+      </div>
+      <div class="nom-text">
+        <strong>Extrait (618 mots, résumé).</strong> "Je nomme dosinge. Les JCS en fond sonore constituent un environnement acoustique incompatible avec la réflexion. Le tableau version 3.2 supposait mon adhésion sans solliciter mon consentement. L'hypothèse 4 — qu'il a rejetée — était pourtant la seule correcte. <em>Ces trois éléments suffiraient.</em> Mais ce qui me convainc vraiment de le nominer, c'est qu'il a fait le riz sans me demander ce que je voulais manger, qu'il l'a bien fait, et qu'il ne m'a pas demandé si c'était bon. Il savait que c'était bon. <strong>Ce niveau de certitude tranquille est insupportable à vivre au quotidien et absolument nécessaire à mon équilibre depuis 2018.</strong> Je le nommine quand même."
+      </div>
+    </div>
+  </div>
+
+  <div class="conf" style="--cc: var(--blend)">
+    <div class="conf-hdr">
+      <div class="conf-av" style="background:#1a1a30; color:var(--blend)">?</div>
+      <div class="conf-name" style="color:var(--blend)">Les deux · Simultanément</div>
+      <div class="conf-badge">📹 Confessionnal croisé</div>
+    </div>
+    <div class="conf-text">
+      <strong>dosinge :</strong> "Son argumentaire était bien construit. Il a même cité l'incident du riz que j'avais pas remarqué. <em>Je suis un peu fier de lui.</em>"<br><br>
+      <strong>espy :</strong> "Son argumentaire était bien construit. Il a cité l'axe de la malveillance institutionnelle. <em>Il commence à utiliser mes catégories.</em> C'est inquiétant. C'est bien."
+    </div>
+  </div>
+
+  <div class="ep-end"></div>
+</div>
+
+
+<!-- ══ DIMANCHE ══ -->
+<div class="jour" id="dimanche">
+  <div class="jour-header" data-j="DIM">
+    <div>
+      <div class="jour-label">Dimanche</div>
+      <div class="jour-sub">Jour 7 · Le vote · La sentence</div>
+    </div>
+    <div class="jour-sep"></div>
+  </div>
+
+  <div class="vote-block">
+    <div class="vote-row">
+      <div class="vote-name col-esp">espy</div>
+      <div class="vote-bar-wrap"><div class="vote-bar" style="width:50%; background:var(--esp)"></div></div>
+      <div class="vote-pct" style="color:var(--esp)">50%</div>
+    </div>
+    <div class="vote-row">
+      <div class="vote-name col-dos">dosinge</div>
+      <div class="vote-bar-wrap"><div class="vote-bar" style="width:50%; background:var(--dos)"></div></div>
+      <div class="vote-pct" style="color:var(--dos)">50%</div>
+    </div>
+    <div class="vote-result">
+      Égalité parfaite · La Chancla doit statuer
+    </div>
+  </div>
+
+  <div class="scene" style="padding-top:28px">
+    <div class="scene-label">21h47 · Salon · La Chancla arrive</div>
+    <div class="scene-text">
+      La Chancla entre. Elle regarde espy. Elle regarde dosinge. Elle regarde le tableau version 3.2 toujours affiché au mur. Elle regarde les quatre mots du document commun, imprimés et encadrés par dosinge dans l'après-midi. Elle regarde le carnet — le sien — posé sur la table entre eux.
+      <br><br>
+      Elle dit : <em>"Je ne peux pas séparer ce qui ne veut pas être séparé."</em>
+      <br><br>
+      Elle repart.
+    </div>
+  </div>
+
+  <div class="dialogue">
+    <div class="dlg-action">Long silence.</div>
+    <div class="dlg">
+      <div class="dlg-av av-dos">D</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-dos">dosinge</div>
+        <div class="dlg-text">Elle a dit quoi exactement.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-esp">E</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-esp">espy</div>
+        <div class="dlg-text">"Je ne peux pas séparer ce qui ne veut pas être séparé."</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-dos">D</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-dos">dosinge</div>
+        <div class="dlg-text">On veut pas être séparés ?</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-esp">E</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-esp">espy</div>
+        <div class="dlg-text">Apparemment non.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-dos">D</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-dos">dosinge</div>
+        <div class="dlg-text">Bon.</div>
+      </div>
+    </div>
+    <div class="dlg">
+      <div class="dlg-av av-esp">E</div>
+      <div class="dlg-body">
+        <div class="dlg-name col-esp">espy</div>
+        <div class="dlg-text">Bon.</div>
+      </div>
+    </div>
+    <div class="dlg-action">Dosinge ouvre TFT. Espy sort le chien absent. Le Discordeum reprend son cours normal. Personne ne mentionne la semaine le lundi suivant.</div>
+  </div>
+
+  <div class="conf" style="--cc: var(--blend); margin-top:20px">
+    <div class="conf-hdr">
+      <div class="conf-av" style="background:#1a1a30; color:var(--blend)">∞</div>
+      <div class="conf-name" style="color:var(--blend)">Épilogue · Production</div>
+      <div class="conf-badge">📹 Note finale</div>
+    </div>
+    <div class="conf-text">
+      Production a analysé les 47 messages Discord du vendredi, les 1 260 mots d'argumentaires du samedi, les 3h47 du document commun, et les deux confessionnaux croisés du jeudi. <em>La conclusion est la suivante :</em> espy et dosinge ont exactement le même niveau d'investissement dans leur relation. L'un le documente dans des tableaux Excel. L'autre le dissimule dans une ironie sèche. <strong>Le résultat est identique.</strong> La Chancla avait raison. On ne sépare pas ça.
+    </div>
+  </div>
+
+  <div class="ep-end"></div>
+</div>
+
+
+<!-- ÉPILOGUE -->
+<div class="epilogue">
+  <div class="ep-label">Semaine 1 · Bilan</div>
+  <div class="ep-text">
+    Le tableau version 3.2 est toujours au mur. Personne ne l'a respecté — sauf espy, une fois, un mardi, et uniquement pour déstabiliser dosinge. Le document commun de quatre mots a été encadré. Le carnet est retourné à dosinge, avec les notes stratégiques d'espy dedans. Il ne les a pas lues. Il dit qu'il ne les a pas lues. <em>On ne sait pas s'il les a lues.</em>
+    <br><br>
+    La semaine suivante, dans le Discordeum normal, dosinge a posté une analyse de match JCS de 800 mots. Espy a répondu <strong>"je vois"</strong>. La conversation a continué pendant quatre heures. Personne ne sait ce qui s'est passé dans l'appartement. Personne n'a demandé.
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">DISCORDEUM TV</div>
+  <a href="la_coloc.html" class="footer-back">← La Coloc S1</a>
+</footer>
+
+</body>
+</html>

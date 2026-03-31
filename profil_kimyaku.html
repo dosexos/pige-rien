@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>kimyaku — Profil · Le Discordeum</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+  :root {
+    --bg:      #0d080e;
+    --bg2:     #150d18;
+    --bg3:     #1c1220;
+    --border:  #2c1a32;
+    --text:    #c8a8d4;
+    --muted:   #604870;
+    --dim:     #220830;
+    --white:   #f4e8fc;
+
+    --p:       #f9a8d4;
+    --p2:      #ec4899;
+    --p3:      #2d0a20;
+    --cry:     #fb923c;
+    --teal:    #5eead4;
+    --amber:   #fbbf24;
+    --green:   #4ade80;
+    --purple:  #a78bfa;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--border);
+    position: relative; overflow: hidden;
+  }
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+  }
+
+  .hero-left {
+    padding: 100px 8vw 80px;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    position: relative; z-index: 1;
+    border-right: 1px solid var(--border);
+  }
+
+  .hero-right {
+    background: var(--bg2);
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    padding: 60px 40px; gap: 32px;
+    position: relative; overflow: hidden;
+  }
+  .hero-right::before {
+    content: 'K';
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 480px; color: var(--p);
+    opacity: 0.04; line-height: 1;
+    pointer-events: none; user-select: none;
+  }
+
+  .hero-back {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 3px; color: var(--muted);
+    text-transform: uppercase; margin-bottom: 32px;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    transition: color 0.2s; align-self: flex-start;
+  }
+  .hero-back:hover { color: var(--white); }
+  .hero-back::before { content: '←'; }
+
+  .hero-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--p); margin-bottom: 16px;
+    opacity: 0; animation: rise 0.7s ease forwards 0.1s;
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(60px, 11vw, 130px);
+    color: var(--white); line-height: 0.9; letter-spacing: 3px;
+    opacity: 0; animation: rise 0.7s ease forwards 0.3s;
+  }
+
+  .hero-role {
+    font-family: 'Crimson Pro', serif;
+    font-size: clamp(15px, 2vw, 19px); font-style: italic;
+    color: var(--muted); margin-top: 20px; line-height: 1.5; max-width: 420px;
+    opacity: 0; animation: rise 0.7s ease forwards 0.6s;
+  }
+  .hero-role strong { color: var(--p); font-style: normal; font-weight: 600; }
+
+  .hero-stats-row {
+    display: flex; gap: 32px; margin-top: 48px; flex-wrap: wrap;
+    opacity: 0; animation: rise 0.7s ease forwards 0.9s;
+  }
+  .hs { display: flex; flex-direction: column; gap: 3px; }
+  .hs-v { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--p); line-height: 1; }
+  .hs-l { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: 1px; }
+
+  .stat-card {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 3px; padding: 18px 22px; width: 100%; max-width: 340px;
+    position: relative; z-index: 1;
+  }
+  .sc-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--p); margin-bottom: 8px;
+  }
+  .sc-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: #805890; line-height: 1.6; font-style: italic;
+  }
+
+  /* ── CONTAINER ── */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 8vw; }
+
+  /* ── SECTIONS ── */
+  .section { padding: 72px 0; border-bottom: 1px solid var(--border); }
+  .section:last-of-type { border-bottom: none; }
+  .sh { display: flex; align-items: baseline; gap: 16px; margin-bottom: 40px; }
+  .sh-num { font-family: 'Bebas Neue', sans-serif; font-size: 40px; color: var(--dim); line-height: 1; }
+  .sh-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(24px, 4vw, 38px); color: var(--white); letter-spacing: 1px; }
+
+  /* ── PROSE ── */
+  .prose { font-size: 15px; line-height: 1.9; color: var(--text); margin-bottom: 22px; max-width: 680px; }
+  .prose strong { color: var(--white); font-weight: 600; }
+  .prose em { color: var(--p); font-style: italic; }
+
+  /* ── GRAPHIQUE ACTIVITÉ ── */
+  .year-chart { display: flex; align-items: flex-end; gap: 6px; height: 120px; margin: 32px 0; }
+  .yc-col { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; }
+  .yc-val { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--p); }
+  .yc-bar {
+    width: 100%; border-radius: 2px 2px 0 0;
+    background: var(--p); opacity: 0.7; transition: opacity 0.2s;
+  }
+  .yc-bar:hover { opacity: 1; }
+  .yc-bar.peak { opacity: 1; }
+  .yc-bar.low { background: var(--dim); opacity: 1; }
+  .yc-year { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); }
+
+  /* ── HEATMAP HORAIRE ── */
+  .hour-map { display: grid; grid-template-columns: repeat(24, 1fr); gap: 3px; margin: 20px 0; }
+  .hm-cell { height: 28px; border-radius: 2px; position: relative; }
+  .hm-cell:hover::after {
+    content: attr(data-label);
+    position: absolute; bottom: 110%; left: 50%; transform: translateX(-50%);
+    background: var(--bg2); border: 1px solid var(--border);
+    padding: 3px 7px; border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    color: var(--white); white-space: nowrap; z-index: 10;
+  }
+  .hour-labels { display: grid; grid-template-columns: repeat(24, 1fr); gap: 3px; margin-top: 4px; }
+  .hl { font-family: 'JetBrains Mono', monospace; font-size: 8px; color: var(--muted); text-align: center; }
+
+  /* ── CITATIONS ── */
+  .citations { display: flex; flex-direction: column; gap: 16px; margin: 24px 0; }
+  .cit {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-left: 3px solid var(--p); border-radius: 0 3px 3px 0;
+    padding: 16px 20px;
+  }
+  .cit-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: #906080; line-height: 1.65; margin-bottom: 8px;
+  }
+  .cit-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: var(--muted); letter-spacing: 1px;
+  }
+  .cit.faded { border-left-color: var(--dim); }
+  .cit.faded .cit-text { color: #502040; }
+
+  /* ── LEXIQUE ── */
+  .lexique { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 24px 0; }
+  @media (max-width: 600px) { .lexique { grid-template-columns: 1fr; } }
+  .lex-item { background: var(--bg2); border: 1px solid var(--border); border-radius: 3px; padding: 14px 16px; }
+  .lex-word { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: var(--p); letter-spacing: 1px; margin-bottom: 4px; }
+  .lex-def { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .lex-count { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--dim); margin-top: 6px; }
+
+  /* ── PROCÈS ── */
+  .proces-block {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-left: 3px solid var(--cry);
+    border-radius: 0 4px 4px 0; padding: 20px 24px; margin: 20px 0;
+    position: relative;
+  }
+  .proces-block::before {
+    content: attr(data-label);
+    position: absolute; top: -10px; left: 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 2px;
+    background: var(--bg3); padding: 0 6px; color: var(--cry); text-transform: uppercase;
+  }
+  .proces-msg { margin-bottom: 8px; }
+  .pm-time { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); margin-bottom: 2px; }
+  .pm-text { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #907080; line-height: 1.55; font-style: italic; }
+  .pm-text strong { color: var(--white); font-style: normal; }
+
+  /* ── RELATIONS ── */
+  .relations { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 24px 0; }
+  @media (max-width: 600px) { .relations { grid-template-columns: 1fr; } }
+  .rel-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 3px; padding: 18px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .rel-av {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif; font-size: 16px;
+  }
+  .rel-name { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: var(--white); letter-spacing: 1px; }
+  .rel-surnom { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--p); letter-spacing: 1px; }
+  .rel-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 48px 8vw;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .footer-logo { font-family: 'Crimson Pro', serif; font-size: 18px; font-style: italic; color: var(--muted); }
+  .footer-nav { display: flex; gap: 24px; }
+  .footer-link {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--muted); letter-spacing: 2px; text-transform: uppercase;
+    text-decoration: none; transition: color 0.2s;
+  }
+  .footer-link:hover { color: var(--white); }
+
+  @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 600px) {
+    .container { padding: 0 20px; }
+    .hero-left { padding: 60px 20px 48px; }
+    footer { padding: 40px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="hero-left">
+    <a href="index.html" class="hero-back">Retour au Discordeum</a>
+    <div class="hero-tag">Profil · Épouse de cryo · Membre à part entière</div>
+    <h1>kimyaku</h1>
+    <div class="hero-role">
+      <strong>Numéro 1 sur ce Discord.</strong> Épouse de cryoslinger, mère de Thélio. Technicienne de laboratoire reconvertie. A organisé deux procès contre cryo depuis l'hôpital. "A défaut d'avoir la foi, il a des défauts au foie."
+    </div>
+    <div class="hero-stats-row">
+      <div class="hs"><div class="hs-v">~700</div><div class="hs-l">messages estimés</div></div>
+      <div class="hs"><div class="hs-v">2019</div><div class="hs-l">première apparition</div></div>
+      <div class="hs"><div class="hs-v">2</div><div class="hs-l">procès intentés</div></div>
+      <div class="hs"><div class="hs-v">1</div><div class="hs-l">emote dédiée 🩷</div></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="stat-card">
+      <div class="sc-label">Auto-proclamation · 2 janvier 2026</div>
+      <div class="sc-text">"Numéro 8 en France mais Numéro 1 sur ce discord"</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Hospitalisation cryo · 1er mai 2025</div>
+      <div class="sc-text">"A défaut d'avoir la foi, il a des défauts au foie."<br>"Monsieur va rester encore quelques jours à l'hôpital aux frais du contribuable."</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Doctrine gaming · 10 novembre 2020</div>
+      <div class="sc-text">"vite on lance avant que Théo arrive"</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Sur son mariage · 4 mai 2020</div>
+      <div class="sc-text">"il me force aussi à vous dire qu'il est très gentil — et que FF c'est super méga génial — et qu'il est le meilleur chercheur international"</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ══ 01 · PRÉSENCE ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">01</div><div class="sh-title">Sa présence</div></div>
+
+    <p class="prose">
+      Kimyaku apparaît dans le Discordeum en mai 2019 — deux ans après l'ouverture — et devient progressivement un membre à part entière plutôt que "juste la femme de cryo". Son pic d'activité est <strong>2020</strong>, l'année du confinement et du mariage, avec 36 messages sur 20 jours actifs. Elle est la plus active entre 21h et 23h — les soirées gaming, pile quand cryo est susceptible de ne pas être disponible pour faire la vaisselle.
+    </p>
+
+    <p class="prose">
+      Sa présence décline après 2021 — elle travaille, elle a un projet d'enseignement, puis Thélio arrive — mais elle ne disparaît jamais vraiment. En 2025, elle poste depuis la salle d'attente des urgences. En 2026, elle signale que <em>"le mini T nous a cassé le nôtre"</em> en parlant d'un objet non identifié. Elle est là, en filigrane, jusqu'au bout.
+    </p>
+
+    <div class="year-chart" id="yearChart"></div>
+
+    <p class="prose" style="margin-top:0">
+      Elle est le membre le plus nocturne du groupe avec dosinge — <strong>21h–23h</strong>, pic à 21h (13 messages). Contrairement aux autres qui postent le matin au réveil, kimyaku arrive en fin de soirée, quand les sessions gaming commencent. Sa présence est celle d'une personne qui vit avec quelqu'un du groupe plutôt que d'un membre qui se connecte depuis chez lui.
+    </p>
+
+    <div class="hour-map" id="hourMap"></div>
+    <div class="hour-labels" id="hourLabels"></div>
+  </section>
+
+  <!-- ══ 02 · PORTRAIT ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">02</div><div class="sh-title">Portrait</div></div>
+
+    <p class="prose">
+      Kimyaku est la seule membre du Discordeum dont le rôle n'est pas défini par un jeu, un surnom inventé par les autres, ou une trajectoire gaming. Elle est là parce qu'elle est avec cryo — et elle s'y est installée à sa façon, qui est radicalement différente du reste du groupe.
+    </p>
+
+    <p class="prose">
+      Elle est <strong>technicienne de laboratoire</strong> — bac+3, salaire autour de 1500€ net qu'elle trouve insuffisant face à une offre à 2850€ brut qui "lui fait de l'œil" en octobre 2021. Elle a aussi un projet pédagogique pour les élèves non adaptés au système scolaire, qu'elle met en pause pour chercher du travail. Elle est au chômage en janvier 2021 et annonce ça avec <em>"#teamdeparasite"</em>.
+    </p>
+
+    <p class="prose">
+      Sa relation au groupe est celle d'une observatrice externe qui a fini par avoir plus de recul que les membres eux-mêmes. Elle voit cryo de l'intérieur. Elle rapporte ses trahisons au canal avec une précision clinique : <em>"Théo nous a tous trahis pour FFTCG"</em>, <em>"@everyone hop hop hop, Théo nous a encore trahis — rassemblement"</em>. Elle est le contre-récit de cryo dans le Discordeum.
+    </p>
+
+    <p class="prose">
+      Elle a une <strong>émote dédiée</strong> — <code>&lt;:kik:&gt;</code> — ce qui en fait, avec cryo et quelques autres, l'un des membres à avoir été iconisé dans le canal. L'émote est utilisée 47 fois par espy seul. C'est plus que la plupart des membres n'utilisent quoi que ce soit.
+    </p>
+  </section>
+
+  <!-- ══ 03 · LES PROCÈS ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">03</div><div class="sh-title">Les procès contre cryo</div></div>
+
+    <p class="prose">
+      Kimyaku a intenté deux procès formels contre cryoslinger dans le canal. Les deux sont documentés, avec chef d'accusation, circonstances aggravantes, et prédiction du comportement défensif de l'accusé. Le premier depuis l'hôpital, à 8h10 du matin.
+    </p>
+
+    <div class="proces-block" data-label="Procès n°1 · 17 avril 2023 · 08h10 · Depuis l'hôpital">
+      <div class="proces-msg">
+        <div class="pm-time">08:10</div>
+        <div class="pm-text">@everyone et oui j'invoque tout le monde ! Je demande un procès contre cryo !</div>
+      </div>
+      <div class="proces-msg">
+        <div class="pm-time">08:11</div>
+        <div class="pm-text"><strong>Contexte :</strong> sa femme sort de l'hôpital et l'attend pour pas faire la route toute seule après une opération.</div>
+      </div>
+      <div class="proces-msg">
+        <div class="pm-time">08:11</div>
+        <div class="pm-text"><strong>Accusation :</strong> il dort et est certainement en silencieux donc il n'entend pas les appels désespérés de sa femme.</div>
+      </div>
+      <div class="proces-msg">
+        <div class="pm-time">08:12</div>
+        <div class="pm-text">Il risquera la peine maximale : Annihilation de sa collection de cartes FF — purgée par le feu.</div>
+      </div>
+      <div class="proces-msg">
+        <div class="pm-time">08:24</div>
+        <div class="pm-text"><strong>Prédiction de la défense :</strong> "Aya prout je crovais que son père venait la chercher alors qu'on en a jamais parlé prout koifeur" — Ceci est ma prédiction.</div>
+      </div>
+      <div class="proces-msg">
+        <div class="pm-time">11:39</div>
+        <div class="pm-text">Il a fini par se réveiller et venir me chercher quand même 👌 — On pourra être assez sympa.</div>
+      </div>
+    </div>
+
+    <div class="proces-block" data-label="Procès n°2 · 30 décembre 2023 · 21h32 · Trahison FFTCG">
+      <div class="proces-msg">
+        <div class="pm-time">21:32</div>
+        <div class="pm-text">@everyone hop hop hop, Théo nous a encore trahis — rassemblement</div>
+      </div>
+      <div class="proces-msg">
+        <div class="pm-time">21:38</div>
+        <div class="pm-text">il a choisi le discord FFTCG et il a débarqué en disant <strong>"salut les loulous"</strong> ??????!!!!!!!!??????? a-t-on vraiment besoin d'un procès ou la condamnation est directe ?</div>
+      </div>
+    </div>
+
+    <p class="prose" style="margin-top:16px">
+      Les deux procès partagent la même structure : convocation @everyone, chef d'accusation précis, peine proposée, puis résolution. Le premier se conclut par un acquittement de fait — il est venu la chercher. Le second reste ouvert. La condamnation directe n'a pas encore été prononcée.
+    </p>
+  </section>
+
+  <!-- ══ 04 · L'HOSPITALISATION ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">04</div><div class="sh-title">L'hospitalisation de cryo</div></div>
+
+    <p class="prose">
+      En mai 2025, cryo est hospitalisé. Kimyaku rapporte l'événement en direct dans le canal, avec une précision factuelle et un humour qui ne se démentent jamais.
+    </p>
+
+    <div class="citations">
+      <div class="cit">
+        <div class="cit-text">"Une prière pour Théo le pêcheur rattrapé par son karma"</div>
+        <div class="cit-meta">1er mai 2025 · 21:10 · premier message sur l'hospitalisation</div>
+      </div>
+      <div class="cit">
+        <div class="cit-text">"Urgences partie 2 mon mari est tout jaune"</div>
+        <div class="cit-meta">1er mai 2025 · 21:10 · diagnostic visuel</div>
+      </div>
+      <div class="cit">
+        <div class="cit-text">"Ah ben je veux pas me venter mais on n'a plus besoin de montrer sa mutuelle maintenant 👌👌😎"</div>
+        <div class="cit-meta">1er mai 2025 · 21:15 · avantage inattendu de la situation</div>
+      </div>
+      <div class="cit">
+        <div class="cit-text">"A défaut d'avoir la foi, il a des défauts au foie."</div>
+        <div class="cit-meta">1er mai 2025 · 23:11 · diagnostic théologique</div>
+      </div>
+      <div class="cit">
+        <div class="cit-text">"Monsieur va rester encore quelques jours à l'hôpital aux frais du contribuable"</div>
+        <div class="cit-meta">1er mai 2025 · 23:12</div>
+      </div>
+      <div class="cit">
+        <div class="cit-text">"Merci, je me prépare à être troubadour pour faire vivre le foyer familial"</div>
+        <div class="cit-meta">2 mai 2025 · 07:53 · plan de reconversion</div>
+      </div>
+      <div class="cit">
+        <div class="cit-text">"En vrai Théo voulait juste pas préparer la suite du JDR"</div>
+        <div class="cit-meta">2 mai 2025 · 07:53 · explication alternative</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 05 · LEXIQUE ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">05</div><div class="sh-title">Son lexique</div></div>
+
+    <p class="prose">
+      Kimyaku a un style distinct de tous les autres membres — plus proche du langage parlé, avec une ironie sèche qui ne s'annonce jamais. Elle est la seule à utiliser <em>"x)"</em> comme ponctuation émotionnelle régulière, et à ponctuer ses messages de parenthèses explicatives adressées au groupe.
+    </p>
+
+    <div class="lexique">
+      <div class="lex-item">
+        <div class="lex-word">X)</div>
+        <div class="lex-def">Sa ponctuation émotionnelle signature. Apparaît après les situations absurdes, les chutes narratives, les aveux d'échec. "C'était pas mon bus x)" Distinct du "mdr" du reste du groupe — plus retenu, plus pince-sans-rire.</div>
+        <div class="lex-count">Présent tout au long des archives · usage exclusif de ce style</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">SIGNÉ, SA SECRÉTAIRE</div>
+        <div class="lex-def">Sa formule de locutrice mandatée. "Théo arrive bientôt — signé, sa secrétaire." Elle parle au nom de cryo avec une ironie documentaire. Elle est l'archive vivante de son emploi du temps.</div>
+        <div class="lex-count">Usage récurrent · rôle d'interprète officiel</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">VITE ON LANCE AVANT QUE THÉO ARRIVE</div>
+        <div class="lex-def">La doctrine gaming de kimyaku. Elle joue avec le groupe — mais cryo est présenté comme une contrainte à contourner plutôt qu'un partenaire. Résume en six mots la dynamique de couple vue de l'intérieur.</div>
+        <div class="lex-count">10 novembre 2020 · citation fondatrice</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">TRAHISON</div>
+        <div class="lex-def">Son diagnostic moral standard. "Théo nous a tous trahis pour FFTCG." "Trahison." Utilisé pour des événements allant de l'hospitalisation à l'absence à une session co-op. L'échelle de gravité est volontairement constante.</div>
+        <div class="lex-count">Présent 2021–2024 · usage constant indépendamment de la gravité</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">CORVÉE DE LINGE · FEMME MALTRAITÉE</div>
+        <div class="lex-def">Son registre de fausse plainte conjugale. "peut-être demain je suis corvée de linge parce que je suis une femme maltraitée 😭" Lu au premier degré : elle fait la lessive. Lu à son degré : elle documente sa vie de couple avec une ironie clinique.</div>
+        <div class="lex-count">4 mai 2020 · ton maintenu sur toute la durée</div>
+      </div>
+      <div class="lex-item">
+        <div class="lex-word">NUMÉRO 1 SUR CE DISCORD</div>
+        <div class="lex-def">Son auto-désignation finale. "Numéro 8 en France mais Numéro 1 sur ce discord." Contexte : inconnu. Probablement un classement de jeu. Retourné comme déclaration de statut absolu. Elle a raison.</div>
+        <div class="lex-count">2 janvier 2026 · position maintenue</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 06 · CITATIONS ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">06</div><div class="sh-title">Citations</div></div>
+
+    <div class="citations">
+
+      <div class="cit">
+        <div class="cit-text">"j'étais déjà en train d'écrire qu'on programmera nos enfants à te faire chier mais du coup on le fera pas — je leur apprendrai juste à appeler Théo 'Dorian2'"</div>
+        <div class="cit-meta">1er mai 2020 · à dosinge · sur les futurs enfants · menace reconvertie en surnom</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"peut-être demain je suis corvée de linge parce que je suis une femme maltraitée 😭 — il me force aussi à vous dire qu'il est très gentil — et que FF c'est super méga génial — et qu'il est le meilleur chercheur international"</div>
+        <div class="cit-meta">4 mai 2020 · suite de messages · cryo dicte visiblement à côté</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"vite on lance avant que Théo arrive"</div>
+        <div class="cit-meta">10 novembre 2020 · sur une session gaming · la doctrine en six mots</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"Je ne cherche pas de nouveau boulot parce que je veux me poser un peu et commencer à monter mon projet d'enseignement pour les élèves non adaptés au système scolaire"</div>
+        <div class="cit-meta">1er octobre 2021 · le projet pédagogique · le seul message du profil entièrement sans ironie</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"Aka Théo le Cuck"</div>
+        <div class="cit-meta">14 octobre 2021 · sans contexte supplémentaire · conclusion</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"Dorian est une merde, signé Kimberley, absolument pas Enzo"</div>
+        <div class="cit-meta">15 octobre 2022 · message collaboratif avec espy · dénégation transparente</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"Théo est gay"</div>
+        <div class="cit-meta">18 septembre 2022 · pendant un test de partage de compte · "omg on peut pas savoir qui dit quoi"</div>
+      </div>
+
+      <div class="cit">
+        <div class="cit-text">"Numéro 8 en France mais Numéro 1 sur ce discord"</div>
+        <div class="cit-meta">2 janvier 2026 · contexte incertain · positionnement définitif</div>
+      </div>
+
+      <div class="cit faded">
+        <div class="cit-text">"Il y a moyen à voir avec Théo, vu que le mini T nous a cassé le nôtre"</div>
+        <div class="cit-meta">7 mars 2026 · dernier message archivé · objet cassé non identifié · Thélio impliqué</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ 07 · RELATIONS ══ -->
+  <section class="section">
+    <div class="sh"><div class="sh-num">07</div><div class="sh-title">Ses relations</div></div>
+
+    <div class="relations">
+      <div class="rel-card">
+        <div class="rel-av" style="background:#2a1205; color:var(--cry)">C</div>
+        <div class="rel-name" style="color:var(--cry)">cryo</div>
+        <div class="rel-surnom">Théo · Monsieur · le pêcheur</div>
+        <div class="rel-desc">Son mari. Sa cible principale. Sa source de matériau. Elle l'a défendu devant le groupe, poursuivi en procès deux fois, soigné à l'hôpital, et annoncé jaune sur le canal. "C'pas sa femme pour rien" — dans les deux sens.</div>
+      </div>
+      <div class="rel-card">
+        <div class="rel-av" style="background:#0a2030; color:var(--teal)">E</div>
+        <div class="rel-name" style="color:var(--teal)">espy</div>
+        <div class="rel-surnom">luco · Enzo</div>
+        <div class="rel-desc">47 mentions de kik par espy — le membre qui l'a le plus documentée. Ils ont co-signé "Dorian est une merde" ensemble. Une affinité de plume qui transparaît dans les archives.</div>
+      </div>
+      <div class="rel-card">
+        <div class="rel-av" style="background:#2a1a5a; color:var(--purple)">D</div>
+        <div class="rel-name" style="color:var(--purple)">dosinge</div>
+        <div class="rel-surnom">Dorian · Dorian2</div>
+        <div class="rel-desc">Sa cible secondaire. Elle lui apprenait à ses futurs enfants à l'appeler "Dorian2". Elle a co-signé "Dorian est une merde". Elle lui souhaite son anniversaire chaque année sans faute.</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="footer-logo">Le Discordeum</div>
+  <nav class="footer-nav">
+    <a href="index.html" class="footer-link">← Sommaire</a>
+    <a href="profil_cryoslinger.html" class="footer-link">Profil cryo</a>
+    <a href="kouffardor.html" class="footer-link">Kouffardor</a>
+  </nav>
+</footer>
+
+<script>
+const yearData = [
+  {y:'2019', n:9, peak:false},
+  {y:'2020', n:36, peak:true},
+  {y:'2021', n:14, peak:false},
+  {y:'2022', n:8, peak:false},
+  {y:'2023', n:9, peak:false},
+  {y:'2024', n:1, peak:false},
+  {y:'2025', n:7, peak:false},
+  {y:'2026', n:2, peak:false},
+];
+const maxY = Math.max(...yearData.map(d=>d.n));
+const chartEl = document.getElementById('yearChart');
+yearData.forEach(d => {
+  const col = document.createElement('div');
+  col.className = 'yc-col';
+  const h = Math.max(4, Math.round((d.n/maxY)*100));
+  col.innerHTML = `
+    <div class="yc-val">${d.n}</div>
+    <div class="yc-bar${d.peak?' peak':d.n<=2?' low':''}" style="height:${h}px"></div>
+    <div class="yc-year">${d.y}</div>
+  `;
+  chartEl.appendChild(col);
+});
+
+const hourData = [0,0,0,2,0,0,0,2,9,4,2,6,2,1,3,5,2,3,4,6,6,13,7,9];
+const maxH = Math.max(...hourData);
+const hmEl = document.getElementById('hourMap');
+const hlEl = document.getElementById('hourLabels');
+hourData.forEach((n, h) => {
+  const cell = document.createElement('div');
+  cell.className = 'hm-cell';
+  const alpha = n === 0 ? 0.03 : 0.05 + (n/maxH)*0.85;
+  cell.style.background = `rgba(249,168,212,${alpha})`;
+  cell.setAttribute('data-label', `${String(h).padStart(2,'0')}h · ${n} msgs`);
+  hmEl.appendChild(cell);
+  const lbl = document.createElement('div');
+  lbl.className = 'hl';
+  lbl.textContent = h % 3 === 0 ? String(h).padStart(2,'0') : '';
+  hlEl.appendChild(lbl);
+});
+</script>
+
+</body>
+</html>
