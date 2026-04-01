@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le Grand Débat — Le Discordeum · 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Barlow+Condensed:wght@300;400;600;700;800;900&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap');
+
+  :root {
+    --bg:      #06060a;
+    --bg2:     #0c0c14;
+    --bg3:     #12121e;
+    --border:  #1c1c2c;
+    --text:    #b0b0c8;
+    --muted:   #484860;
+    --white:   #e8e8f4;
+    --red:     #dc2626;
+    --gold:    #d4aa60;
+
+    --dos: #a78bfa;
+    --esp: #5eead4;
+    --cry: #fb923c;
+    --lay: #fbbf24;
+    --bai: #4ade80;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── GÉNÉRIQUE TV ── */
+  .opening {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    text-align: center; padding: 80px 8vw;
+    position: relative; overflow: hidden;
+    border-bottom: 4px solid var(--red);
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.008) 3px, rgba(255,255,255,0.008) 4px),
+      radial-gradient(ellipse at 50% 40%, rgba(220,38,38,0.08) 0%, transparent 55%),
+      var(--bg);
+  }
+
+  .tv-flag {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--red); padding: 4px 16px; border-radius: 2px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; font-weight: 700; letter-spacing: 4px;
+    color: #fff; text-transform: uppercase; margin-bottom: 28px;
+    opacity: 0; animation: fadeUp 0.6s ease forwards 0.2s;
+  }
+  .tv-flag::before { content: '●'; font-size: 8px; animation: blink 1s step-end infinite; }
+
+  .opening h1 {
+    font-family: 'Bebas+Neue', 'Bebas Neue', sans-serif;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 10vw, 120px);
+    color: var(--white); line-height: 0.9; letter-spacing: 2px;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.5s;
+  }
+  .opening h1 .le { display: block; font-size: 0.45em; color: var(--muted); letter-spacing: 6px; }
+  .opening h1 .grand { color: var(--white); }
+  .opening h1 .debat { color: var(--red); }
+
+  .opening-question {
+    font-family: 'Crimson Pro', serif; font-style: italic;
+    font-size: clamp(18px, 3vw, 28px); color: var(--gold);
+    margin-top: 28px; max-width: 620px; line-height: 1.45;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 0.8s;
+  }
+
+  .opening-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; font-weight: 600; letter-spacing: 3px;
+    color: var(--muted); text-transform: uppercase; margin-top: 16px;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 1s;
+  }
+
+  /* Plateau */
+  .plateau {
+    display: flex; gap: 12px; margin-top: 48px;
+    justify-content: center; flex-wrap: wrap;
+    opacity: 0; animation: fadeUp 0.8s ease forwards 1.3s;
+  }
+  .candidat {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 4px; padding: 14px 18px; min-width: 100px;
+    position: relative;
+  }
+  .candidat-av {
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif; font-size: 18px;
+    border: 2px solid;
+  }
+  .candidat-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  }
+  .candidat-role {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px; color: var(--muted); letter-spacing: 1px;
+    text-transform: uppercase; text-align: center;
+  }
+  .chancla-badge {
+    position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+    background: var(--gold); padding: 1px 8px; border-radius: 2px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 8px; font-weight: 700; letter-spacing: 1px; color: #000;
+    white-space: nowrap;
+  }
+
+  .hero-back {
+    position: absolute; top: 24px; left: 8vw;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; letter-spacing: 3px; color: var(--muted);
+    text-transform: uppercase; text-decoration: none;
+    transition: color 0.2s; z-index: 10;
+  }
+  .hero-back:hover { color: var(--white); }
+
+  /* ── CONTAINER ── */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 8vw; }
+
+  /* ── SECTION DÉBAT ── */
+  .debat-section { padding: 64px 0 0; border-top: 1px solid var(--border); }
+  .debat-section:first-of-type { border-top: none; padding-top: 56px; }
+
+  .section-flag {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--bg2); border: 1px solid var(--border);
+    padding: 4px 14px; border-radius: 2px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: 3px;
+    color: var(--muted); text-transform: uppercase; margin-bottom: 24px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(28px, 5vw, 52px);
+    color: var(--white); letter-spacing: 1px; line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .section-question {
+    font-family: 'Crimson Pro', serif; font-style: italic;
+    font-size: clamp(16px, 2.2vw, 20px); color: var(--gold);
+    margin-bottom: 32px; max-width: 620px; line-height: 1.5;
+  }
+
+  /* ── PRISE DE PAROLE ── */
+  .prise {
+    margin: 24px 0;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-left: 4px solid var(--pc, var(--muted));
+    border-radius: 0 4px 4px 0; padding: 20px 24px;
+    position: relative;
+  }
+  .prise-header {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+  }
+  .prise-av {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif; font-size: 13px; flex-shrink: 0;
+  }
+  .prise-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  }
+  .prise-role {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; color: var(--muted); letter-spacing: 1px; margin-left: 4px;
+  }
+  .prise-timer {
+    margin-left: auto;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; color: var(--muted); letter-spacing: 1px;
+  }
+  .prise-text {
+    font-size: 14px; color: var(--text); line-height: 1.85;
+  }
+  .prise-text strong { color: var(--white); font-weight: 600; }
+  .prise-text em { color: var(--pc, var(--gold)); font-style: italic; }
+
+  /* ── INTERRUPTION ── */
+  .interruption {
+    margin: 8px 0 8px 32px;
+    background: var(--bg3); border: 1px solid var(--border);
+    border-left: 3px solid var(--pi, var(--muted));
+    border-radius: 0 3px 3px 0; padding: 10px 14px;
+    position: relative;
+  }
+  .interruption::before {
+    content: '↩ INTERRUPTION';
+    position: absolute; top: -9px; left: 10px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 8px; font-weight: 700; letter-spacing: 2px;
+    background: var(--bg3); padding: 0 5px; color: var(--pi, var(--muted));
+    text-transform: uppercase;
+  }
+  .int-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+  .int-text {
+    font-size: 13px; color: #8888a8; font-style: italic; line-height: 1.55;
+  }
+
+  /* ── MODÉRATEUR ── */
+  .moderateur {
+    margin: 20px 0;
+    background: var(--bg3); border: 1px solid rgba(212,170,96,0.3);
+    border-radius: 4px; padding: 14px 18px;
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+  .mod-av {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: rgba(212,170,96,0.15); border: 1px solid rgba(212,170,96,0.4);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0; margin-top: 2px;
+  }
+  .mod-body { flex: 1; }
+  .mod-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: 2px;
+    color: var(--gold); text-transform: uppercase; margin-bottom: 3px;
+  }
+  .mod-text { font-size: 13px; color: var(--muted); font-style: italic; line-height: 1.55; }
+
+  /* ── STATS LIVE ── */
+  .stat-live {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 4px; padding: 14px 18px; margin: 16px 0;
+    display: flex; gap: 24px; flex-wrap: wrap; align-items: center;
+  }
+  .stat-live-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px; font-weight: 700; letter-spacing: 2px;
+    color: var(--red); text-transform: uppercase; flex-shrink: 0;
+  }
+  .stat-live-items { display: flex; gap: 20px; flex-wrap: wrap; }
+  .sli { display: flex; flex-direction: column; gap: 2px; }
+  .sli-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px; line-height: 1;
+  }
+  .sli-lab {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase;
+  }
+
+  /* ── VERDICT FINAL ── */
+  .verdict {
+    background: var(--bg2); border: 2px solid var(--gold);
+    border-radius: 4px; padding: 32px 36px; margin: 40px 0;
+    text-align: center; position: relative;
+  }
+  .verdict::before {
+    content: '⚖ VERDICT FINAL';
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: 3px;
+    background: var(--bg2); padding: 0 12px; color: var(--gold);
+    text-transform: uppercase; white-space: nowrap;
+  }
+  .verdict-text {
+    font-family: 'Crimson Pro', serif; font-style: italic;
+    font-size: clamp(18px, 3vw, 24px); color: var(--gold);
+    line-height: 1.5; margin-bottom: 16px;
+  }
+  .verdict-sub { font-size: 14px; color: var(--muted); line-height: 1.8; max-width: 560px; margin: 0 auto; }
+  .verdict-sub strong { color: var(--white); }
+
+  /* ── EPILOGUE ── */
+  .epilogue {
+    padding: 56px 0 80px;
+    border-top: 1px solid var(--border);
+  }
+  .epilogue-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: 4px;
+    color: var(--muted); text-transform: uppercase; margin-bottom: 20px;
+  }
+  .epilogue-text { font-size: 15px; color: var(--muted); line-height: 1.9; max-width: 640px; }
+  .epilogue-text strong { color: var(--white); }
+  .epilogue-text em { color: var(--gold); font-style: italic; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 40px 8vw;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: var(--muted); letter-spacing: 2px; }
+  .footer-back {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 11px;
+    color: var(--muted); letter-spacing: 2px; text-transform: uppercase;
+    text-decoration: none; transition: color 0.2s;
+  }
+  .footer-back:hover { color: var(--white); }
+
+  .av-dos { background: #2a1a5a; color: var(--dos); }
+  .av-esp { background: #0a2030; color: var(--esp); }
+  .av-cry { background: #2a1205; color: var(--cry); }
+  .av-lay { background: #2a1f05; color: var(--lay); }
+  .av-bai { background: #0a2010; color: var(--bai); }
+  .col-dos { color: var(--dos); }
+  .col-esp { color: var(--esp); }
+  .col-cry { color: var(--cry); }
+  .col-lay { color: var(--lay); }
+  .col-bai { color: var(--bai); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+  @media (max-width: 600px) {
+    .container { padding: 0 20px; }
+    .opening { padding: 60px 20px; }
+    footer { padding: 36px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- OPENING -->
+<div class="opening">
+  <a href="index.html" class="hero-back">← Archives</a>
+  <div class="tv-flag">En direct · Discordeum TV · Débat</div>
+  <h1>
+    <span class="le">Le</span>
+    <span class="grand">Grand</span><br>
+    <span class="debat">Débat</span>
+  </h1>
+  <p class="opening-question">"Le Discordeum est-il en train de mourir ?"</p>
+  <p class="opening-sub">Discordeum TV · Saison 2026 · Modération : La Chancla</p>
+
+  <div class="plateau">
+    <div class="candidat">
+      <div class="candidat-av av-dos" style="border-color:var(--dos)">D</div>
+      <div class="candidat-name col-dos">dosinge</div>
+      <div class="candidat-role">Analyste · 12 726 msgs</div>
+    </div>
+    <div class="candidat">
+      <div class="candidat-av av-esp" style="border-color:var(--esp)">E</div>
+      <div class="candidat-name col-esp">espy</div>
+      <div class="candidat-role">Commentateur · 10 405 msgs</div>
+    </div>
+    <div class="candidat" style="border-color:rgba(212,170,96,0.3)">
+      <div class="chancla-badge">Modératrice</div>
+      <div class="candidat-av" style="border-color:var(--gold); background:rgba(212,170,96,0.1); color:var(--gold); font-size:20px">⚖</div>
+      <div class="candidat-name" style="color:var(--gold)">La Chancla</div>
+      <div class="candidat-role">Institution suprême</div>
+    </div>
+    <div class="candidat">
+      <div class="candidat-av av-cry" style="border-color:var(--cry)">C</div>
+      <div class="candidat-name col-cry">cryo</div>
+      <div class="candidat-role">Organisateur · 6 678 msgs</div>
+    </div>
+    <div class="candidat">
+      <div class="candidat-av av-lay" style="border-color:var(--lay)">L</div>
+      <div class="candidat-name col-lay">layvi</div>
+      <div class="candidat-role">Absent présent · 5 346 msgs</div>
+    </div>
+    <div class="candidat">
+      <div class="candidat-av av-bai" style="border-color:var(--bai)">B</div>
+      <div class="candidat-name col-bai">baiedhiver</div>
+      <div class="candidat-role">Philosophe · 750 msgs</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ══ OUVERTURE ══ -->
+  <div class="debat-section">
+    <div class="section-flag">Ouverture · La question</div>
+
+    <div class="stat-live">
+      <div class="stat-live-label">📊 Données live</div>
+      <div class="stat-live-items">
+        <div class="sli"><div class="sli-val" style="color:var(--red)">−92,9%</div><div class="sli-lab">activité 2020→2025</div></div>
+        <div class="sli"><div class="sli-val" style="color:var(--lay)">1 037</div><div class="sli-lab">messages en 2025</div></div>
+        <div class="sli"><div class="sli-val" style="color:var(--esp)">14 559</div><div class="sli-lab">messages en 2020</div></div>
+        <div class="sli"><div class="sli-val" style="color:var(--cry)">5</div><div class="sli-lab">membres encore actifs</div></div>
+        <div class="sli"><div class="sli-val" style="color:var(--bai)">21/03/26</div><div class="sli-lab">dernier message</div></div>
+      </div>
+    </div>
+
+    <div class="moderateur">
+      <div class="mod-av">⚖</div>
+      <div class="mod-body">
+        <div class="mod-name">La Chancla · Ouverture</div>
+        <div class="mod-text">Le Discordeum a perdu 92,9% de son activité entre 2020 et 2025. Cinq membres encore présents. Le dernier message date du 21 mars 2026. La question est posée. Qui veut commencer ?</div>
+      </div>
+    </div>
+
+    <div class="prise" style="--pc: var(--dos)">
+      <div class="prise-header">
+        <div class="prise-av av-dos">D</div>
+        <div>
+          <span class="prise-name col-dos">dosinge</span>
+          <span class="prise-role">— Analyse préliminaire</span>
+        </div>
+        <div class="prise-timer">2 min</div>
+      </div>
+      <div class="prise-text">
+        J'ai fait un tableau. <em>Activité par année, membres actifs, jours de co-présence, taux de réponse aux pings.</em> La conclusion est claire : on est passés de 14 559 messages en 2020 à 1 037 en 2025. C'est une chute de 92,9%. Si on projette la trajectoire linéaire, <strong>on atteint zéro message quelque part entre fin 2026 et mi-2027.</strong>
+        <br><br>
+        Mais je veux préciser quelque chose avant qu'on aille plus loin : <em>les cinq membres sont encore là le 21 mars 2026.</em> Tous. Personne n'est parti. Le canal existe toujours. Ce n'est pas la même chose que mourir — c'est autre chose que je n'ai pas encore nommé.
+      </div>
+    </div>
+
+    <div class="prise" style="--pc: var(--esp)">
+      <div class="prise-header">
+        <div class="prise-av av-esp">E</div>
+        <div>
+          <span class="prise-name col-esp">espy</span>
+          <span class="prise-role">— Remise en question du cadre</span>
+        </div>
+        <div class="prise-timer">1 min 30</div>
+      </div>
+      <div class="prise-text">
+        La question est mal posée. <strong>"Mourir" suppose qu'il y a eu une vie définie, un état de référence contre lequel mesurer le déclin.</strong> Mais qu'est-ce que le Discordeum vivant ? 2020 ? C'était le confinement. 14 559 messages parce qu'on n'avait nulle part où aller. <em>Ce n'était pas la norme — c'était l'exception.</em>
+        <br><br>
+        Si on prend 2022 comme référence — première année sans confinement ni pishot — on a 3 894 messages. 2025 fait 1 037. C'est une chute, oui. Mais c'est peut-être simplement un retour à ce qu'on est réellement.
+      </div>
+    </div>
+
+    <div class="interruption" style="--pi: var(--dos)">
+      <div class="int-name col-dos">dosinge</div>
+      <div class="int-text">La trajectoire de 2022 à 2025 est aussi déclinante. Ce n'est pas un retour à la normale — c'est une continuation de la chute.</div>
+    </div>
+
+    <div class="interruption" style="--pi: var(--esp)">
+      <div class="int-name col-esp">espy</div>
+      <div class="int-text">Je vois.</div>
+    </div>
+  </div>
+
+
+  <!-- ══ ROUND 1 — LES POSITIONS ══ -->
+  <div class="debat-section">
+    <div class="section-flag">Round 1 · Les positions</div>
+    <div class="section-title">Qu'est-ce qui a changé ?</div>
+
+    <div class="moderateur">
+      <div class="mod-av">⚖</div>
+      <div class="mod-body">
+        <div class="mod-name">La Chancla</div>
+        <div class="mod-text">Cryo. Tu organises des soirées depuis l'hôpital. Tu as organisé le Kouffardor depuis un lit médicalisé. Est-ce que tu penses que le groupe est en train de mourir ?</div>
+      </div>
+    </div>
+
+    <div class="prise" style="--pc: var(--cry)">
+      <div class="prise-header">
+        <div class="prise-av av-cry">C</div>
+        <div>
+          <span class="prise-name col-cry">cryoslinger</span>
+          <span class="prise-role">— Position pragmatique</span>
+        </div>
+        <div class="prise-timer">2 min</div>
+      </div>
+      <div class="prise-text">
+        Non. <strong>Le groupe n'est pas en train de mourir — il est en train de vieillir.</strong> C'est pas la même chose. En 2020 on était tous disponibles parce qu'on avait rien d'autre. Maintenant j'ai Kimberley, j'ai Thélio, j'ai un boulot, j'ai des tournois FFTCG. Dosinge fait de l'escalade. Espy sort son chien.
+        <br><br>
+        <em>L'activité a baissé parce que nos vies ont grossi.</em> C'est pas un signe de mort — c'est un signe que le groupe a réussi à exister assez longtemps pour que tout le monde ait une vie autour. Le Discordeum est encore là. Ykk ce soir ?
+      </div>
+    </div>
+
+    <div class="prise" style="--pc: var(--lay)">
+      <div class="prise-header">
+        <div class="prise-av av-lay">L</div>
+        <div>
+          <span class="prise-name col-lay">layvi</span>
+          <span class="prise-role">— Position personnelle</span>
+        </div>
+        <div class="prise-timer">1 min 47</div>
+      </div>
+      <div class="prise-text">
+        Je suis là. <em>Je suis là maintenant.</em> C'est le principal. J'ai été absent — mais j'ai toujours été là quand ça comptait. Le GIF de Shrek c'était un message de paix. Bonne année le Discordeum. Je vous aime tous les 33 jours où j'étais là en 2025.
+        <br><br>
+        Sur la question de savoir si ça meurt — <strong>je pense que les choses meurent quand personne ne revient.</strong> Moi je reviens toujours. Donc non.
+      </div>
+    </div>
+
+    <div class="interruption" style="--pi: var(--esp)">
+      <div class="int-name col-esp">espy</div>
+      <div class="int-text">Il est revenu après 116 jours avec un GIF de Shrek et il considère ça comme une preuve de vie. Je note.</div>
+    </div>
+
+    <div class="interruption" style="--pi: var(--lay)">
+      <div class="int-name col-lay">layvi</div>
+      <div class="int-text">Je suis là là, en ce moment. C'est quand même remarquable.</div>
+    </div>
+
+    <div class="prise" style="--pc: var(--bai)">
+      <div class="prise-header">
+        <div class="prise-av av-bai">B</div>
+        <div>
+          <span class="prise-name col-bai">baiedhiver</span>
+          <span class="prise-role">— Position ontologique</span>
+        </div>
+        <div class="prise-timer">3 min 12</div>
+      </div>
+      <div class="prise-text">
+        La mort, telle qu'Aristote la conceptualise dans le <em>De Anima</em>, est la séparation de l'âme et du corps — la perte de la forme par rapport à la matière. <strong>Or le Discordeum possède-t-il une âme distincte de ses membres ?</strong> Je soutiens que oui. L'âme du Discordeum, c'est l'ensemble des relations, des références partagées, du lexique commun — "chromosome", "ayaent", "gomin", le pavé César. Ces choses existent indépendamment du volume de messages.
+        <br><br>
+        Donc la vraie question n'est pas "le Discordeum meurt-il ?" mais <em>"l'âme du Discordeum subsiste-t-elle quand les messages se raréfient ?"</em> Ma réponse est : oui, et elle se consolide même. <strong>Un groupe qui a moins à dire parce qu'il se comprend mieux n'est pas un groupe qui meurt.</strong>
+        <br><br>
+        J'attends vos objections philosophiques. J'ai passé le CAPES, je suis disponible.
+      </div>
+    </div>
+
+    <div class="interruption" style="--pi: var(--dos)">
+      <div class="int-name col-dos">dosinge</div>
+      <div class="int-text">La trajectoire reste déclinante indépendamment de la théorie de l'âme aristotélicienne.</div>
+    </div>
+
+    <div class="interruption" style="--pi: var(--bai)">
+      <div class="int-name col-bai">baiedhiver</div>
+      <div class="int-text">C'est précisément ce que je conteste. Mais je maintiens que tu as raison sur le chiffre.</div>
+    </div>
+  </div>
+
+
+  <!-- ══ ROUND 2 — LES PREUVES ══ -->
+  <div class="debat-section">
+    <div class="section-flag">Round 2 · Les preuves</div>
+    <div class="section-title">Les données à charge et à décharge</div>
+
+    <div class="moderateur">
+      <div class="mod-av">⚖</div>
+      <div class="mod-body">
+        <div class="mod-name">La Chancla</div>
+        <div class="mod-text">Dosinge. Tu as les chiffres. Présente les preuves à charge.</div>
+      </div>
+    </div>
+
+    <div class="prise" style="--pc: var(--dos)">
+      <div class="prise-header">
+        <div class="prise-av av-dos">D</div>
+        <div>
+          <span class="prise-name col-dos">dosinge</span>
+          <span class="prise-role">— Réquisitoire statistique</span>
+        </div>
+        <div class="prise-timer">4 min</div>
+      </div>
+      <div class="prise-text">
+        J'ai préparé cinq éléments. <strong>Un.</strong> L'activité a chuté de 92,9% entre 2020 et 2025. <strong>Deux.</strong> Layvi est présent 33 jours sur 365 en 2025 — soit 9% de l'année. <strong>Trois.</strong> Le nombre de jours actifs est passé de 353 en 2020 à 152 en 2025. <strong>Quatre.</strong> On a eu 2 semaines sans aucun message en 2025. <strong>Cinq.</strong> <em>Le dernier message de baiedhiver avant celui d'aujourd'hui date du 11 mars 2026 — "Try not to cringe : impossible edition".</em>
+        <br><br>
+        Je précise quand même que tous les membres ont posté le 21 mars 2026. Et que cryo essaie d'organiser un concert Clair Obscur. <strong>Les deux faits coexistent.</strong> Je n'ai pas encore résolu cette contradiction dans mon tableau.
+      </div>
+    </div>
+
+    <div class="moderateur">
+      <div class="mod-av">⚖</div>
+      <div class="mod-body">
+        <div class="mod-name">La Chancla</div>
+        <div class="mod-text">Espy. La défense.</div>
+      </div>
+    </div>
+
+    <div class="prise" style="--pc: var(--esp)">
+      <div class="prise-header">
+        <div class="prise-av av-esp">E</div>
+        <div>
+          <span class="prise-name col-esp">espy</span>
+          <span class="prise-role">— Plaidoirie à décharge</span>
+        </div>
+        <div class="prise-timer">3 min 30</div>
+      </div>
+      <div class="prise-text">
+        Les cinq membres sont encore là. <em>Personne n'a quitté le serveur.</em> En sept ans, aucune brouille définitive, aucune exclusion, aucun départ volontaire. Cryo organise un concert pour six personnes dont certains membres du groupe — depuis un site de billetterie qui plante. <strong>C'est de l'obstination. C'est de la fidélité.</strong>
+        <br><br>
+        Le groupe a traversé pishot, le covid de dosinge, le mariage de cryo, l'hospitalisation de cryo, la naissance de Thélio, les 318 jours de baiedhiver, les 116 jours de layvi. <em>À chaque fois, tout le monde est revenu.</em> Pas toujours vite. Pas toujours avec un message élaboré — parfois avec un GIF de Shrek. Mais revenu.
+        <br><br>
+        Je ne dis pas que ça ne décline pas. Je dis que <strong>la forme que prend ce groupe a changé, pas son existence.</strong>
+      </div>
+    </div>
+
+    <div class="interruption" style="--pi: var(--cry)">
+      <div class="int-name col-cry">cryoslinger</div>
+      <div class="int-text">Ayaent. Exactement ça.</div>
+    </div>
+
+    <div class="interruption" style="--pi: var(--lay)">
+      <div class="int-name col-lay">layvi</div>
+      <div class="int-text">Le GIF de Shrek c'était sincère.</div>
+    </div>
+  </div>
+
+
+  <!-- ══ ROUND 3 — L'AVENIR ══ -->
+  <div class="debat-section">
+    <div class="section-flag">Round 3 · L'avenir</div>
+    <div class="section-title">Qu'est-ce qu'on fait maintenant ?</div>
+
+    <div class="moderateur">
+      <div class="mod-av">⚖</div>
+      <div class="mod-body">
+        <div class="mod-name">La Chancla</div>
+        <div class="mod-text">La question finale. Pas "est-il en train de mourir" — mais "qu'est-ce qu'on fait ?" Tour de table.</div>
+      </div>
+    </div>
+
+    <div class="prise" style="--pc: var(--cry)">
+      <div class="prise-header">
+        <div class="prise-av av-cry">C</div>
+        <div><span class="prise-name col-cry">cryoslinger</span></div>
+        <div class="prise-timer">1 min</div>
+      </div>
+      <div class="prise-text">
+        <strong>On se retrouve IRL.</strong> Décembre c'est statistiquement le meilleur mois — layvi et baiedhiver sont toujours là en décembre. J'essaie de prendre des places pour le concert Clair Obscur. Si le site plante je recommence le lendemain. <em>C'est pas plus compliqué que ça.</em>
+      </div>
+    </div>
+
+    <div class="prise" style="--pc: var(--esp)">
+      <div class="prise-header">
+        <div class="prise-av av-esp">E</div>
+        <div><span class="prise-name col-esp">espy</span></div>
+        <div class="prise-timer">1 min 15</div>
+      </div>
+      <div class="prise-text">
+        On continue. <em>Comme on a toujours continué.</em> Ce groupe ne s'est jamais explicitement organisé pour durer — il a juste duré. Ce n'est pas un projet. C'est une habitude. <strong>Les habitudes ne meurent pas — elles se transforment.</strong> Ou elles ne se transforment pas et elles continuent exactement comme avant. Dans les deux cas on est là.
+      </div>
+    </div>
+
+    <div class="prise" style="--pc: var(--dos)">
+      <div class="prise-header">
+        <div class="prise-av av-dos">D</div>
+        <div><span class="prise-name col-dos">dosinge</span></div>
+        <div class="prise-timer">2 min 30</div>
+      </div>
+      <div class="prise-text">
+        J'ai mis à jour le tableau. Version 4.0 — j'ai ajouté une colonne "projection". <em>Si on maintient le rythme de 2025, on atteint environ 800 messages en 2026, 600 en 2027.</em> Ce n'est pas zéro. C'est peu — mais c'est pas zéro.
+        <br><br>
+        <strong>Ce que je pense vraiment :</strong> le Discordeum est moins actif parce qu'on se parle mieux. On a moins besoin d'envoyer 50 messages pour se dire quelque chose. Sept ans de références communes font que trois mots suffisent là où il en fallait vingt. <em>C'est de l'efficacité, pas du déclin.</em>
+        <br><br>
+        C'est peut-être juste ce que je veux croire. Mais j'ai fait un tableau et ça tient.
+      </div>
+    </div>
+
+    <div class="prise" style="--pc: var(--bai)">
+      <div class="prise-header">
+        <div class="prise-av av-bai">B</div>
+        <div><span class="prise-name col-bai">baiedhiver</span></div>
+        <div class="prise-timer">1 min 50</div>
+      </div>
+      <div class="prise-text">
+        Je maintiens ma position aristotélicienne. <em>L'âme persiste.</em> Et j'ajouterai une chose : ce débat lui-même est une preuve que le groupe n'est pas mort. <strong>Un groupe mort ne débat pas de sa propre mort.</strong> Il se contente de ne plus exister. Nous, on analyse, on argumente, on projette, on fait des tableaux version 4.0.
+        <br><br>
+        C'est du soin. On prend soin de ce groupe en en parlant. <em>Je suis prêt à le défendre philosophiquement.</em> CAPES rang 34.
+      </div>
+    </div>
+
+    <div class="prise" style="--pc: var(--lay)">
+      <div class="prise-header">
+        <div class="prise-av av-lay">L</div>
+        <div><span class="prise-name col-lay">layvi</span></div>
+        <div class="prise-timer">45 sec</div>
+      </div>
+      <div class="prise-text">
+        Je suis d'accord avec tout ce qui a été dit.
+      </div>
+    </div>
+
+    <div class="interruption" style="--pi: var(--esp)">
+      <div class="int-name col-esp">espy</div>
+      <div class="int-text">Petit rappel journalier pour que les gens n'oublient pas que semoule est une sacrée pute.</div>
+    </div>
+
+    <div class="interruption" style="--pi: var(--lay)">
+      <div class="int-name col-lay">layvi</div>
+      <div class="int-text">Je suis là là quand même.</div>
+    </div>
+
+    <div class="interruption" style="--pi: var(--cry)">
+      <div class="int-name col-cry">cryoslinger</div>
+      <div class="int-text">Ykk ce soir ?</div>
+    </div>
+  </div>
+
+
+  <!-- ══ VERDICT ══ -->
+  <div class="debat-section" style="padding-bottom:48px">
+    <div class="moderateur">
+      <div class="mod-av">⚖</div>
+      <div class="mod-body">
+        <div class="mod-name">La Chancla · Clôture</div>
+        <div class="mod-text">J'ai écouté. Voici ce que je retiens.</div>
+      </div>
+    </div>
+
+    <div class="verdict">
+      <div class="verdict-text">
+        "Le Discordeum n'est pas en train de mourir.<br>Il est en train de devenir ce qu'il a toujours été."
+      </div>
+      <div class="verdict-sub">
+        <strong>−92,9% d'activité.</strong> Cinq membres encore présents. Tous actifs le 21 mars 2026. Un concert en cours d'organisation. Un tableau version 4.0. Une thèse aristotélicienne. Un GIF de Shrek. Un "je suis d'accord."
+        <br><br>
+        Ce groupe n'a jamais été un projet. Il n'a pas de chef, pas de règles, pas d'objectif. Il a des habitudes, un lexique, une histoire commune de sept ans. <strong>Ces choses ne disparaissent pas quand les messages se raréfient.</strong> Elles s'épaississent.
+        <br><br>
+        La question n'était pas la bonne. La bonne question est : <em>qu'est-ce qu'on fait de ce qu'on a construit ?</em>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ÉPILOGUE -->
+  <div class="epilogue">
+    <div class="epilogue-label">Après le débat</div>
+    <div class="epilogue-text">
+      Cryo a posté un lien Codenames dans les cinq minutes suivant la clôture. Dosinge a mis à jour le tableau en version 4.1 pour intégrer les arguments du débat dans la colonne "facteurs qualitatifs". Espy est sorti le chien. Baiedhiver a dit <em>"dans quel univers parallèle sommes-nous"</em> et est reparti.
+      <br><br>
+      Layvi a dit <strong>"je suis d'accord"</strong> une deuxième fois et n'a plus posté pendant 27 jours.
+      <br><br>
+      Le canal existe toujours.
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-logo">DISCORDEUM TV</div>
+  <a href="index.html" class="footer-back">← Retour aux archives</a>
+</footer>
+
+</body>
+</html>
